@@ -1,5 +1,5 @@
 {
-  "name": "template",
+  "name": "tm",
   "type": "module",
   "version": "1.0.0",
   "description": "",
@@ -8,7 +8,7 @@
   "types": "dist/index.d.ts",
   "bin": {
     "create-template": "dist/index.js",
-    "tmp": "dist/index.js"
+    "tm": "dist/index.js"
   },
   "files": [
     "*.d.ts",

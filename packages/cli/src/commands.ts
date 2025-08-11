@@ -1,3 +1,5 @@
+import { createAction } from './actions'
+
 interface CommandsOptions {
   command: { command: string, description?: string }
   options?: { option: string, description: string }
@@ -10,7 +12,5 @@ export const commands: CommandsOptions[] = [{
     description: 'Create a new project',
   },
 
-  action: (dir: string, options) => {
-    console.log(dir, options)
-  },
+  action: createAction,
 }]

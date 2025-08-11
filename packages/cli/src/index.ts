@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { CAC } from 'cac'
-import { commands } from './commands.js'
+import { commands } from './commands'
 
 const cli = new CAC()
 
