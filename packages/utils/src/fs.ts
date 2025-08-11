@@ -23,3 +23,11 @@ export function mkdir(dir: string) {
 export function join(...paths: string[]) {
   return path.join(...paths)
 }
+
+export function writeFile(fileName: string, content: string) {
+  fs.writeFileSync(fileName, content, { encoding: 'utf8' })
+}
+
+export function rm(path: string) {
+  fs.rm(path, { recursive: true, force: true }, () => {})
+}
