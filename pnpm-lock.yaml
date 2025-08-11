@@ -51,6 +51,9 @@ importers:
       cac:
         specifier: ^6.7.14
         version: 6.7.14
+      execa:
+        specifier: ^9.6.0
+        version: 9.6.0
 
   packages/templates/vue:
     dependencies:
