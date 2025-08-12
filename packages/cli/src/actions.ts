@@ -43,7 +43,7 @@ export async function createAction(dir: string) {
 async function createProject(dir: string) {
   const cwd = join(process.cwd(), dir)
   try {
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss']
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'unplugin-auto-import']
 
     await execa('pnpm.cmd', ['create', 'vue', dir], { stdio: 'inherit' })
 
@@ -69,7 +69,8 @@ async function createProject(dir: string) {
     writeFile(join(cwd, 'uno.config.ts'), ['import { defineConfig } from \'unocss\'', 'export default defineConfig({', '  rules: [', '    [\'center\', { \'display\': \'flex\', \'justify-content\': \'center\', \'align-items\': \'center\' }],', '  ],', '})'].join('\n'))
 
     mainAddUnoCss(join(cwd, 'src', 'main.ts'))
-    viteConfigAddUnoCss(join(cwd, 'vite.config.ts'))
+    viteConfig(join(cwd, 'vite.config.ts'))
+    addTypings(join(cwd, 'env.d.ts'))
   }
   catch (error) {
     console.error('执行失败:', error)
@@ -103,7 +104,7 @@ function mainAddUnoCss(file: string) {
   writeFile(file, targetCode)
 }
 
-function viteConfigAddUnoCss(file: string) {
+function viteConfig(file: string) {
   const sourceText = readFile(file)
   const ast = parse(sourceText, { sourceType: 'module' })
 
@@ -112,11 +113,17 @@ function viteConfigAddUnoCss(file: string) {
       const firstImport = path.get('body.0')
 
       if (firstImport.isImportDeclaration()) {
-        const newImport = types.importDeclaration(
+        const unoCssImport = types.importDeclaration(
           [types.importDefaultSpecifier(types.identifier('UnoCSS'))],
           types.stringLiteral('unocss/vite'),
         )
-        firstImport.insertAfter(newImport)
+        firstImport.insertAfter(unoCssImport)
+
+        const autoImport = types.importDeclaration(
+          [types.importDefaultSpecifier(types.identifier('AutoImport'))],
+          types.stringLiteral('unplugin-auto-import/vite'),
+        )
+        firstImport.insertAfter(autoImport)
       }
     },
 
@@ -127,8 +134,20 @@ function viteConfigAddUnoCss(file: string) {
           types.identifier('UnoCSS'),
           [],
         )
+        const autoImportNode = types.callExpression(
+          types.identifier('AutoImport'),
+          [
+            types.objectExpression([
+              // imports: ['vue']
+              types.objectProperty(types.identifier('imports'), types.arrayExpression([types.stringLiteral('vue')])),
 
-        path.node.elements.unshift(unoCSSNode)
+              // dts: "typings/auto-imports.d.ts"
+              types.objectProperty(types.identifier('dts'), types.stringLiteral('typings/auto-imports.d.ts')),
+            ]),
+          ],
+        )
+
+        path.node.elements.unshift(unoCSSNode, autoImportNode)
       }
     },
   })
@@ -140,4 +159,10 @@ function viteConfigAddUnoCss(file: string) {
   }, sourceText).code
 
   writeFile(file, targetCode)
+}
+
+function addTypings(file: string) {
+  const sourceText = readFile(file)
+
+  writeFile(file, `${sourceText}/// <reference types="./typings/auto-imports" />`)
 }
