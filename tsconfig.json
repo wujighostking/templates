@@ -43,6 +43,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "noUncheckedSideEffectImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
   }
 }

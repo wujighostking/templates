@@ -31,3 +31,7 @@ export function writeFile(fileName: string, content: string) {
 export function rm(path: string) {
   fs.rm(path, { recursive: true, force: true }, () => {})
 }
+
+export function readFile(file: string) {
+  return fs.readFileSync(file, { encoding: 'utf-8' })
+}
