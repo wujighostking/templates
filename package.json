@@ -14,6 +14,10 @@
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix"
   },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "chalk": "^5.5.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",
     "@commitlint/cli": "^19.8.1",
@@ -34,9 +38,5 @@
     "*.{js,ts}": [
       "eslint --fix"
     ]
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "chalk": "^5.5.0"
   }
 }

@@ -4,6 +4,7 @@
     "target": "esnext",
     "jsx": "react-jsx",
     "moduleDetection": "force",
+    "baseUrl": ".",
     // File Layout
     // "rootDir": "./src",
     // "outDir": "./dist",
@@ -12,10 +13,12 @@
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
     "moduleResolution": "node",
-    "baseUrl": ".",
     "paths": {
       "@tm/*": ["./packages/*/src/index.ts"]
     },
+    // For nodejs:
+    // "lib": ["esnext"],
+    "types": ["node"],
     // "types": [],
 
     // Style Options
@@ -33,9 +36,6 @@
     "noUncheckedIndexedAccess": true,
     "declaration": true,
     "declarationMap": true,
-    // For nodejs:
-    // "lib": ["esnext"],
-     "types": ["node"],
     // and npm install -D @types/node
 
     // Other Outputs
