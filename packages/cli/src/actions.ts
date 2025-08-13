@@ -74,7 +74,7 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
 
-    mkdir(join(cwd, dir, 'packages'))
+    mkdir(join(cwd, 'packages'))
 
     writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - \'packages/*\'')
     writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
