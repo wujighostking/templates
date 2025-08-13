@@ -1,3 +1,4 @@
+import type { WriteFileOptions } from 'node:fs'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import * as process from 'node:process'
@@ -24,8 +25,8 @@ export function join(...paths: string[]) {
   return path.join(...paths)
 }
 
-export function writeFile(fileName: string, content: string) {
-  fs.writeFileSync(fileName, content, { encoding: 'utf8' })
+export function writeFile(fileName: string, content: string, options?: WriteFileOptions & object) {
+  fs.writeFileSync(fileName, content, { encoding: 'utf8', ...options })
 }
 
 export function rm(path: string) {

@@ -71,6 +71,7 @@ async function createProject(dir: string) {
     mainAddUnoCss(join(cwd, 'src', 'main.ts'))
     viteConfig(join(cwd, 'vite.config.ts'))
     addTypings(join(cwd, 'env.d.ts'))
+    addGitIgnoreFile(join(cwd, '.gitignore'))
   }
   catch (error) {
     console.error('执行失败:', error)
@@ -162,7 +163,9 @@ function viteConfig(file: string) {
 }
 
 function addTypings(file: string) {
-  const sourceText = readFile(file)
+  writeFile(file, `/// <reference types="./typings/auto-imports" />`, { flag: 'a' })
+}
 
-  writeFile(file, `${sourceText}/// <reference types="./typings/auto-imports" />`)
+function addGitIgnoreFile(file: string) {
+  writeFile(file, `typings/auto-imports.d.ts`, { flag: 'a' })
 }
