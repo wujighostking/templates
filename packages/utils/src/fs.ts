@@ -1,12 +1,9 @@
 import type { WriteFileOptions } from 'node:fs'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import * as process from 'node:process'
-
-const cwd = process.cwd()
 
 export function isExisting(path: string): boolean {
-  return fs.existsSync(join(cwd, path))
+  return fs.existsSync(path)
 }
 
 export function isFile(file: string): boolean {
@@ -18,7 +15,7 @@ export function isDir(dir: string): boolean {
 }
 
 export function mkdir(dir: string) {
-  return fs.mkdirSync(join(cwd, dir))
+  return fs.mkdirSync(dir)
 }
 
 export function join(...paths: string[]) {

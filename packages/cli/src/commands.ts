@@ -1,4 +1,4 @@
-import { createAction } from './actions'
+import { createAction, pkgAction } from './actions'
 
 interface CommandsOptions {
   command: { command: string, description?: string }
@@ -6,11 +6,23 @@ interface CommandsOptions {
   action: (...args: any[]) => void
 }
 
-export const commands: CommandsOptions[] = [{
-  command: {
-    command: 'create <projectName>',
-    description: 'Create a new project',
+export const commands: CommandsOptions[] = [
+  {
+    command: {
+      command: 'create <projectName>',
+      description: 'Create a new project',
+    },
+    action: createAction,
   },
-
-  action: createAction,
-}]
+  {
+    command: {
+      command: 'pkg [dir]',
+      description: 'Add a package into project',
+    },
+    options: {
+      option: '-n, --name <name>',
+      description: 'package name',
+    },
+    action: pkgAction,
+  },
+]

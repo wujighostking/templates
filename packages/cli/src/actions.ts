@@ -21,7 +21,7 @@ import { execa } from 'execa'
 
 export async function createAction(dir: string) {
   async function create() {
-    if (isExisting(dir)) {
+    if (isExisting(join(process.cwd(), dir))) {
       console.log(error(`目录 ${dir} 已存在`))
 
       return
@@ -43,7 +43,7 @@ export async function createAction(dir: string) {
 
 async function createMonoRepoProject(dir: string) {
   const cwd = join(process.cwd(), dir)
-  mkdir(dir)
+  mkdir(cwd)
 
   try {
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript']
@@ -74,7 +74,7 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
 
-    mkdir(join(dir, 'packages'))
+    mkdir(join(cwd, dir, 'packages'))
 
     writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - \'packages/*\'')
     writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
@@ -213,4 +213,30 @@ function addTypings(file: string) {
 
 function addGitIgnoreFile(file: string) {
   writeFile(file, `typings/auto-imports.d.ts`, { flag: 'a' })
+}
+
+export async function pkgAction(dir: string, options: { name: string }) {
+  const { name } = options
+
+  const cwd = join(process.cwd(), dir ?? '', name)
+
+  if (isExisting(cwd)) {
+    console.log(error(`文件夹 ${name} 已存在`))
+
+    return
+  }
+
+  mkdir(cwd)
+
+  try {
+    await execa('pnpm.cmd', ['init'], { cwd })
+
+    await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
+    mkdir(join(cwd, 'src'))
+    writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
+  }
+  catch (error) {
+    console.error(error)
+    rm(cwd)
+  }
 }
