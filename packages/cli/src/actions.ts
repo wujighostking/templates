@@ -11,6 +11,7 @@ import {
   frameworkSelection,
   isExisting,
   join,
+  mkdir,
   readFile,
   repoSelection,
   rm,
@@ -27,17 +28,61 @@ export async function createAction(dir: string) {
     }
 
     const repoType = await createSelect(repoSelection)
-    await createSelect(frameworkSelection)
 
     if (repoType === 'monorepo') {
-      // TODO
+      await createMonoRepoProject(dir)
     }
     else {
+      await createSelect(frameworkSelection)
       await createProject(dir)
     }
   }
 
   await create()
+}
+
+async function createMonoRepoProject(dir: string) {
+  const cwd = join(process.cwd(), dir)
+  mkdir(dir)
+
+  try {
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript']
+
+    writeFile(join(cwd, '.gitignore'), ['.idea', 'node_modules', 'dist'].join('\n'))
+    await execa('git', ['init'], { stdio: 'inherit', cwd })
+
+    await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
+
+    await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'private=true'], { cwd })
+
+    await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
+
+    await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
+
+    await execa('npx', ['tsc', '--init'], { cwd })
+
+    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.lint=eslint --fix'], { cwd })
+
+    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={}', '--json'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.pre-commit=npx lint-staged'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.commit-msg=pnpm commitlint'], { cwd })
+
+    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged={}', '--json'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged.*=["eslint --fix"]', '--json'], { cwd })
+
+    await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
+
+    mkdir(join(dir, 'packages'))
+
+    writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - \'packages/*\'')
+    writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
+  }
+  catch (err) {
+    console.error(err)
+    rm(cwd)
+  }
 }
 
 async function createProject(dir: string) {
