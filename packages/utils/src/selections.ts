@@ -1,4 +1,4 @@
-import type { SelectOptions } from '@clack/prompts'
+import type { ConfirmOptions, SelectOptions } from '@clack/prompts'
 
 export const repoSelection: SelectOptions<string> = {
   message: '请选择仓库类型: ',
@@ -13,4 +13,9 @@ export const frameworkSelection: SelectOptions<string> = {
   options: [
     { value: 'vue', label: 'Vue' },
   ],
+}
+
+export const definiteSelection: ConfirmOptions = {
+  message: '是否添加到workspace',
+  initialValue: false,
 }

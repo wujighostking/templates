@@ -21,7 +21,8 @@
     "@babel/traverse": "^7.28.0",
     "@babel/types": "^7.28.2",
     "@clack/prompts": "^0.11.0",
-    "chalk": "^5.5.0"
+    "chalk": "^5.5.0",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",

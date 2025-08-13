@@ -6,7 +6,9 @@ import { generate } from '@babel/generator'
 import { parse } from '@babel/parser'
 import types from '@babel/types'
 import {
+  createConfirm,
   createSelect,
+  definiteSelection,
   error,
   frameworkSelection,
   isExisting,
@@ -18,6 +20,7 @@ import {
   writeFile,
 } from '@tm/utils'
 import { execa } from 'execa'
+import { parse as parseYaml, stringify } from 'yaml'
 
 export async function createAction(dir: string) {
   async function create() {
@@ -234,9 +237,31 @@ export async function pkgAction(dir: string, options: { name: string }) {
     await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
+
+    const shouldConfirm: boolean | symbol = await createConfirm(definiteSelection)
+
+    if (typeof shouldConfirm !== 'symbol' && shouldConfirm) {
+      pkgToWorkspace(join(process.cwd(), 'pnpm-workspace.yaml'), join(dir ?? '', name))
+    }
   }
   catch (error) {
     console.error(error)
     rm(cwd)
   }
+}
+
+function pkgToWorkspace(file: string, pkg: string) {
+  if (!isExisting(file)) {
+    console.log(error('pnpm-workspace.yaml 文件不存在'))
+
+    return
+  }
+
+  const sourceText = readFile(file)
+
+  const ast = parseYaml(sourceText)
+
+  ast.packages = [...(ast.packages || []), pkg.replaceAll('\\', '/')]
+
+  writeFile(file, stringify(ast))
 }
