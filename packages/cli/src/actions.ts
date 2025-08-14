@@ -22,6 +22,7 @@ import {
   readFile,
   repoSelection,
   rm,
+  warning,
   writeFile,
 } from '@tm/utils'
 import { execa } from 'execa'
@@ -330,4 +331,17 @@ export async function cpTemplateAction(template: string, projectName: string) {
     console.error(error)
     rm(projectPath)
   }
+}
+
+export function showTemplatesAction() {
+  const templatesPath = join(__dirname, 'templates')
+
+  if (!isExisting(templatesPath)) {
+    console.log(warning('模板列表为空'))
+
+    return
+  }
+
+  const templates = readdir(templatesPath)
+  console.log(templates.map(t => `* ${warning(t)}`).join('\n'))
 }
