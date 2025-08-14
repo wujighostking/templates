@@ -345,3 +345,15 @@ export function showTemplatesAction() {
   const templates = readdir(templatesPath)
   console.log(templates.map(t => `* ${warning(t)}`).join('\n'))
 }
+
+export function deleteTemplate(template: string) {
+  const templatePath = join(__dirname, 'templates', template)
+
+  if (!isExisting(templatePath)) {
+    console.log(error(`模板 ${template} 不存在`))
+
+    return
+  }
+
+  rm(templatePath)
+}

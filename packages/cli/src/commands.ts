@@ -1,4 +1,11 @@
-import { cpTemplateAction, createAction, pkgAction, setCustomTemplateAction, showTemplatesAction } from './actions'
+import {
+  cpTemplateAction,
+  createAction,
+  deleteTemplate,
+  pkgAction,
+  setCustomTemplateAction,
+  showTemplatesAction,
+} from './actions'
 
 interface CommandsOptions {
   command: { command: string, description?: string }
@@ -45,5 +52,12 @@ export const commands: CommandsOptions[] = [
       description: 'get all templates list',
     },
     action: showTemplatesAction,
+  },
+  {
+    command: {
+      command: 'delete <template>',
+      description: 'delete existing template',
+    },
+    action: deleteTemplate,
   },
 ]
