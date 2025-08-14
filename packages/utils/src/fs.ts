@@ -33,3 +33,36 @@ export function rm(path: string) {
 export function readFile(file: string) {
   return fs.readFileSync(file, { encoding: 'utf-8' })
 }
+
+export function readdir(path: string) {
+  return fs.readdirSync(path)
+}
+
+export function copy(src: string, dest: string, ignores?: string[]) {
+  const files = readdir(src)
+
+  if (!isExisting(dest)) {
+    mkdir(dest)
+  }
+
+  for (const file of files) {
+    if (ignores?.includes(file)) {
+      continue
+    }
+    const srcPath = join(src, file)
+    const destPath = join(dest, file)
+
+    const fileStat = stat(srcPath)
+
+    if (fileStat.isFile()) {
+      fs.copyFileSync(srcPath, destPath)
+    }
+    else {
+      copy(srcPath, destPath)
+    }
+  }
+}
+
+export function stat(path: string) {
+  return fs.statSync(path)
+}

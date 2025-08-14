@@ -1,4 +1,5 @@
 export * from './color'
 export * from './fs'
+export * from './path'
 export * from './select'
 export * from './selections'

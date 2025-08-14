@@ -6,14 +6,19 @@ import { generate } from '@babel/generator'
 import { parse } from '@babel/parser'
 import types from '@babel/types'
 import {
+  __dirname,
+  copy,
   createConfirm,
   createSelect,
   definiteSelection,
   error,
   frameworkSelection,
+  isAbsolutePath,
   isExisting,
   join,
   mkdir,
+  parsePath,
+  readdir,
   readFile,
   repoSelection,
   rm,
@@ -264,4 +269,37 @@ function pkgToWorkspace(file: string, pkg: string) {
   ast.packages = [...(ast.packages || []), pkg.replaceAll('\\', '/')]
 
   writeFile(file, stringify(ast))
+}
+
+export function setCustomTemplateAction(dirname: string, template?: string) {
+  // region 路径名、模板名归一化
+  if (!isAbsolutePath(dirname)) {
+    dirname = join(process.cwd(), dirname)
+  }
+
+  if (!isExisting(dirname)) {
+    console.log(`路径 ${dirname} 不存在`)
+
+    return
+  }
+
+  if (!template) {
+    template = parsePath(dirname).name
+  }
+  // endregion
+
+  const templatesDir = join(__dirname, 'templates')
+  if (!isExisting(templatesDir)) {
+    mkdir(templatesDir)
+  }
+
+  const existingTemplates = readdir(templatesDir)
+  if (existingTemplates.includes(template)) {
+    console.log(error(`模板名 ${template} 已存在`))
+
+    return
+  }
+
+  const templatePath = join(templatesDir, template)
+  copy(dirname, templatePath, ['node_modules', '.git'])
 }
