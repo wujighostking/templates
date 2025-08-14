@@ -303,3 +303,31 @@ export function setCustomTemplateAction(dirname: string, template?: string) {
   const templatePath = join(templatesDir, template)
   copy(dirname, templatePath, ['node_modules', '.git'])
 }
+
+export async function cpTemplateAction(template: string, projectName: string) {
+  projectName ??= template
+
+  const templatePath = join(__dirname, 'templates', template)
+  if (!isExisting(templatePath)) {
+    console.log(error(`模板 ${template} 不存在`))
+
+    return
+  }
+
+  const projectPath = join(process.cwd(), projectName)
+  if (isExisting(projectPath)) {
+    console.log(error(`目录 ${projectName} 已存在`))
+
+    return
+  }
+
+  try {
+    copy(templatePath, projectPath)
+
+    await execa('git', ['init'], { cwd: projectPath })
+  }
+  catch (error) {
+    console.error(error)
+    rm(projectPath)
+  }
+}

@@ -1,4 +1,4 @@
-import { createAction, pkgAction, setCustomTemplateAction } from './actions'
+import { cpTemplateAction, createAction, pkgAction, setCustomTemplateAction } from './actions'
 
 interface CommandsOptions {
   command: { command: string, description?: string }
@@ -31,5 +31,12 @@ export const commands: CommandsOptions[] = [
       description: 'set custom template',
     },
     action: setCustomTemplateAction,
+  },
+  {
+    command: {
+      command: 'cp <template> [projectName]',
+      description: 'copy template to current dir',
+    },
+    action: cpTemplateAction,
   },
 ]
