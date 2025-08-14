@@ -24,7 +24,7 @@ export const commands: CommandsOptions[] = [
   {
     command: {
       command: 'pkg [dir]',
-      description: 'Add a package into project',
+      description: 'Add a package to project',
     },
     options: {
       option: '-n, --name <name>',
@@ -53,7 +53,7 @@ export const commands: CommandsOptions[] = [
   {
     command: {
       command: 'ls',
-      description: 'get all templates list',
+      description: 'get templates list',
     },
     action: showTemplatesAction,
   },
