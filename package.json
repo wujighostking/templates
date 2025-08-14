@@ -1,5 +1,5 @@
 {
-  "name": "tm",
+  "name": "tmes",
   "type": "module",
   "version": "1.0.0",
   "private": true,
@@ -16,17 +16,11 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/generator": "^7.28.0",
-    "@babel/parser": "^7.28.0",
-    "@babel/traverse": "^7.28.0",
-    "@babel/types": "^7.28.2",
-    "@clack/prompts": "^0.11.0",
-    "chalk": "^5.5.0",
-    "yaml": "^2.8.1"
+    "@babel/traverse": "^7.28.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",
+    "@changesets/cli": "^2.29.5",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@types/babel__core": "^7.20.5",

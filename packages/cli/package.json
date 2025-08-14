@@ -1,15 +1,14 @@
 {
-  "name": "@tm/cli",
+  "name": "@tmes/cli",
   "type": "module",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "create-template": "dist/index.js",
-    "tm": "dist/index.js",
-    "@tm/cli": "dist/index.js"
+    "tm": "dist/index.js"
   },
   "files": [
     "*.d.ts",
@@ -19,7 +18,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/generator": "^7.28.0",
+    "@babel/parser": "^7.28.0",
+    "@babel/types": "^7.28.2",
+    "@tmes/utils": "workspace:*",
     "cac": "^6.7.14",
-    "execa": "^9.6.0"
+    "execa": "^9.6.0",
+    "yaml": "^2.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
