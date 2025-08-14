@@ -10,7 +10,8 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "build": "tsdown",
+    "dev": "tsdown --config=tsdown.config.dev.ts",
+    "build": "tsdown --config=tsdown.config.build.ts",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix"
   },
