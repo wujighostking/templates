@@ -272,7 +272,7 @@ function pkgToWorkspace(file: string, pkg: string) {
   writeFile(file, stringify(ast))
 }
 
-export function setCustomTemplateAction(dirname: string, template?: string) {
+export function setCustomTemplateAction(dirname: string, template?: string, options?: { ignores: string[] }) {
   // region 路径名、模板名归一化
   if (!isAbsolutePath(dirname)) {
     dirname = join(process.cwd(), dirname)
@@ -302,7 +302,7 @@ export function setCustomTemplateAction(dirname: string, template?: string) {
   }
 
   const templatePath = join(templatesDir, template)
-  copy(dirname, templatePath, ['node_modules', '.git'])
+  copy(dirname, templatePath, ['node_modules', '.git', ...(options?.ignores ?? [])])
 }
 
 export async function cpTemplateAction(template: string, projectName: string) {

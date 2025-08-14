@@ -37,6 +37,10 @@ export const commands: CommandsOptions[] = [
       command: 'set <dirname> [templateName]',
       description: 'set custom template',
     },
+    options: {
+      option: '-i, --ignores [ignores]',
+      description: 'ignore custom template file or directory',
+    },
     action: setCustomTemplateAction,
   },
   {
