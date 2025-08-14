@@ -1,7 +1,7 @@
 ## Installation
 
 ```
-npm install @tm/cli -g
+cd packages/cli && npm link
 ```
 
 create \<projectName> 创建项目
