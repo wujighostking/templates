@@ -227,6 +227,12 @@ function addGitIgnoreFile(file: string) {
 export async function pkgAction(dir: string, options: { name: string }) {
   const { name } = options
 
+  if (!name) {
+    console.log((`请填写 ${error('-n, --name <name>')} 选项`))
+
+    return
+  }
+
   const cwd = join(process.cwd(), dir ?? '', name)
 
   if (isExisting(cwd)) {
@@ -244,9 +250,9 @@ export async function pkgAction(dir: string, options: { name: string }) {
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
 
-    const shouldConfirm: boolean | symbol = await createConfirm(definiteSelection)
+    const shouldConfirm = await createConfirm(definiteSelection)
 
-    if (typeof shouldConfirm !== 'symbol' && shouldConfirm) {
+    if (shouldConfirm) {
       pkgToWorkspace(join(process.cwd(), 'pnpm-workspace.yaml'), join(dir ?? '', name))
     }
   }
