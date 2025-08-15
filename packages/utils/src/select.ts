@@ -11,5 +11,10 @@ export async function createSelect(selectOptions: SelectOptions<string>) {
 }
 
 export async function createConfirm(confirmOptions: ConfirmOptions) {
-  return await confirm({ ...confirmOptions })
+  try {
+    return await confirm({ ...confirmOptions }).then(result => typeof result === 'boolean' ? result : false)
+  }
+  catch {
+    return false
+  }
 }
