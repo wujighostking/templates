@@ -13,10 +13,20 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/generator": "^7.28.0",
+    "@babel/parser": "^7.28.0",
+    "@babel/types": "^7.28.2",
     "@clack/prompts": "^0.11.0",
-    "chalk": "^5.5.0"
+    "chalk": "^5.5.0",
+    "execa": "^9.6.0",
+    "yaml": "^2.8.1"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.27.0"
   }
 }

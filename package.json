@@ -15,17 +15,11 @@
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix"
   },
-  "dependencies": {
-    "@babel/traverse": "^7.28.0"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",
     "@changesets/cli": "^2.29.5",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@types/babel__core": "^7.20.5",
-    "@types/babel__generator": "^7.27.0",
-    "@types/babel__traverse": "^7.28.0",
     "@types/node": "^24.2.1",
     "eslint": "^9.32.0",
     "eslint-plugin-format": "^1.0.1",

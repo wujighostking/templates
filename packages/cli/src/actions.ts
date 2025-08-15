@@ -1,10 +1,5 @@
-import type { NodePath } from '@babel/core'
-import type { ArrayExpression } from '@babel/types'
+import type { ArrayExpression, NodePath } from '@tmes/utils'
 import * as process from 'node:process'
-import { traverse } from '@babel/core'
-import { generate } from '@babel/generator'
-import { parse } from '@babel/parser'
-import types from '@babel/types'
 import {
   __dirname,
   copy,
@@ -12,21 +7,26 @@ import {
   createSelect,
   definiteSelection,
   error,
+  execa,
   frameworkSelection,
+  generate,
   isAbsolutePath,
   isExisting,
   join,
   mkdir,
+  parse,
   parsePath,
+  parseYaml,
   readdir,
   readFile,
   repoSelection,
   rm,
+  stringify,
+  traverse,
+  types,
   warning,
   writeFile,
 } from '@tm/utils'
-import { execa } from 'execa'
-import { parse as parseYaml, stringify } from 'yaml'
 
 export async function createAction(dir: string) {
   async function create() {
