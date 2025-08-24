@@ -27,6 +27,7 @@ import {
   warning,
   writeFile,
 } from '@tm/utils'
+import { commitConfig, gitignore, unoConfig } from 'packages/utils/src/configFiles'
 
 export async function createAction(dir: string) {
   async function create() {
@@ -57,7 +58,7 @@ async function createMonoRepoProject(dir: string) {
   try {
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript']
 
-    writeFile(join(cwd, '.gitignore'), ['.idea', 'node_modules', 'dist'].join('\n'))
+    writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
     await execa('git', ['init'], { stdio: 'inherit', cwd })
 
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
@@ -85,7 +86,7 @@ async function createMonoRepoProject(dir: string) {
 
     mkdir(join(cwd, 'packages'))
 
-    writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - \'packages/*\'')
+    writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*')
     writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
   }
   catch (err) {
@@ -119,8 +120,8 @@ async function createProject(dir: string) {
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
 
-    writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
-    writeFile(join(cwd, 'uno.config.ts'), ['import { defineConfig } from \'unocss\'', 'export default defineConfig({', '  rules: [', '    [\'center\', { \'display\': \'flex\', \'justify-content\': \'center\', \'align-items\': \'center\' }],', '  ],', '})'].join('\n'))
+    writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
+    writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
 
     mainAddUnoCss(join(cwd, 'src', 'main.ts'))
     viteConfig(join(cwd, 'vite.config.ts'))
