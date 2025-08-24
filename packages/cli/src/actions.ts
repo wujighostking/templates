@@ -2,6 +2,7 @@ import type { ArrayExpression, NodePath } from '@tmes/utils'
 import * as process from 'node:process'
 import {
   __dirname,
+  buildToolsSelection,
   copy,
   createConfirm,
   createSelect,
@@ -23,11 +24,12 @@ import {
   rm,
   stringify,
   traverse,
+  tsdownBuildConfig,
   types,
   warning,
   writeFile,
 } from '@tm/utils'
-import { commitConfig, gitignore, unoConfig } from 'packages/utils/src/configFiles'
+import { commitConfig, gitignore, tsdownConfig, unoConfig, viteConfig, workspaceConfig } from 'packages/utils/src/configFiles'
 
 export async function createAction(dir: string) {
   async function create() {
@@ -56,7 +58,9 @@ async function createMonoRepoProject(dir: string) {
   mkdir(cwd)
 
   try {
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript']
+    const buildTool = await createSelect(buildToolsSelection) as 'vite' | 'tsdown'
+
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
     writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
     await execa('git', ['init'], { stdio: 'inherit', cwd })
@@ -72,6 +76,16 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('npx', ['tsc', '--init'], { cwd })
 
+    if (buildTool === 'tsdown') {
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
+    }
+    else if (buildTool === 'vite') {
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
+    }
+
     await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
     await execa('pnpm.cmd', ['pkg', 'set', 'scripts.lint=eslint --fix'], { cwd })
 
@@ -86,8 +100,10 @@ async function createMonoRepoProject(dir: string) {
 
     mkdir(join(cwd, 'packages'))
 
-    writeFile(join(cwd, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*')
-    writeFile(join(cwd, 'commitlint.config.js'), 'export default { extends: [\'@commitlint/config-conventional\'] }')
+    writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
+    writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
+
+    createBuildToolConfig(buildTool, cwd)
   }
   catch (err) {
     console.error(err)
@@ -124,7 +140,7 @@ async function createProject(dir: string) {
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
 
     mainAddUnoCss(join(cwd, 'src', 'main.ts'))
-    viteConfig(join(cwd, 'vite.config.ts'))
+    setViteConfig(join(cwd, 'vite.config.ts'))
     addTypings(join(cwd, 'env.d.ts'))
     addGitIgnoreFile(join(cwd, '.gitignore'))
   }
@@ -160,7 +176,7 @@ function mainAddUnoCss(file: string) {
   writeFile(file, targetCode)
 }
 
-function viteConfig(file: string) {
+function setViteConfig(file: string) {
   const sourceText = readFile(file)
   const ast = parse(sourceText, { sourceType: 'module' })
 
@@ -363,4 +379,25 @@ export function deleteTemplate(template: string) {
   }
 
   rm(templatePath)
+}
+
+function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string) {
+  switch (buildTool) {
+    case 'vite':
+      createViteConfig(cwd)
+      break
+
+    case 'tsdown':
+      createTsdownConfig(cwd)
+      break
+  }
+}
+
+function createViteConfig(cwd: string) {
+  writeFile(join(cwd, 'vite.config.ts'), viteConfig.join('\n'))
+}
+
+function createTsdownConfig(cwd: string) {
+  writeFile(join(cwd, 'tsdown.config.dev.ts'), tsdownConfig.join('\n'))
+  writeFile(join(cwd, 'tsdown.config.build.ts'), tsdownBuildConfig.join('\n'))
 }

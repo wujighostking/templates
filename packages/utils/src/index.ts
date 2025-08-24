@@ -1,5 +1,6 @@
 export * from './babel'
 export * from './color'
+export * from './configFiles'
 export * from './execa'
 export * from './fs'
 export * from './path'
