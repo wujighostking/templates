@@ -1,5 +1,16 @@
 # @tmes/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- feat, fix
+
+### Patch Changes
+
+- Updated dependencies
+  - @tmes/utils@1.2.0
+
 ## 1.1.0
 
 ### Minor Changes
