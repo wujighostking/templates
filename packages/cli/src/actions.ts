@@ -67,6 +67,7 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
 
+    await execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
     await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
     await execa('pnpm.cmd', ['pkg', 'set', 'private=true'], { cwd })
 
