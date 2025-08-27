@@ -18,6 +18,7 @@ import {
   parse,
   parsePath,
   parseYaml,
+  projectTypeSelection,
   readdir,
   readFile,
   repoSelection,
@@ -27,6 +28,7 @@ import {
   tsdownBuildConfig,
   types,
   warning,
+  webIndexHtmlConfig,
   writeFile,
 } from '@tm/utils'
 import { commitConfig, gitignore, tsdownConfig, unoConfig, viteConfig, workspaceConfig } from 'packages/utils/src/configFiles'
@@ -58,7 +60,12 @@ async function createMonoRepoProject(dir: string) {
   mkdir(cwd)
 
   try {
+    let projectType: 'node' | 'web'
     const buildTool = await createSelect(buildToolsSelection) as 'vite' | 'tsdown'
+
+    if (buildTool === 'vite') {
+      projectType = await createSelect(projectTypeSelection) as 'node' | 'web'
+    }
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
@@ -85,6 +92,8 @@ async function createMonoRepoProject(dir: string) {
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
+
+      createProjectType(projectType!, cwd)
     }
 
     await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
@@ -401,4 +410,11 @@ function createViteConfig(cwd: string) {
 function createTsdownConfig(cwd: string) {
   writeFile(join(cwd, 'tsdown.config.dev.ts'), tsdownConfig.join('\n'))
   writeFile(join(cwd, 'tsdown.config.build.ts'), tsdownBuildConfig.join('\n'))
+}
+
+function createProjectType(projectType: 'node' | 'web', cwd: string) {
+  if (projectType === 'node') { /* empty */ }
+  else if (projectType === 'web') {
+    writeFile(join(cwd, 'index.html'), webIndexHtmlConfig.join('\n'))
+  }
 }

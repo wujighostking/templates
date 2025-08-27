@@ -27,3 +27,11 @@ export const buildToolsSelection: SelectOptions<string> = {
     { value: 'tsdown', label: 'tsdown' },
   ],
 }
+
+export const projectTypeSelection: SelectOptions<string> = {
+  message: '请选择项目类型',
+  options: [
+    { value: 'node', label: 'node' },
+    { value: 'web', label: 'web' },
+  ],
+}
