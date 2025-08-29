@@ -280,7 +280,33 @@ export async function pkgAction(dir: string, options: { name: string }) {
     const shouldConfirm = await createConfirm(definiteSelection)
 
     if (shouldConfirm) {
-      pkgToWorkspace(join(process.cwd(), 'pnpm-workspace.yaml'), join(dir ?? '', name))
+      const filename = 'pnpm-workspace.yaml'
+      let cwd = process.cwd()
+      let workspacePath = join(cwd, filename)
+      let workspaceIsExists = isExisting(workspacePath)
+      let packageName = join('')
+
+      while (!workspaceIsExists) {
+        const { dir, base, root } = parsePath(cwd)
+
+        cwd = dir
+        packageName = join(base, packageName)
+
+        workspacePath = join(cwd, filename)
+        workspaceIsExists = isExisting(workspacePath)
+
+        if (dir === root && !workspaceIsExists) {
+          console.log(`没有找到 ${error(filename)} 文件`)
+
+          return
+        }
+      }
+
+      dir = dir ?? packageName
+
+      if (workspaceIsExists) {
+        pkgToWorkspace(workspacePath, join(dir ?? '', name))
+      }
     }
   }
   catch (error) {
