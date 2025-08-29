@@ -23,7 +23,7 @@ export const commands: CommandsOptions[] = [
   },
   {
     command: {
-      command: 'pkg [dir]',
+      command: 'pkg [dir] [name]',
       description: 'Add a package to project',
     },
     options: {

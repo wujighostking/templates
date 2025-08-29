@@ -251,7 +251,19 @@ function addGitIgnoreFile(file: string) {
   writeFile(file, `typings/auto-imports.d.ts`, { flag: 'a' })
 }
 
-export async function pkgAction(dir: string, options: { name: string }) {
+export async function pkgAction(dir: string | undefined, _name: string | undefined, options: { name: string }) {
+  /**
+   * 100
+   * 110
+   */
+  if (dir && !_name && !options.name) {
+    options.name = dir
+    dir = undefined
+  }
+  else if (dir && _name && !options.name) {
+    options.name = _name
+  }
+
   const { name } = options
 
   if (!name) {
