@@ -9,9 +9,9 @@ create \<projectName> 创建项目
 tm create project
 ```
 
-pkg [name] 添加一个包到项目中
+pkg [dir] \[packageName]/-n=packageName 添加一个包到项目dir目录中
 ```
-tm pkg play
+tm pkg packages play/-n=play
 ```
 
 set \<dirname> [templateName] 设置自定义模板
