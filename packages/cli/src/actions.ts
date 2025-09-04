@@ -287,6 +287,10 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
 
     await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
     await execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'main=dist/index.js'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'module=dist/index.js'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'types=dist/index..d.ts'], { cwd })
+
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
 
