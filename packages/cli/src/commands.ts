@@ -9,9 +9,11 @@ import {
 
 interface CommandsOptions {
   command: { command: string, description?: string }
-  options?: { option: string, description: string }
+  options?: Options | Options[]
   action: (...args: any[]) => void
 }
+interface Options { option: string, description: string, config?: OptionConfig }
+interface OptionConfig { type: string[] }
 
 export const commands: CommandsOptions[] = [
   {
@@ -26,10 +28,16 @@ export const commands: CommandsOptions[] = [
       command: 'pkg [dir] [name]',
       description: 'Add a package to project',
     },
-    options: {
-      option: '-n, --name <name>',
-      description: 'package name',
-    },
+    options: [
+      {
+        option: '-n, --name <name>',
+        description: 'package name',
+      },
+      {
+        option: '-a, --add [isAddWorkSpace]',
+        description: 'add this package to workspace file',
+      },
+    ],
     action: pkgAction,
   },
   {

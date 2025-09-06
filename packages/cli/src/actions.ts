@@ -14,7 +14,10 @@ import {
   generate,
   gitignore,
   isAbsolutePath,
+  isBoolean,
+  isEmpty,
   isExisting,
+  isString,
   join,
   mkdir,
   parse,
@@ -26,12 +29,16 @@ import {
   repoSelection,
   rm,
   stringify,
+  stringToBoolean,
   traverse,
   tsdownBuildConfig,
   tsdownConfig,
   types,
   unoConfig,
   viteConfig,
+  viteVueConfig,
+  vueAppFile,
+  vueMainFile,
   warning,
   webIndexHtmlConfig,
   workspaceConfig,
@@ -66,15 +73,33 @@ async function createMonoRepoProject(dir: string) {
 
   try {
     let projectType: 'node' | 'web'
+    let framework: string | undefined
     const buildTool = await createSelect(buildToolsSelection) as 'vite' | 'tsdown'
 
     if (buildTool === 'vite') {
       projectType = await createSelect(projectTypeSelection) as 'node' | 'web'
+
+      if (projectType === 'web') {
+        const frameworkSelected = await createSelect(frameworkSelection)
+        framework = isString(frameworkSelected) ? frameworkSelected : undefined
+      }
     }
+
+    createBuildToolConfig(buildTool, cwd, framework)
+
+    writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
+
+    mkdir(join(cwd, 'packages'))
+
+    writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
+    writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
-    writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
+    if (framework === 'vue') {
+      devDependencies.push('@vitejs/plugin-vue')
+    }
+
     await execa('git', ['init'], { stdio: 'inherit', cwd })
 
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
@@ -87,19 +112,11 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
+    if (isString(framework)) {
+      await execa('pnpm.cmd', ['install', framework], { stdio: 'inherit', cwd })
+    }
+
     await execa('npx', ['tsc', '--init'], { cwd })
-
-    if (buildTool === 'tsdown') {
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`], { cwd })
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
-    }
-    else if (buildTool === 'vite') {
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
-
-      createProjectType(projectType!, cwd)
-    }
 
     await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
     await execa('pnpm.cmd', ['pkg', 'set', 'scripts.lint=eslint --fix'], { cwd })
@@ -113,12 +130,21 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
 
-    mkdir(join(cwd, 'packages'))
+    if (buildTool === 'tsdown') {
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
+    }
+    else if (buildTool === 'vite') {
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
+      await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
 
-    writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
-    writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
+      await createProjectType(projectType!, cwd)
 
-    createBuildToolConfig(buildTool, cwd)
+      if (isString(framework)) {
+        createApp(framework, cwd)
+      }
+    }
   }
   catch (err) {
     console.error(err)
@@ -256,7 +282,7 @@ function addGitIgnoreFile(file: string) {
   writeFile(file, `typings/auto-imports.d.ts`, { flag: 'a' })
 }
 
-export async function pkgAction(dir: string | undefined, _name: string | undefined, options: { name: string }) {
+export async function pkgAction(dir: string | undefined, _name: string | undefined, options: { name: string, add: boolean }) {
   /**
    * 100
    * 110
@@ -269,7 +295,7 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
     options.name = _name
   }
 
-  const { name } = options
+  const { name, add } = options
 
   if (!name) {
     console.log((`请填写 ${error('-n, --name <name>')} 选项`))
@@ -288,18 +314,26 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   mkdir(cwd)
 
   try {
-    await execa('pnpm.cmd', ['init'], { cwd })
+    await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'main=dist/index.js'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'module=dist/index.js'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'types=dist/index.d.ts'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'main=dist/index.js'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'module=dist/index.js'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'types=dist/index.d.ts'], { cwd })
 
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
 
-    const shouldConfirm = await createConfirm(definiteSelection)
+    let isAddToWorkspace: boolean | undefined
+    if (isString(add)) {
+      isAddToWorkspace = stringToBoolean(add)
+    }
+    else if (isBoolean(add)) {
+      isAddToWorkspace = add
+    }
+
+    const shouldConfirm = isEmpty(isAddToWorkspace) ? await createConfirm(definiteSelection) : isAddToWorkspace
 
     if (shouldConfirm) {
       const filename = 'pnpm-workspace.yaml'
@@ -439,10 +473,10 @@ export function deleteTemplate(template: string) {
   rm(templatePath)
 }
 
-function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string) {
+function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string, framework: string | undefined) {
   switch (buildTool) {
     case 'vite':
-      createViteConfig(cwd)
+      createViteConfig(cwd, framework)
       break
 
     case 'tsdown':
@@ -451,8 +485,13 @@ function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string) {
   }
 }
 
-function createViteConfig(cwd: string) {
-  writeFile(join(cwd, 'vite.config.ts'), viteConfig.join('\n'))
+function createViteConfig(cwd: string, framework: string | undefined) {
+  if (framework === 'vue') {
+    writeFile(join(cwd, 'vite.config.ts'), viteVueConfig.join('\n'))
+  }
+  else {
+    writeFile(join(cwd, 'vite.config.ts'), viteConfig.join('\n'))
+  }
 }
 
 function createTsdownConfig(cwd: string) {
@@ -460,9 +499,17 @@ function createTsdownConfig(cwd: string) {
   writeFile(join(cwd, 'tsdown.config.build.ts'), tsdownBuildConfig.join('\n'))
 }
 
-function createProjectType(projectType: 'node' | 'web', cwd: string) {
+async function createProjectType(projectType: 'node' | 'web', cwd: string) {
   if (projectType === 'node') { /* empty */ }
   else if (projectType === 'web') {
     writeFile(join(cwd, 'index.html'), webIndexHtmlConfig.join('\n'))
+    await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+  }
+}
+
+function createApp(framework: string, cwd: string) {
+  if (framework === 'vue') {
+    writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile.join('\n'), { flag: 'w' })
+    writeFile(join(cwd, 'packages', 'main', 'src', 'index.ts'), vueMainFile.join('\n'))
   }
 }

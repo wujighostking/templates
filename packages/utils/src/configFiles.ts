@@ -36,6 +36,18 @@ export const viteConfig = [
   '',
 ]
 
+export const viteVueConfig = [
+  'import { defineConfig } from \'vite\'',
+  'import vue from \'@vitejs/plugin-vue\'',
+  '',
+  'export default defineConfig({',
+  '  plugins: [',
+  '    vue(),',
+  '  ],',
+  '})',
+  '',
+]
+
 export const tsdownConfig = [
   'import type { UserConfig } from \'tsdown\'',
   'import { readdirSync } from \'node:fs\'',
@@ -76,7 +88,32 @@ export const webIndexHtmlConfig = [
   '  </head>',
   '  <body>',
   '     <div id="app"></div>',
-  '     <script type="module" src=""></script>',
+  '     <script type="module" src="./packages/main/src/index.ts"></script>',
   '  </body>',
   '</html>',
+]
+
+export const vueMainFile = [
+  'import { createApp } from \'vue\'',
+  'import App from \'./App.vue\'',
+  '',
+  'const app = createApp(App)',
+  '',
+  'app.mount(\'#app\')',
+  '',
+]
+
+export const vueAppFile = [
+  '<script setup lang="ts">',
+  '',
+  '</script>',
+  '',
+  '<template>',
+  '  <div>app</div>',
+  '</template>',
+  '',
+  '<style scoped>',
+  '',
+  '</style>',
+  '',
 ]
