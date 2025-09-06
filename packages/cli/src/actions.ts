@@ -3,6 +3,7 @@ import * as process from 'node:process'
 import {
   __dirname,
   buildToolsSelection,
+  commitConfig,
   copy,
   createConfirm,
   createSelect,
@@ -11,6 +12,7 @@ import {
   execa,
   frameworkSelection,
   generate,
+  gitignore,
   isAbsolutePath,
   isExisting,
   join,
@@ -26,12 +28,15 @@ import {
   stringify,
   traverse,
   tsdownBuildConfig,
+  tsdownConfig,
   types,
+  unoConfig,
+  viteConfig,
   warning,
   webIndexHtmlConfig,
+  workspaceConfig,
   writeFile,
 } from '@tm/utils'
-import { commitConfig, gitignore, tsdownConfig, unoConfig, viteConfig, workspaceConfig } from 'packages/utils/src/configFiles'
 
 export async function createAction(dir: string) {
   async function create() {
