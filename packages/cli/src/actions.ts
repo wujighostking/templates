@@ -105,8 +105,7 @@ async function createMonoRepoProject(dir: string) {
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
 
     await execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'private=true'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'private=true'], { cwd })
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
@@ -324,6 +323,7 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
     execa('pnpm.cmd', ['pkg', 'set', 'main=dist/index.js'], { cwd })
     execa('pnpm.cmd', ['pkg', 'set', 'module=dist/index.js'], { cwd })
     execa('pnpm.cmd', ['pkg', 'set', 'types=dist/index.d.ts'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
 
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
