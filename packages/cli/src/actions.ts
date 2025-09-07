@@ -35,7 +35,7 @@ import {
   tsdownConfig,
   types,
   unoConfig,
-  viteConfig,
+  viteNodeConfig,
   viteVueConfig,
   vueAppFile,
   vueMainFile,
@@ -135,14 +135,17 @@ async function createMonoRepoProject(dir: string) {
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
     }
     else if (buildTool === 'vite') {
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
       await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
 
       await createProjectType(projectType!, cwd)
 
       if (isString(framework)) {
+        await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
+      }
+      else {
+        await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
       }
     }
   }
@@ -490,7 +493,7 @@ function createViteConfig(cwd: string, framework: string | undefined) {
     writeFile(join(cwd, 'vite.config.ts'), viteVueConfig.join('\n'))
   }
   else {
-    writeFile(join(cwd, 'vite.config.ts'), viteConfig.join('\n'))
+    writeFile(join(cwd, 'vite.config.ts'), viteNodeConfig.join('\n'))
   }
 }
 
@@ -500,7 +503,9 @@ function createTsdownConfig(cwd: string) {
 }
 
 async function createProjectType(projectType: 'node' | 'web', cwd: string) {
-  if (projectType === 'node') { /* empty */ }
+  if (projectType === 'node') {
+    await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+  }
   else if (projectType === 'web') {
     writeFile(join(cwd, 'index.html'), webIndexHtmlConfig.join('\n'))
     await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })

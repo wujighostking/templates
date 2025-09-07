@@ -29,11 +29,19 @@ export const unoConfig = ['import { defineConfig } from \'unocss\'', 'export def
 
 export const workspaceConfig = ['packages:\n  - packages/*']
 
-export const viteConfig = [
-  'import { defineConfig } from \'vite\'',
-  '',
-  'export default defineConfig({})',
-  '',
+export const viteNodeConfig = [
+  'export default ({ mode }: { mode: string }) => ({',
+  '  build: {',
+  '    lib: {',
+  '      entry: [\'./packages/main/src/index.ts\'],',
+  '      formats: [\'es\'],',
+  '      fileName: \'index\',',
+  '    },',
+  '    watch: mode === \'development\' ? { include: [\'packages/**/*\'] } : null,',
+  '    minify: true,',
+  '    sourcemap: true,',
+  '  },',
+  '})',
 ]
 
 export const viteVueConfig = [
