@@ -100,12 +100,31 @@ async function createMonoRepoProject(dir: string) {
       devDependencies.push('@vitejs/plugin-vue')
     }
 
-    await execa('git', ['init'], { stdio: 'inherit', cwd })
+    execa('git', ['init'], { stdio: 'inherit', cwd })
 
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'private=true'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
+
+    execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
+
+    if (buildTool === 'tsdown') {
+      execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`, `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
+    }
+    else if (buildTool === 'vite') {
+      execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`, `scripts.preview=${buildTool} preview`], { cwd })
+
+      await createProjectType(projectType!, cwd)
+
+      if (isString(framework)) {
+        execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
+        createApp(framework, cwd)
+      }
+      else {
+        execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
+      }
+    }
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
@@ -117,36 +136,7 @@ async function createMonoRepoProject(dir: string) {
 
     await execa('npx', ['tsc', '--init'], { cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.lint=eslint --fix'], { cwd })
-
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={}', '--json'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.pre-commit=npx lint-staged'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.commit-msg=pnpm commitlint'], { cwd })
-
-    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged={}', '--json'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged.*=["eslint --fix"]', '--json'], { cwd })
-
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
-
-    if (buildTool === 'tsdown') {
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`], { cwd })
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
-    }
-    else if (buildTool === 'vite') {
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`], { cwd })
-      await execa('pnpm.cmd', ['pkg', 'set', `scripts.preview=${buildTool} preview`], { cwd })
-
-      await createProjectType(projectType!, cwd)
-
-      if (isString(framework)) {
-        await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
-        createApp(framework, cwd)
-      }
-      else {
-        await execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
-      }
-    }
   }
   catch (err) {
     console.error(err)
@@ -163,21 +153,9 @@ async function createProject(dir: string) {
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.lint=eslint --fix'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={}', '--json'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.pre-commit=npx lint-staged'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks.commit-msg=pnpm commitlint'], { cwd })
-
-    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged={}', '--json'], { cwd })
-    await execa('pnpm.cmd', ['pkg', 'set', 'lint-staged.*=["eslint --fix"]', '--json'], { cwd })
-
-    await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
-
-    await execa('git', ['init'], { stdio: 'inherit', cwd })
-
-    await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
 
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
@@ -186,6 +164,12 @@ async function createProject(dir: string) {
     setViteConfig(join(cwd, 'vite.config.ts'))
     addTypings(join(cwd, 'env.d.ts'))
     addGitIgnoreFile(join(cwd, '.gitignore'))
+
+    await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
+
+    await execa('git', ['init'], { stdio: 'inherit', cwd })
+
+    await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
   }
   catch (error) {
     console.error('执行失败:', error)
@@ -318,12 +302,9 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   try {
     await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
 
-    execa('pnpm.cmd', ['pkg', 'set', 'type=module'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'set', 'main=dist/index.js'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'set', 'module=dist/index.js'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'set', 'types=dist/index.d.ts'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'main=dist/index.js', 'module=dist/index.js', 'types=dist/index.d.ts'], { cwd })
     execa('pnpm.cmd', ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
+    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
 
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
