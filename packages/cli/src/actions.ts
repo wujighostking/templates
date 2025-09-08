@@ -401,7 +401,10 @@ export function setCustomTemplateAction(dirname: string, template?: string, opti
   }
 
   const templatePath = join(templatesDir, template)
-  copy(dirname, templatePath, ['node_modules', '.git', ...(options?.ignores ?? [])])
+
+  const ignoreFiles = ['.git', 'node_modules', ...(options?.ignores ?? [])]
+
+  copy(dirname, templatePath, ignoreFiles)
 }
 
 export async function cpTemplateAction(template: string, projectName: string) {

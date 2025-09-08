@@ -48,6 +48,9 @@ export const commands: CommandsOptions[] = [
     options: {
       option: '-i, --ignores [ignores]',
       description: 'ignore custom template file or directory',
+      config: {
+        type: ['string'],
+      },
     },
     action: setCustomTemplateAction,
   },

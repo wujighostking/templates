@@ -1,17 +1,19 @@
 import type { WriteFileOptions } from 'node:fs'
 import * as fs from 'node:fs'
+import { EOL } from 'node:os'
 import * as path from 'node:path'
+import { createIgnoreParse, ignoreFile } from './ignore'
 
 export function isExisting(path: string): boolean {
   return fs.existsSync(path)
 }
 
 export function isFile(file: string): boolean {
-  return fs.existsSync(file)
+  return stat(file).isFile()
 }
 
 export function isDir(dir: string): boolean {
-  return fs.existsSync(dir)
+  return stat(dir).isDirectory()
 }
 
 export function mkdir(dir: string) {
@@ -38,27 +40,39 @@ export function readdir(path: string) {
   return fs.readdirSync(path)
 }
 
-export function copy(src: string, dest: string, ignores?: string[]) {
+let ignoreParse: ReturnType<typeof createIgnoreParse>
+export function copy(src: string, dest: string, ignores?: string[], autoIgnoreFiles: boolean = true) {
   const files = readdir(src)
 
   if (!isExisting(dest)) {
     mkdir(dest)
   }
 
+  if (autoIgnoreFiles) {
+    const gitignorePath = join(src, '.gitignore')
+    if (isExisting(gitignorePath)) {
+      ;(ignores ??= []).push(...readFile(gitignorePath).split(EOL))
+
+      ignoreParse = createIgnoreParse(ignores)
+    }
+  }
+  else {
+    ignores ??= []
+    ignoreParse = createIgnoreParse(ignores)
+  }
+
   for (const file of files) {
-    if (ignores?.includes(file)) {
+    if (ignoreFile(ignoreParse, file)) {
       continue
     }
     const srcPath = join(src, file)
     const destPath = join(dest, file)
 
-    const fileStat = stat(srcPath)
-
-    if (fileStat.isFile()) {
+    if (isFile(srcPath)) {
       fs.copyFileSync(srcPath, destPath)
     }
     else {
-      copy(srcPath, destPath)
+      copy(srcPath, destPath, ignores)
     }
   }
 }
