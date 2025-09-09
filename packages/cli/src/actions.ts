@@ -24,6 +24,7 @@ import {
   parse,
   parsePath,
   parseYaml,
+  pnpm,
   projectTypeSelection,
   readdir,
   readFile,
@@ -101,38 +102,38 @@ async function createMonoRepoProject(dir: string) {
       devDependencies.push('@vitejs/plugin-vue')
     }
 
-    execa('git', ['init'], { stdio: 'inherit', cwd })
+    await execa('git', ['init'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
-    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
-    execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
+    await execa(pnpm, ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
 
-    execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
+    await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
 
     if (buildTool === 'tsdown') {
-      execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`, `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
+      await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool} --config=tsdown.config.dev.ts`, `scripts.build=${buildTool} --config=tsdown.config.build.ts`], { cwd })
     }
     else if (buildTool === 'vite') {
-      execa('pnpm.cmd', ['pkg', 'set', `scripts.build=${buildTool} build`, `scripts.preview=${buildTool} preview`], { cwd })
+      await execa(pnpm, ['pkg', 'set', `scripts.build=${buildTool} build`, `scripts.preview=${buildTool} preview`], { cwd })
 
       await createProjectType(projectType!, cwd)
 
       if (isString(framework)) {
-        execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
+        await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
       }
       else {
-        execa('pnpm.cmd', ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
+        await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
       }
     }
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
     if (isString(framework)) {
-      await execa('pnpm.cmd', ['install', framework], { stdio: 'inherit', cwd })
+      await execa(pnpm, ['install', framework], { stdio: 'inherit', cwd })
     }
 
     await execa('npx', ['tsc', '--init'], { cwd })
@@ -150,15 +151,15 @@ async function createProject(dir: string) {
   try {
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'unplugin-auto-import']
 
-    await execa('pnpm.cmd', ['create', 'vue', dir], { stdio: 'inherit' })
+    await execa(pnpm, ['create', 'vue', dir], { stdio: 'inherit' })
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { stdio: 'inherit', cwd })
 
-    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
@@ -168,7 +169,7 @@ async function createProject(dir: string) {
     addTypings(join(cwd, 'env.d.ts'))
     addGitIgnoreFile(join(cwd, '.gitignore'))
 
-    await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
   }
@@ -301,11 +302,11 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   mkdir(cwd)
 
   try {
-    await execa('pnpm.cmd', ['init'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
-    execa('pnpm.cmd', ['pkg', 'set', 'type=module', 'main=dist/index.js', 'module=dist/index.js', 'types=dist/index.d.ts'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
-    execa('pnpm.cmd', ['pkg', 'delete', 'scripts.test'], { cwd })
+    execa(pnpm, ['pkg', 'set', 'type=module', 'main=dist/index.js', 'module=dist/index.js', 'types=dist/index.d.ts'], { cwd })
+    execa(pnpm, ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
+    execa(pnpm, ['pkg', 'delete', 'scripts.test'], { cwd })
 
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
