@@ -304,9 +304,9 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   try {
     await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
-    execa(pnpm, ['pkg', 'set', 'type=module', 'main=dist/index.js', 'module=dist/index.js', 'types=dist/index.d.ts'], { cwd })
-    execa(pnpm, ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
-    execa(pnpm, ['pkg', 'delete', 'scripts.test'], { cwd })
+    await execa(pnpm, ['pkg', 'set', 'type=module', 'main=dist/index.js', 'module=dist/index.js', 'types=dist/index.d.ts'], { cwd })
+    await execa(pnpm, ['pkg', 'set', 'files=["dist"]', '--json'], { cwd })
+    await execa(pnpm, ['pkg', 'delete', 'scripts.test'], { cwd })
 
     mkdir(join(cwd, 'src'))
     writeFile(join(cwd, 'src', 'index.ts'), '', { flag: 'w' })
