@@ -1,4 +1,5 @@
 import type { ArrayExpression, NodePath } from '@tmes/utils'
+import { EOL } from 'node:os'
 import * as process from 'node:process'
 import {
   __dirname,
@@ -151,11 +152,13 @@ async function createProject(dir: string) {
 
     await execa('pnpm.cmd', ['create', 'vue', dir], { stdio: 'inherit' })
 
+    await execa('git', ['init'], { stdio: 'inherit', cwd })
+
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { stdio: 'inherit', cwd })
 
-    execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
+    await execa('pnpm.cmd', ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
@@ -166,8 +169,6 @@ async function createProject(dir: string) {
     addGitIgnoreFile(join(cwd, '.gitignore'))
 
     await execa('pnpm.cmd', ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
-
-    await execa('git', ['init'], { stdio: 'inherit', cwd })
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
   }
@@ -404,7 +405,7 @@ export function setCustomTemplateAction(dirname: string, template?: string, opti
 
   const ignoreFiles = ['.git', 'node_modules', ...(options?.ignores ?? [])]
 
-  copy(dirname, templatePath, ignoreFiles)
+  copy(dirname, templatePath, ignoreFiles).then()
 }
 
 export async function cpTemplateAction(template: string, projectName: string) {
@@ -425,7 +426,7 @@ export async function cpTemplateAction(template: string, projectName: string) {
   }
 
   try {
-    copy(templatePath, projectPath)
+    await copy(templatePath, projectPath)
 
     await execa('git', ['init'], { cwd: projectPath })
   }
@@ -445,7 +446,7 @@ export function showTemplatesAction() {
   }
 
   const templates = readdir(templatesPath)
-  console.log(templates.map(t => `* ${warning(t)}`).join('\n'))
+  console.log(templates.map(t => `* ${warning(t)}`).join(EOL))
 }
 
 export function deleteTemplate(template: string) {

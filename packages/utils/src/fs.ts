@@ -1,8 +1,9 @@
 import type { WriteFileOptions } from 'node:fs'
 import * as fs from 'node:fs'
-import { EOL } from 'node:os'
 import * as path from 'node:path'
+import readLine from 'node:readline'
 import { createIgnoreParse, ignoreFile } from './ignore'
+import { pathSep } from './path'
 
 export function isExisting(path: string): boolean {
   return fs.existsSync(path)
@@ -41,7 +42,8 @@ export function readdir(path: string) {
 }
 
 let ignoreParse: ReturnType<typeof createIgnoreParse>
-export function copy(src: string, dest: string, ignores?: string[], autoIgnoreFiles: boolean = true) {
+const filesList: string[] = []
+export async function copy(src: string, dest: string, ignores?: string[], autoIgnoreFiles: boolean = true) {
   const files = readdir(src)
 
   if (!isExisting(dest)) {
@@ -49,11 +51,19 @@ export function copy(src: string, dest: string, ignores?: string[], autoIgnoreFi
   }
 
   if (autoIgnoreFiles) {
+    if (filesList.length === 0) {
+      getFilesPath(src, ignores ?? [])
+    }
+
     const gitignorePath = join(src, '.gitignore')
     if (isExisting(gitignorePath)) {
-      ;(ignores ??= []).push(...readFile(gitignorePath).split(EOL))
+      await read_line(gitignorePath, (line) => {
+        (ignores ??= []).push(line)
 
-      ignoreParse = createIgnoreParse(ignores)
+        return ignores
+      })
+
+      ignoreParse = createIgnoreParse(ignores ??= [])
     }
   }
   else {
@@ -61,22 +71,86 @@ export function copy(src: string, dest: string, ignores?: string[], autoIgnoreFi
     ignoreParse = createIgnoreParse(ignores)
   }
 
-  for (const file of files) {
-    if (ignoreFile(ignoreParse, file)) {
-      continue
-    }
-    const srcPath = join(src, file)
-    const destPath = join(dest, file)
+  if (autoIgnoreFiles) {
+    filesList.forEach((file) => {
+      if (ignoreFile(ignoreParse, file)) {
+        return
+      }
 
-    if (isFile(srcPath)) {
-      fs.copyFileSync(srcPath, destPath)
-    }
-    else {
-      copy(srcPath, destPath, ignores)
+      const srcPath = join(src, file)
+      const destPath = join(dest, file)
+
+      if (isFile(srcPath)) {
+        fs.copyFileSync(srcPath, destPath)
+      }
+      else {
+        mkdir(destPath)
+      }
+    })
+  }
+  else {
+    for (const file of files) {
+      if (ignoreFile(ignoreParse, file)) {
+        continue
+      }
+
+      const srcPath = join(src, file)
+      const destPath = join(dest, file)
+
+      if (isFile(srcPath)) {
+        fs.copyFileSync(srcPath, destPath)
+      }
+      else {
+        await copy(srcPath, destPath, ignores, autoIgnoreFiles)
+      }
     }
   }
 }
 
 export function stat(path: string) {
   return fs.statSync(path)
+}
+
+export function read_line(file: string, callback: (...args: any[]) => any) {
+  return new Promise((resolve) => {
+    let result: string[]
+    const rl = readLine.createInterface({ input: fs.createReadStream(file), crlfDelay: Infinity })
+
+    rl.on('line', (line) => {
+      if (result) {
+        callback(line)
+        return
+      }
+
+      result = callback(line)
+    })
+
+    rl.on('close', () => {
+      resolve(result)
+    })
+  })
+}
+
+export function getFilesPath(src: string, ignores: string[] = []) {
+  const sourceSrcLength = pathSep(src).length
+
+  function setFilesPath(src: string) {
+    const filesOrDir = readdir(src)
+
+    filesOrDir.forEach((file) => {
+      if (ignores.includes(file)) {
+        return
+      }
+
+      filesList.push(join(...pathSep(join(src, file)).slice(sourceSrcLength)))
+
+      const srcPath = join(src, file)
+
+      if (isDir(srcPath)) {
+        setFilesPath(srcPath)
+      }
+    })
+  }
+
+  setFilesPath(src)
 }

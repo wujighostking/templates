@@ -1,4 +1,4 @@
-import { dirname, isAbsolute, parse } from 'node:path'
+import { dirname, isAbsolute, parse, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export function isAbsolutePath(path: string) {
@@ -7,6 +7,10 @@ export function isAbsolutePath(path: string) {
 
 export function parsePath(path: string) {
   return parse(path)
+}
+
+export function pathSep(path: string) {
+  return path.split(sep)
 }
 
 export const __filename = fileURLToPath(import.meta.url)
