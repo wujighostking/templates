@@ -62,12 +62,12 @@ export async function copy(src: string, dest: string, ignores?: string[], autoIg
 
         return ignores
       })
-
-      ignoreParse = createIgnoreParse(ignores ??= [])
     }
+    ignoreParse = createIgnoreParse(ignores ??= [])
   }
   else {
     ignores ??= []
+
     ignoreParse = createIgnoreParse(ignores)
   }
 
