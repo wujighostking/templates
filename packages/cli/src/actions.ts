@@ -504,3 +504,47 @@ function createApp(framework: string, cwd: string) {
     writeFile(join(cwd, 'packages', 'main', 'src', 'index.ts'), vueMainFile.join('\n'))
   }
 }
+
+export async function commitlintAction() {
+  const cwd = process.cwd()
+  const packagePath = join(cwd, 'package.json')
+
+  if (!isExisting(packagePath)) {
+    console.log(error('packages.json 文件不存在'))
+
+    return
+  }
+
+  writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
+  await execa(pnpm, ['pkg', 'set', 'scripts.commitlint=commitlint --edit'], { cwd, stdio: 'inherit' })
+  await execa(pnpm, ['i', '-D', '@commitlint/cli', '@commitlint/config-conventional'], { cwd, stdio: 'inherit' })
+}
+
+export async function gitHooksAction() {
+  const cwd = process.cwd()
+  const packagePath = join(cwd, 'package.json')
+
+  if (!isExisting(packagePath)) {
+    console.log(error('packages.json 文件不存在'))
+
+    return
+  }
+
+  await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', '--json'], { cwd, stdio: 'inherit' })
+  await execa(pnpm, ['i', 'simple-git-hooks', '-D'], { cwd, stdio: 'inherit' })
+  await execa(pnpm, ['simple-git-hooks'], { cwd, stdio: 'inherit' })
+}
+
+export async function lintStagedAction() {
+  const cwd = process.cwd()
+  const packagePath = join(cwd, 'package.json')
+
+  if (!isExisting(packagePath)) {
+    console.log(error('packages.json 文件不存在'))
+
+    return
+  }
+
+  await execa(pnpm, ['pkg', 'set', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd, stdio: 'inherit' })
+  await execa(pnpm, ['i', 'lint-staged', '-D'], { cwd, stdio: 'inherit' })
+}

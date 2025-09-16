@@ -1,7 +1,10 @@
 import {
+  commitlintAction,
   cpTemplateAction,
   createAction,
   deleteTemplate,
+  gitHooksAction,
+  lintStagedAction,
   pkgAction,
   setCustomTemplateAction,
   showTemplatesAction,
@@ -80,33 +83,20 @@ export const commands: CommandsOptions[] = [
       command: 'commitlint',
       description: 'add commitlint config',
     },
-    action: () => {},
-  },
-  {
-    command: {
-      command: 'commitlint',
-      description: 'add commitlint config',
-    },
-    action: () => {
-      console.log('commitlint')
-    },
+    action: commitlintAction,
   },
   {
     command: {
       command: 'git-hooks',
       description: 'add simple-git-hooks config',
     },
-    action: () => {
-      console.log('git-hooks')
-    },
+    action: gitHooksAction,
   },
   {
     command: {
       command: 'lint-staged',
       description: 'add lint-staged config',
     },
-    action: () => {
-      console.log('lint-staged')
-    },
+    action: lintStagedAction,
   },
 ]
