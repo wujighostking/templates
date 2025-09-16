@@ -30,6 +30,7 @@ import {
   readFile,
   repoSelection,
   rm,
+  rmSync,
   stringify,
   stringToBoolean,
   traverse,
@@ -373,7 +374,14 @@ function pkgToWorkspace(file: string, pkg: string) {
   writeFile(file, stringify(ast))
 }
 
-export function setCustomTemplateAction(dirname: string, template?: string, options?: { ignores: string[] }) {
+async function coverOldTemplate(oldTemplate: string) {
+  return await createConfirm({
+    message: `是否覆盖已存在的模板 ${oldTemplate}`,
+    initialValue: false,
+  })
+}
+
+export async function setCustomTemplateAction(dirname: string, template?: string, options?: { ignores: string[] }) {
   // region 路径名、模板名归一化
   if (!isAbsolutePath(dirname)) {
     dirname = join(process.cwd(), dirname)
@@ -395,18 +403,26 @@ export function setCustomTemplateAction(dirname: string, template?: string, opti
     mkdir(templatesDir)
   }
 
+  let isForceDelete: boolean = false
   const existingTemplates = readdir(templatesDir)
   if (existingTemplates.includes(template)) {
     console.log(error(`模板名 ${template} 已存在`))
 
-    return
+    isForceDelete = await coverOldTemplate(template)
+
+    if (!isForceDelete)
+      return
   }
 
   const templatePath = join(templatesDir, template)
 
+  if (isForceDelete) {
+    rmSync(templatePath)
+  }
+
   const ignoreFiles = ['.git', 'node_modules', ...(options?.ignores ?? [])]
 
-  copy(dirname, templatePath, ignoreFiles).then()
+  await copy(dirname, templatePath, ignoreFiles)
 }
 
 export async function cpTemplateAction(template: string, projectName: string) {
