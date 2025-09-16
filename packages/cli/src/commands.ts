@@ -75,4 +75,38 @@ export const commands: CommandsOptions[] = [
     },
     action: deleteTemplate,
   },
+  {
+    command: {
+      command: 'commitlint',
+      description: 'add commitlint config',
+    },
+    action: () => {},
+  },
+  {
+    command: {
+      command: 'commitlint',
+      description: 'add commitlint config',
+    },
+    action: () => {
+      console.log('commitlint')
+    },
+  },
+  {
+    command: {
+      command: 'git-hooks',
+      description: 'add simple-git-hooks config',
+    },
+    action: () => {
+      console.log('git-hooks')
+    },
+  },
+  {
+    command: {
+      command: 'lint-staged',
+      description: 'add lint-staged config',
+    },
+    action: () => {
+      console.log('lint-staged')
+    },
+  },
 ]
