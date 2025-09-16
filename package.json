@@ -11,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsdown --config=tsdown.config.dev.ts",
-    "build": "tsdown --config=tsdown.config.build.ts",
+    "build": "tsdown --config=tsdown.config.build.ts && node scripts/setDefaultTemplates.js",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix"
   },
