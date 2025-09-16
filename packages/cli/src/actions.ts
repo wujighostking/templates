@@ -530,6 +530,12 @@ export async function gitHooksAction() {
     return
   }
 
+  if (!isExisting(join(cwd, '.git'))) {
+    console.log(error('当前目录不是 git 仓库'))
+
+    return
+  }
+
   await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', '--json'], { cwd, stdio: 'inherit' })
   await execa(pnpm, ['i', 'simple-git-hooks', '-D'], { cwd, stdio: 'inherit' })
   await execa(pnpm, ['simple-git-hooks'], { cwd, stdio: 'inherit' })
