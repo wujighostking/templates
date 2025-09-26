@@ -96,6 +96,9 @@ async function createMonoRepoProject(dir: string) {
 
     writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
+    writeFile(join(cwd, '.nvmrc'), process.version)
+    writeFile(join(cwd, '.npmrc'), '')
+    writeFile(join(cwd, 'README.md'), '')
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
