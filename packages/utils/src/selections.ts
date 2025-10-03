@@ -12,6 +12,7 @@ export const frameworkSelection: SelectOptions<string> = {
   message: '请选择框架: ',
   options: [
     { value: 'vue', label: 'Vue' },
+    { value: 'react', label: 'React' },
   ],
 }
 
