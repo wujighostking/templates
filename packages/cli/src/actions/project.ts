@@ -181,6 +181,8 @@ export async function createMonoRepoProject(dir: string) {
       if (isString(framework)) {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
+
+        devDependencies.push('unocss')
       }
       else {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
