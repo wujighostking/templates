@@ -24,6 +24,7 @@ import {
   workspaceConfig,
   writeFile,
 } from '@tm/utils'
+import { createReactProject } from '../react'
 import { createVueProject } from '../vue'
 import { createApp, createBuildToolConfig, createProjectType, pkgToWorkspace } from './config'
 
@@ -204,12 +205,20 @@ export async function createAction(dir: string) {
 
     const repoType = await createSelect(repoSelection)
 
+    let framework: string | symbol
+
     if (repoType === 'monorepo') {
       await createMonoRepoProject(dir)
     }
     else {
-      await createSelect(frameworkSelection)
-      await createVueProject(dir)
+      framework = await createSelect(frameworkSelection)
+
+      if (framework === 'vue') {
+        await createVueProject(dir)
+      }
+      else if (framework === 'react') {
+        await createReactProject(dir)
+      }
     }
   }
 
