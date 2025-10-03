@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { commitConfig, execa, gitignore, join, mkdir, pnpm, reactAppFile, reactIndexHtmlConfig, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, writeFile } from '@tm/utils'
+import { commitConfig, execa, gitignore, join, mkdir, pnpm, reactAppFile, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, webIndexHtmlConfig, writeFile } from '@tm/utils'
 
 export async function createReactProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -15,7 +15,7 @@ export async function createReactProject(dir: string) {
 
     writeFile(join(cwd, 'README.md'), '')
     writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
-    writeFile(join(cwd, 'index.html'), reactIndexHtmlConfig.join('\n'))
+    writeFile(join(cwd, 'index.html'), webIndexHtmlConfig('root', '/src/main.tsx').join('\n'))
     writeFile(join(cwd, 'vite.config.ts'), viteReactConfig.join('\n'))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
