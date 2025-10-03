@@ -21,6 +21,9 @@ import {
   repoSelection,
   rm,
   stringToBoolean,
+  tsconfig,
+  tsconfigApp,
+  tsconfigNode,
   workspaceConfig,
   writeFile,
 } from '@tm/utils'
@@ -145,10 +148,17 @@ export async function createMonoRepoProject(dir: string) {
     writeFile(join(cwd, '.npmrc'), '')
     writeFile(join(cwd, 'README.md'), '')
 
+    writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
+    writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp.join('\n'))
+    writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode.join('\n'))
+
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
     if (framework === 'vue') {
       devDependencies.push('@vitejs/plugin-vue')
+    }
+    else if (framework === 'react') {
+      devDependencies.push('@types/react', '@types/react-dom', '@vitejs/plugin-react')
     }
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })
@@ -166,7 +176,7 @@ export async function createMonoRepoProject(dir: string) {
     else if (buildTool === 'vite') {
       await execa(pnpm, ['pkg', 'set', `scripts.build=${buildTool} build`, `scripts.preview=${buildTool} preview`], { cwd })
 
-      await createProjectType(projectType!, cwd)
+      await createProjectType(projectType!, framework, cwd)
 
       if (isString(framework)) {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
@@ -181,11 +191,12 @@ export async function createMonoRepoProject(dir: string) {
 
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
-    if (isString(framework)) {
-      await execa(pnpm, ['install', framework], { stdio: 'inherit', cwd })
+    if (framework === 'vue') {
+      await execa(pnpm, ['install', 'vue'], { stdio: 'inherit', cwd })
     }
-
-    await execa('npx', ['tsc', '--init'], { cwd })
+    else if (framework === 'react') {
+      await execa(pnpm, ['install', 'react', 'react-dom'], { stdio: 'inherit', cwd })
+    }
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
   }

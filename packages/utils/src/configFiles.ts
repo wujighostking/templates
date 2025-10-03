@@ -98,20 +98,26 @@ export const tsdownBuildConfig = [
   '',
 ]
 
-export const webIndexHtmlConfig = [
-  '<!DOCTYPE html>',
-  '<html lang="zh">',
-  '  <head>',
-  '    <meta charset="UTF-8">',
-  '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
-  '    <title>Document</title>',
-  '  </head>',
-  '  <body>',
-  '     <div id="app"></div>',
-  '     <script type="module" src="./packages/main/src/index.ts"></script>',
-  '  </body>',
-  '</html>',
-]
+export function webIndexHtmlConfig(id: string, scriptSrc: string, title?: string) {
+  id = id ?? 'app'
+  scriptSrc = scriptSrc ?? '/src/main.ts'
+  title = title ?? 'Document'
+
+  return [
+    '<!DOCTYPE html>',
+    '<html lang="zh">',
+    '  <head>',
+    '    <meta charset="UTF-8">',
+    '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    `    <title>${title}</title>`,
+    '  </head>',
+    '  <body>',
+    `     <div id="${id}"></div>`,
+    `     <script type="module" src="${scriptSrc}"></script>`,
+    '  </body>',
+    '</html>',
+  ]
+}
 
 export const reactIndexHtmlConfig = [
   '<!DOCTYPE html>',

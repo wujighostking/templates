@@ -1,4 +1,4 @@
-import { error, execa, isExisting, join, parseYaml, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { error, execa, isExisting, join, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
 
 export function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string, framework: string | undefined) {
   switch (buildTool) {
@@ -15,6 +15,9 @@ export function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string,
 function createViteConfig(cwd: string, framework: string | undefined) {
   if (framework === 'vue') {
     writeFile(join(cwd, 'vite.config.ts'), viteVueConfig.join('\n'))
+  }
+  else if (framework === 'react') {
+    writeFile(join(cwd, 'vite.config.ts'), viteReactConfig.join('\n'))
   }
   else {
     writeFile(join(cwd, 'vite.config.ts'), viteNodeConfig.join('\n'))
@@ -42,19 +45,35 @@ export function pkgToWorkspace(file: string, pkg: string) {
   writeFile(file, stringify(ast))
 }
 
-export async function createProjectType(projectType: 'node' | 'web', cwd: string) {
+export async function createProjectType(projectType: 'node' | 'web', framework: string | undefined, cwd: string) {
   if (projectType === 'node') {
     await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
   }
   else if (projectType === 'web') {
-    writeFile(join(cwd, 'index.html'), webIndexHtmlConfig.join('\n'))
-    await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+    if (framework === 'vue') {
+      writeFile(
+        join(cwd, 'index.html'),
+        webIndexHtmlConfig('app', './packages/main/src/main.ts').join('\n'),
+      )
+      await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+    }
+    else if (framework === 'react') {
+      writeFile(
+        join(cwd, 'index.html'),
+        webIndexHtmlConfig('root', './packages/main/src/main.tsx').join('\n'),
+      )
+      await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+    }
   }
 }
 
 export function createApp(framework: string, cwd: string) {
   if (framework === 'vue') {
     writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile.join('\n'), { flag: 'w' })
-    writeFile(join(cwd, 'packages', 'main', 'src', 'index.ts'), vueMainFile.join('\n'))
+    writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile.join('\n'))
+  }
+  else if (framework === 'react') {
+    writeFile(join(cwd, 'packages', 'main', 'src', 'App.tsx'), reactAppFile.join('\n'), { flag: 'w' })
+    writeFile(join(cwd, 'packages', 'main', 'src', 'main.tsx'), reactMainFile.join('\n'))
   }
 }
