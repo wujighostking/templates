@@ -182,7 +182,7 @@ export async function createMonoRepoProject(dir: string) {
 
       await createProjectType(projectType!, framework, cwd)
 
-      if (isString(framework)) {
+      if (framework) {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
 
@@ -190,6 +190,8 @@ export async function createMonoRepoProject(dir: string) {
       }
       else {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
+
+        devDependencies.push('vite-plugin-dts')
       }
     }
 

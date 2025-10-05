@@ -49,6 +49,8 @@ export const unoConfig = ['import { defineConfig } from \'unocss\'', 'export def
 export const workspaceConfig = ['packages:\n  - packages/*']
 
 export const viteNodeConfig = [
+  'import dts from \'vite-plugin-dts\'',
+  '',
   'export default ({ mode }: { mode: string }) => ({',
   '  build: {',
   '    lib: {',
@@ -57,9 +59,10 @@ export const viteNodeConfig = [
   '      fileName: \'index\',',
   '    },',
   '    watch: mode === \'development\' ? { include: [\'packages/**/*\'] } : null,',
-  '    minify: true,',
+  '    minify: mode === \'production\',',
   '    sourcemap: true,',
   '  },',
+  '  plugins: [dts({ tsconfigPath: \'./tsconfig.app.json\' })],',
   '})',
 ]
 
