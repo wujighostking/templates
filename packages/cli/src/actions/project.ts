@@ -1,3 +1,4 @@
+import type { JSXOptions } from '@tm/utils'
 import process from 'node:process'
 import {
   buildToolsSelection,
@@ -14,6 +15,7 @@ import {
   isExisting,
   isString,
   join,
+
   mkdir,
   parsePath,
   pnpm,
@@ -118,21 +120,25 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   }
 }
 
+type ProjectType = 'node' | 'web'
+type BuildTool = 'vite' | 'tsdown'
+
 export async function createMonoRepoProject(dir: string) {
   const cwd = join(process.cwd(), dir)
   mkdir(cwd)
 
   try {
-    let projectType: 'node' | 'web'
-    let framework: string | undefined
-    const buildTool = await createSelect(buildToolsSelection) as 'vite' | 'tsdown'
+    let projectType: ProjectType = 'node'
+
+    let framework: string = ''
+    const buildTool = await createSelect(buildToolsSelection) as BuildTool
 
     if (buildTool === 'vite') {
-      projectType = await createSelect(projectTypeSelection) as 'node' | 'web'
+      projectType = await createSelect(projectTypeSelection) as ProjectType
 
       if (projectType === 'web') {
         const frameworkSelected = await createSelect(frameworkSelection)
-        framework = isString(frameworkSelected) ? frameworkSelected : undefined
+        framework = isString(frameworkSelected) ? frameworkSelected : ''
       }
     }
 
@@ -148,9 +154,7 @@ export async function createMonoRepoProject(dir: string) {
     writeFile(join(cwd, '.npmrc'), '')
     writeFile(join(cwd, 'README.md'), '')
 
-    writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
-    writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp.join('\n'))
-    writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode.join('\n'))
+    writeTsconfigFile({ cwd, projectType, framework, buildTool })
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
 
@@ -236,4 +240,56 @@ export async function createAction(dir: string) {
   }
 
   await create()
+}
+
+interface Options {
+  cwd: string
+  projectType: ProjectType
+  framework: string
+  buildTool: BuildTool
+}
+function writeTsconfigFile(options: Options) {
+  const { cwd, projectType, framework, buildTool } = options
+
+  let jsx: JSXOptions
+  let types: string[]
+  let nodeInclude: string[]
+
+  /**
+   * 1.node 项目
+   *  - tsdown
+   *  - vite
+   * 2.web 项目
+   *  - vue
+   *  - react
+   */
+  if (projectType === 'node') {
+    // todo
+    if (buildTool === 'tsdown') {
+      jsx = 'react-jsx'
+      types = []
+      nodeInclude = ['tsdown.config.build.ts', 'tsdown.config.dev.ts']
+    }
+    else if (buildTool === 'vite') {
+      jsx = 'react-jsx'
+      types = ['vite/client']
+      nodeInclude = ['vite.config.ts']
+    }
+  }
+  else if (projectType === 'web') {
+    nodeInclude = ['vite.config.ts']
+
+    if (framework === 'vue') {
+      jsx = 'preserve'
+      types = ['vite/client']
+    }
+    else if (framework === 'react') {
+      jsx = 'react-jsx'
+      types = ['vite/client']
+    }
+  }
+
+  writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
+  writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: jsx!, types: types!, include: ['**/src'] }).join('\n'))
+  writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
 }

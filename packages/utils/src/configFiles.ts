@@ -1,3 +1,22 @@
+export type JSXOptions = 'react-jsx' | 'react-jsxdev' | 'preserve' | 'react-native' | 'react'
+
+interface TsConfigAppOptions {
+  /**
+   * react-jsx：触发 .js 文件，其中 JSX 更改为针对生产优化的 _jsx 调用
+   * react-jsxdev：触发 .js 文件，其中 JSX 更改为仅供开发使用的 _jsx 调用
+   * preserve：触发 .jsx 文件，其中 JSX 保持不变
+   * react-native：触发 .js 文件，其中 JSX 保持不变
+   * react：触发 .js 文件，其中 JSX 更改为等效的 React.createElement 调用
+   */
+  jsx?: JSXOptions
+  types?: string[]
+  include?: string[]
+}
+
+interface TsconfigNodeOptions {
+  include?: string[]
+}
+
 export const gitignore = [
   '# Editor directories and files',
   '.idea',
@@ -80,7 +99,7 @@ export const tsdownConfig = [
   'export const config: UserConfig = readdirSync(\'./packages\').map(dir => ({',
   '  platform: \'neutral\',',
   '  format: \'esm\',',
-  '  dts: true,',
+  '  dts: { build: true },',
   '  minify: true,',
   '  clean: false,',
   '  sourcemap: false,',
@@ -178,71 +197,85 @@ export const reactMainFile = [
 
 export const tsconfig = [
   '{',
+  '  "compilerOptions": {',
+  '    "declaration": true,',
+  '    "declarationMap": true',
+  '  },',
   '  "references": [',
   '    { "path": "./tsconfig.app.json" },',
   '    { "path": "./tsconfig.node.json" }',
-  '],',
-  '"files": []',
+  '  ],',
+  '  "files": []',
   '}',
 ]
-export const tsconfigApp = [
-  '{',
-  '  "compilerOptions": {',
-  '    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",',
-  '    "target": "esnext",',
-  '    "jsx": "react-jsx",',
-  '    "lib": ["esnext", "DOM", "DOM.Iterable"],',
-  '    "moduleDetection": "force",',
-  '    "useDefineForClassFields": true,',
-  '    "module": "ESNext",',
-  '',
-  '    /* Bundler mode */',
-  '    "moduleResolution": "bundler",',
-  '    "types": ["vite/client"],',
-  '    "allowImportingTsExtensions": true,',
-  '',
-  '    /* Linting */',
-  '    "strict": true,',
-  '    "noFallthroughCasesInSwitch": true,',
-  '    "noUnusedLocals": true,',
-  '    "noUnusedParameters": true,',
-  '    "noEmit": true,',
-  '    "verbatimModuleSyntax": true,',
-  '    "erasableSyntaxOnly": true,',
-  '    "skipLibCheck": true,',
-  '    "noUncheckedSideEffectImports": true',
-  '  },',
-  '  "include": ["src"]',
-  '}',
-  '',
+export function tsconfigApp(appOptions: TsConfigAppOptions) {
+  const jsx = appOptions.jsx ?? 'preserve'
+  const types = JSON.stringify(appOptions.types ?? [])
+  const include = JSON.stringify(appOptions.include ?? [])
 
-]
-export const tsconfigNode = [
-  '{',
-  '  "compilerOptions": {',
-  '    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",',
-  '    "target": "esnext",',
-  '    "lib": ["esnext"],',
-  '    "moduleDetection": "force",',
-  '    "module": "ESNext",',
-  '',
-  '    /* Bundler mode */',
-  '    "moduleResolution": "bundler",',
-  '    "types": ["node"],',
-  '    "allowImportingTsExtensions": true,',
-  '',
-  '    /* Linting */',
-  '    "strict": true,',
-  '    "noFallthroughCasesInSwitch": true,',
-  '    "noUnusedLocals": true,',
-  '    "noUnusedParameters": true,',
-  '    "noEmit": true,',
-  '    "verbatimModuleSyntax": true,',
-  '    "erasableSyntaxOnly": true,',
-  '    "skipLibCheck": true,',
-  '    "noUncheckedSideEffectImports": true',
-  '  },',
-  '  "include": ["vite.config.ts"]',
-  '}',
-  '',
-]
+  return [
+    '{',
+    '  "compilerOptions": {',
+    '    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",',
+    '    "target": "esnext",',
+    `    "jsx": "${jsx}",`,
+    '    "lib": ["esnext", "DOM", "DOM.Iterable"],',
+    '    "moduleDetection": "force",',
+    '    "useDefineForClassFields": true,',
+    '    "module": "ESNext",',
+    '',
+    '    /* Bundler mode */',
+    '    "moduleResolution": "bundler",',
+    `    "types": ${types},`,
+    '    "allowImportingTsExtensions": true,',
+    '',
+    '    /* Linting */',
+    '    "strict": true,',
+    '    "noFallthroughCasesInSwitch": true,',
+    '    "noUnusedLocals": true,',
+    '    "noUnusedParameters": true,',
+    '    "noEmit": true,',
+    '    "verbatimModuleSyntax": true,',
+    '    "erasableSyntaxOnly": true,',
+    '    "skipLibCheck": true,',
+    '    "noUncheckedSideEffectImports": true',
+    '  },',
+    `  "include": ${include}`,
+    '}',
+    '',
+
+  ]
+}
+export function tsconfigNode(nodeOptions: TsconfigNodeOptions) {
+  const include = JSON.stringify(nodeOptions.include ?? [])
+
+  return [
+    '{',
+    '  "compilerOptions": {',
+    '    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",',
+    '    "target": "esnext",',
+    '    "lib": ["esnext"],',
+    '    "moduleDetection": "force",',
+    '    "module": "ESNext",',
+    '',
+    '    /* Bundler mode */',
+    '    "moduleResolution": "bundler",',
+    '    "types": ["node"],',
+    '    "allowImportingTsExtensions": true,',
+    '',
+    '    /* Linting */',
+    '    "strict": true,',
+    '    "noFallthroughCasesInSwitch": true,',
+    '    "noUnusedLocals": true,',
+    '    "noUnusedParameters": true,',
+    '    "noEmit": true,',
+    '    "verbatimModuleSyntax": true,',
+    '    "erasableSyntaxOnly": true,',
+    '    "skipLibCheck": true,',
+    '    "noUncheckedSideEffectImports": true',
+    '  },',
+    `  "include": ${include}`,
+    '}',
+    '',
+  ]
+}

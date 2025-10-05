@@ -21,8 +21,8 @@ export async function createReactProject(dir: string) {
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
 
     writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
-    writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp.join('\n'))
-    writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode.join('\n'))
+    writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: 'react-jsx', types: ['vite/client'], include: ['src'] }).join('\n'))
+    writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: ['vite.config.ts'] }).join('\n'))
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom']
     const dependencies = ['react', 'react-dom']
