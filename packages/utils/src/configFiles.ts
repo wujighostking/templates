@@ -104,9 +104,9 @@ export const tsdownConfig = [
   '  platform: \'neutral\',',
   '  format: \'esm\',',
   '  dts: { build: true },',
-  '  minify: true,',
-  '  clean: false,',
-  '  sourcemap: false,',
+  '  minify: false,',
+  '  clean: true,',
+  '  sourcemap: true,',
   `  entry: \`./packages/\${dir}/src/index.ts\`,`,
   `  outDir: \`./packages/\${dir}/dist\`,`,
   `  watch: \`./packages/\${dir}/src\`,`,
@@ -121,7 +121,7 @@ export const tsdownBuildConfig = [
   'import { defineConfig } from \'tsdown\'',
   'import { config } from \'./tsdown.config.dev\'',
   '',
-  'export default defineConfig((config as UserConfig[]).map((option: UserConfig) => ({ ...option, watch: false })))',
+  'export default defineConfig((config as UserConfig[]).map((option: UserConfig) => ({ ...option, minify: true, watch: false })))',
   '',
 ]
 
