@@ -1,5 +1,11 @@
 # @tmes/utils
 
+## 1.5.0
+
+### Minor Changes
+
+- feat
+
 ## 1.4.1
 
 ### Patch Changes
