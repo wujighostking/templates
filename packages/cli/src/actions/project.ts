@@ -214,6 +214,17 @@ export async function createMonoRepoProject(dir: string) {
   }
 }
 
+export async function createPolyProject(dir: string) {
+  const framework = await createSelect(frameworkSelection)
+
+  if (framework === 'vue') {
+    await createVueProject(dir)
+  }
+  else if (framework === 'react') {
+    await createReactProject(dir)
+  }
+}
+
 export async function createAction(dir: string) {
   async function create() {
     if (isExisting(join(process.cwd(), dir))) {
@@ -224,20 +235,11 @@ export async function createAction(dir: string) {
 
     const repoType = await createSelect(repoSelection)
 
-    let framework: string | symbol
-
     if (repoType === 'monorepo') {
       await createMonoRepoProject(dir)
     }
     else {
-      framework = await createSelect(frameworkSelection)
-
-      if (framework === 'vue') {
-        await createVueProject(dir)
-      }
-      else if (framework === 'react') {
-        await createReactProject(dir)
-      }
+      await createPolyProject(dir)
     }
   }
 
