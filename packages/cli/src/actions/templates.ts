@@ -1,6 +1,6 @@
 import { EOL } from 'node:os'
 import process from 'node:process'
-import { __dirname, copy, createConfirm, error, execa, isAbsolutePath, isExisting, join, mkdir, parsePath, readdir, rm, rmSync, warning } from '@tm/utils'
+import { __dirname, copy, createConfirm, error, execa, isAbsolutePath, isExisting, join, mkdir, parsePath, readdir, rm, rmSync, success, warning } from '@tm/utils'
 
 export async function setCustomTemplateAction(dirname: string, template?: string, options?: { ignores: string[] }) {
   // region 路径名、模板名归一化
@@ -75,16 +75,39 @@ export async function cpTemplateAction(template: string, projectName: string) {
 }
 
 export function showTemplatesAction() {
-  const templatesPath = join(__dirname, 'templates')
+  const customTemplatesPath = join(__dirname, 'templates')
+  const defaultTemplatesPath = join(__dirname, '..', 'node_modules', '@tmes', 'default-templates')
 
-  if (!isExisting(templatesPath)) {
+  const hasCustomTemplates = isExisting(customTemplatesPath)
+  const hasDefaultTemplates = isExisting(defaultTemplatesPath)
+  if (!hasCustomTemplates && !hasDefaultTemplates) {
     console.log(warning('模板列表为空'))
 
     return
   }
 
-  const templates = readdir(templatesPath)
-  console.log(templates.map(t => `* ${warning(t)}`).join(EOL))
+  const templates: { default: string[] | null, custom: string[] | null } = {
+    custom: null,
+    default: null,
+  }
+
+  if (hasCustomTemplates) {
+    templates.custom = readdir(customTemplatesPath)
+  }
+
+  if (hasDefaultTemplates) {
+    templates.default = readdir(defaultTemplatesPath).filter(t => t !== 'node_modules' && t !== 'package.json')
+  }
+
+  if (templates.custom) {
+    console.log(success('# 自定义模板'))
+    console.log(templates.custom.map(t => `*  ${warning(t)}`).join(EOL))
+  }
+
+  if (templates.default) {
+    console.log(success('# 默认模板'))
+    console.log(templates.default.map(t => `*  ${warning(t)}`).join(EOL))
+  }
 }
 
 export function deleteTemplate(template: string) {
