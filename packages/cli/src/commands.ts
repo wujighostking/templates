@@ -1,6 +1,7 @@
 import {
   commitlintAction,
   cpTemplateAction,
+  create,
   createAction,
   deleteTemplate,
   gitHooksAction,
@@ -21,15 +22,22 @@ interface OptionConfig { type: string[] }
 export const commands: CommandsOptions[] = [
   {
     command: {
+      command: '',
+      description: 'create a new project',
+    },
+    action: create,
+  },
+  {
+    command: {
       command: 'create <projectName>',
-      description: 'Create a new project',
+      description: 'create a new project',
     },
     action: createAction,
   },
   {
     command: {
       command: 'pkg [dir] [name]',
-      description: 'Add a package to project',
+      description: 'add a package to project',
     },
     options: [
       {

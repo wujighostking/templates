@@ -5,6 +5,7 @@ import {
   commitConfig,
   createConfirm,
   createSelect,
+  createText,
   definiteSelection,
   error,
   execa,
@@ -296,4 +297,21 @@ function writeTsconfigFile(options: Options) {
   writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
   writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: jsx!, types: types!, include: ['**/src'] }).join('\n'))
   writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
+}
+
+export async function create() {
+  try {
+    const dir = await createText('请输入项目名称')
+
+    if (isEmpty(dir)) {
+      console.log(error('请输入项目名称'))
+
+      return
+    }
+
+    await createAction(dir)
+  }
+  catch (error) {
+    console.log(error)
+  }
 }
