@@ -1,0 +1,29 @@
+{
+  "name": "templates",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.13.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "axios": "^1.12.2",
+    "pinia": "^3.0.3",
+    "redux": "^5.0.1",
+    "zustand": "^5.0.8"
+  }
+}
