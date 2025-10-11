@@ -44,6 +44,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@tmes/default-templates':
+        specifier: workspace:*
+        version: link:../defaultTemplates
       '@tmes/utils':
         specifier: workspace:*
         version: link:../utils
