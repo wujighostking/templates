@@ -49,11 +49,15 @@ export async function setCustomTemplateAction(dirname: string, template?: string
 export async function cpTemplateAction(template: string, projectName: string) {
   projectName ??= template
 
-  const templatePath = join(__dirname, 'templates', template)
+  let templatePath = join(__dirname, 'templates', template)
   if (!isExisting(templatePath)) {
-    console.log(error(`模板 ${template} 不存在`))
+    templatePath = join(__dirname, '..', 'node_modules', '@tmes', 'default-templates', template)
 
-    return
+    if (!isExisting(templatePath)) {
+      console.log(error(`模板 ${template} 不存在`))
+
+      return
+    }
   }
 
   const projectPath = join(process.cwd(), projectName)
@@ -114,7 +118,7 @@ export function deleteTemplate(template: string) {
   const templatePath = join(__dirname, 'templates', template)
 
   if (!isExisting(templatePath)) {
-    console.log(error(`模板 ${template} 不存在`))
+    console.log(error(`自定义模板 ${template} 不存在`))
 
     return
   }
