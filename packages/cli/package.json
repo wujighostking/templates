@@ -3,6 +3,12 @@
   "type": "module",
   "version": "1.5.0",
   "description": "自用脚手架",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wujighostking/templates.git"
+  },
+  "keywords": ["cli", "@tmes", "gkk", "gkk-cli"],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,8 +17,7 @@
     "tm": "dist/index.js"
   },
   "files": [
-    "*.d.ts",
-    "*.js"
+    "dist"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
