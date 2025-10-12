@@ -1,4 +1,4 @@
-import type { ConfirmOptions, SelectOptions } from '@clack/prompts'
+import type { ConfirmOptions, SelectOptions, TextOptions } from '@clack/prompts'
 import { confirm, select, text } from '@clack/prompts'
 import { isString } from './type'
 
@@ -20,9 +20,9 @@ export async function createConfirm(confirmOptions: ConfirmOptions) {
   }
 }
 
-export async function createText(message: string) {
+export async function createText(options: TextOptions) {
   try {
-    return await text({ message }).then(result => isString(result) ? result : '')
+    return await text(options).then(result => isString(result) ? result : '')
   }
   catch {
     return ''

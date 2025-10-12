@@ -301,10 +301,10 @@ function writeTsconfigFile(options: Options) {
 
 export async function create() {
   try {
-    const dir = await createText('请输入项目名称')
+    const dir = await createText({ message: '请输入项目名称', placeholder: 'project-name' })
 
     if (isEmpty(dir)) {
-      console.log(error('请输入项目名称'))
+      console.log(error('创建项目失败，必须输入项目名称！'))
 
       return
     }
