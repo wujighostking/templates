@@ -39,15 +39,18 @@ function mainAddUnoCss(file: string) {
   const sourceText = readFile(file)
   const ast = parse(sourceText, { sourceType: 'module' })
 
-  traverse(ast, {
-    Program(path) {
-      const lastImport = path.get('body.1')
-      if (lastImport.isImportDeclaration()) {
+  let firstImport = true
+
+  traverse(ast.program, {
+    ImportDeclaration(node) {
+      if (node.isImportDeclaration() && firstImport) {
         const newImport = types.importDeclaration(
           [],
           types.stringLiteral('virtual:uno.css'),
         )
-        lastImport.insertAfter(newImport)
+
+        ast.program.body.unshift(newImport)
+        firstImport = false
       }
     },
   })
