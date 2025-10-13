@@ -68,22 +68,22 @@ function setViteConfig(file: string) {
   const sourceText = readFile(file)
   const ast = parse(sourceText, { sourceType: 'module' })
 
-  traverse(ast, {
-    Program(path) {
-      const firstImport = path.get('body.0')
+  let firstImport = true
 
-      if (firstImport.isImportDeclaration()) {
+  traverse(ast.program, {
+    ImportDeclaration(node) {
+      if (node.isImportDeclaration() && firstImport) {
         const unoCssImport = types.importDeclaration(
           [types.importDefaultSpecifier(types.identifier('UnoCSS'))],
           types.stringLiteral('unocss/vite'),
         )
-        firstImport.insertAfter(unoCssImport)
-
         const autoImport = types.importDeclaration(
           [types.importDefaultSpecifier(types.identifier('AutoImport'))],
           types.stringLiteral('unplugin-auto-import/vite'),
         )
-        firstImport.insertAfter(autoImport)
+
+        ast.program.body.unshift(unoCssImport, autoImport)
+        firstImport = false
       }
     },
 
