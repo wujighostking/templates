@@ -171,7 +171,7 @@ export async function createMonoRepoProject(dir: string) {
     await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
-    await execa(pnpm, ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { cwd })
+    await execa(pnpm, ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix'], { cwd })
 
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
 
@@ -227,8 +227,9 @@ export async function createPolyProject(dir: string) {
 }
 
 export async function createAction(dir: string) {
+  const cwd = join(process.cwd(), dir)
   async function create() {
-    if (isExisting(join(process.cwd(), dir))) {
+    if (isExisting(cwd)) {
       console.log(error(`目录 ${dir} 已存在`))
 
       return
@@ -245,6 +246,8 @@ export async function createAction(dir: string) {
   }
 
   await create()
+
+  await execa(pnpm, ['lint:fix'], { cwd, stdio: 'inherit' })
 }
 
 interface Options {

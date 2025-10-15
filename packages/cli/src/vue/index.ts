@@ -13,7 +13,7 @@ export async function createVueProject(dir: string) {
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    await execa(pnpm, ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint --fix'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['pkg', 'set', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
