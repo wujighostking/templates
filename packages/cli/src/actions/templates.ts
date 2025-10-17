@@ -70,7 +70,11 @@ export async function cpTemplateAction(template: string, projectName: string) {
   try {
     await copy(templatePath, projectPath)
 
-    await execa('git', ['init'], { cwd: projectPath })
+    const isInitGitStore = await initGitStore()
+
+    if (isInitGitStore) {
+      await execa('git', ['init'], { cwd: projectPath })
+    }
   }
   catch (error) {
     console.error(error)
@@ -129,6 +133,13 @@ export function deleteTemplate(template: string) {
 async function coverOldTemplate(oldTemplate: string) {
   return await createConfirm({
     message: `是否覆盖已存在的模板 ${oldTemplate}`,
+    initialValue: false,
+  })
+}
+
+async function initGitStore() {
+  return await createConfirm({
+    message: `是否初始化 git 仓库`,
     initialValue: false,
   })
 }

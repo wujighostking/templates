@@ -1,6 +1,6 @@
 import type { ConfirmOptions, SelectOptions, TextOptions } from '@clack/prompts'
 import { confirm, select, text } from '@clack/prompts'
-import { isString } from './type'
+import { isBoolean, isString } from './type'
 
 export async function createSelect(selectOptions: SelectOptions<string>) {
   const { message, options } = selectOptions
@@ -13,7 +13,7 @@ export async function createSelect(selectOptions: SelectOptions<string>) {
 
 export async function createConfirm(confirmOptions: ConfirmOptions) {
   try {
-    return await confirm({ ...confirmOptions }).then(result => isString(result) ? result : false)
+    return await confirm({ ...confirmOptions }).then(result => isBoolean(result) ? result : false, () => false)
   }
   catch {
     return false
