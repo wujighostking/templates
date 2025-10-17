@@ -1,14 +1,19 @@
 {
   "name": "@tmes/cli",
   "type": "module",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "自用脚手架",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/wujighostking/templates.git"
   },
-  "keywords": ["cli", "@tmes", "gkk", "gkk-cli"],
+  "keywords": [
+    "cli",
+    "@tmes",
+    "gkk",
+    "gkk-cli"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

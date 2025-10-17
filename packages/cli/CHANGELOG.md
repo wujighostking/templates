@@ -1,5 +1,17 @@
 # @tmes/cli
 
+## 1.6.0
+
+### Minor Changes
+
+- feat, refactor, fix
+
+### Patch Changes
+
+- Updated dependencies
+  - @tmes/default-templates@1.1.0
+  - @tmes/utils@1.6.0
+
 ## 1.5.0
 
 ### Minor Changes

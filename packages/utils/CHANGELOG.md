@@ -1,5 +1,11 @@
 # @tmes/utils
 
+## 1.6.0
+
+### Minor Changes
+
+- feat, refactor, fix
+
 ## 1.5.0
 
 ### Minor Changes
