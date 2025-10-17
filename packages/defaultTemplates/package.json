@@ -7,18 +7,6 @@
   "author": "",
   "license": "ISC",
   "keywords": [],
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
-    }
-  },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {},
   "dependencies": {
     "axios": "^1.12.2",
