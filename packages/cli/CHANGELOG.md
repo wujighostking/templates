@@ -1,5 +1,19 @@
 # @tmes/cli
 
+## 1.6.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @tmes/default-templates@1.2.1
+
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @tmes/default-templates@1.2.0
+
 ## 1.6.0
 
 ### Minor Changes
