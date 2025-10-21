@@ -13,7 +13,8 @@
     "dev": "tsdown --config=tsdown.config.dev.ts",
     "build": "tsdown --config=tsdown.config.build.ts",
     "commitlint": "commitlint --edit",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "test": "vitest"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",
@@ -26,7 +27,8 @@
     "lint-staged": "^16.1.5",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.14.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
