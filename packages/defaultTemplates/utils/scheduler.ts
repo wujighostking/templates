@@ -3,10 +3,16 @@ export class Scheduler {
   private index = 0
   private running = 0
   private resultQueue: any[] = []
+  private resolve: ((...args: any[]) => any) | undefined
+  private resultPromise: Promise<any>
 
-  constructor(private max: number = 6) {}
+  constructor(private max: number = 6) {
+    this.resultPromise = new Promise((resolve) => {
+      this.resolve = resolve
+    })
+  }
 
-  addTask(task: any | any[], immediate: boolean = false) {
+  addTask(task: any | any[]) {
     this.taskQueue ??= []
 
     if (Array.isArray(task)) {
@@ -14,10 +20,6 @@ export class Scheduler {
     }
     else {
       this.taskQueue.push(task)
-    }
-
-    if (immediate) {
-      this.runTask()
     }
   }
 
@@ -48,6 +50,11 @@ export class Scheduler {
           })
           .finally(() => {
             this.running--
+
+            if (this.resultQueue.length === this.taskQueue?.length) {
+              this.resolve?.(this.resultQueue)
+            }
+
             this.runTask()
           })
       }
@@ -60,6 +67,11 @@ export class Scheduler {
         }
         finally {
           this.running--
+
+          if (this.resultQueue.length === this.taskQueue?.length) {
+            this.resolve?.(this.resultQueue)
+          }
+
           this.runTask()
         }
       }
@@ -74,6 +86,11 @@ export class Scheduler {
         })
         .finally(() => {
           this.running--
+
+          if (this.resultQueue.length === this.taskQueue?.length) {
+            this.resolve?.(this.resultQueue)
+          }
+
           this.runTask()
         })
     }
@@ -81,7 +98,16 @@ export class Scheduler {
       this.resultQueue[resultIndex] = task
 
       this.running--
+
+      if (this.resultQueue.length === this.taskQueue?.length) {
+        this.resolve?.(this.resultQueue)
+      }
+
       this.runTask()
     }
+  }
+
+  getResults() {
+    return this.resultPromise
   }
 }
