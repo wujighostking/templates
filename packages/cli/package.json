@@ -1,7 +1,7 @@
 {
   "name": "@tmes/cli",
   "type": "module",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "自用脚手架",
   "license": "MIT",
   "repository": {

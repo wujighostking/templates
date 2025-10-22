@@ -1,5 +1,11 @@
 # @tmes/default-templates
 
+## 1.2.2
+
+### Patch Changes
+
+-
+
 ## 1.2.1
 
 ### Patch Changes
