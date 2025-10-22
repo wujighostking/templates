@@ -14,12 +14,19 @@
     "gkk",
     "gkk-cli"
   ],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "create-template": "dist/index.js",
-    "tm": "dist/index.js"
+    "tm": "dist/index.js",
+    "tmes": "dist/index.js"
   },
   "files": [
     "dist"

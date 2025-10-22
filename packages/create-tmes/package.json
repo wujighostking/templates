@@ -1,0 +1,29 @@
+{
+  "name": "create-tmes",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.13.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@tmes/cli": "workspace:*"
+  }
+}
