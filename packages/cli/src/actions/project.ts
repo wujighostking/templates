@@ -151,7 +151,7 @@ export async function createMonoRepoProject(dir: string) {
 
     writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
-    writeFile(join(cwd, '.nvmrc'), process.version)
+    writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
     writeFile(join(cwd, '.npmrc'), '')
     writeFile(join(cwd, 'README.md'), '')
 
