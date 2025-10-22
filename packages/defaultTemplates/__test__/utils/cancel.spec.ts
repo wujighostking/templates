@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { cancelPromise } from '../../utils/cancel'
 
 describe('cancel', () => {
-  it('test promise ', () => {
+  it('test promise ', async () => {
     const promiseLoop = () => new Promise((resolve) => {
       setTimeout(() => {
         resolve(1)
@@ -10,10 +10,12 @@ describe('cancel', () => {
     })
     const { promise } = cancelPromise(promiseLoop)
 
-    expect(promise).resolves.toBe(1)
+    const res = await promise
+
+    expect(res).toBe(1)
   })
 
-  it('test cancel ', () => {
+  it('test cancel ', async () => {
     const promiseLoop = () => new Promise((resolve) => {
       setTimeout(() => {
         resolve(1)
@@ -21,10 +23,15 @@ describe('cancel', () => {
     })
 
     const { cancel, promise } = cancelPromise(promiseLoop)
+
     const callback = vi.fn(res => res)
+
     promise.then(callback)
 
     cancel()
-    expect(callback).toHaveBeenCalledTimes(0)
+
+    await vi.waitFor(() => {
+      expect(callback).not.toHaveBeenCalled()
+    }, { timeout: 2000 })
   })
 })
