@@ -1,7 +1,7 @@
 {
   "name": "tmes",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.6.3",
   "private": true,
   "packageManager": "pnpm@10.13.0",
   "description": "",
@@ -14,7 +14,8 @@
     "build": "tsdown --config=tsdown.config.build.ts",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix",
-    "test": "vitest"
+    "test": "vitest",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.0",
@@ -22,6 +23,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@types/node": "^24.2.1",
+    "conventional-changelog-cli": "^5.0.0",
     "eslint": "^9.32.0",
     "eslint-plugin-format": "^1.0.1",
     "lint-staged": "^16.1.5",
