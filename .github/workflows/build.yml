@@ -3,6 +3,9 @@ name: 检查语法并构建项目
 on:
   push
 
+permissions: 
+  contents: write
+
 jobs:
   build:
     name: Build
