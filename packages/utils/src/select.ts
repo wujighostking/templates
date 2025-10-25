@@ -1,4 +1,5 @@
 import type { ConfirmOptions, SelectOptions, TextOptions } from '@clack/prompts'
+import process from 'node:process'
 import { confirm, select, text } from '@clack/prompts'
 import { isBoolean, isString } from './type'
 
@@ -8,7 +9,7 @@ export async function createSelect(selectOptions: SelectOptions<string>) {
   return await select({
     message,
     options,
-  })
+  }).then(result => isString(result) ? result : process.exit(0))
 }
 
 export async function createConfirm(confirmOptions: ConfirmOptions) {
