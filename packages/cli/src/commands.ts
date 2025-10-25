@@ -22,7 +22,7 @@ interface OptionConfig { type: string[] }
 export const commands: CommandsOptions[] = [
   {
     command: {
-      command: '',
+      command: '[dirname]',
       description: 'create a new project',
     },
     action: create,

@@ -302,9 +302,11 @@ function writeTsconfigFile(options: Options) {
   writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
 }
 
-export async function create() {
+export async function create(dir: string) {
   try {
-    const dir = await createText({ message: '请输入项目名称', placeholder: 'project-name' })
+    if (isEmpty(dir)) {
+      dir = await createText({ message: '请输入项目名称', placeholder: 'project-name' })
+    }
 
     if (isEmpty(dir)) {
       console.log(error('创建项目失败，必须输入项目名称！'))
