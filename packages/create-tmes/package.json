@@ -27,6 +27,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@tmes/cli": "workspace:*"
+    "@tmes/cli": "workspace:*",
+    "mri": "^1.2.0"
   }
 }

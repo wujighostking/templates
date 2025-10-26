@@ -65,6 +65,9 @@ importers:
       '@tmes/cli':
         specifier: workspace:*
         version: link:../cli
+      mri:
+        specifier: ^1.2.0
+        version: 1.2.0
 
   packages/defaultTemplates:
     dependencies:

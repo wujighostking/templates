@@ -18,6 +18,10 @@
     ".": {
       "import": "./src/index.ts",
       "require": "./src/index.ts"
+    },
+    "./src/actions": {
+      "import": "./src/actions/index.ts",
+      "require": "./src/actions/index.ts"
     }
   },
   "main": "dist/index.js",
