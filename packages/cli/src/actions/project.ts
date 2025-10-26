@@ -302,7 +302,7 @@ function writeTsconfigFile(options: Options) {
   writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
 }
 
-export async function create(dir: string) {
+export async function create(dir?: string) {
   try {
     if (isEmpty(dir)) {
       dir = await createText({ message: '请输入项目名称', placeholder: 'project-name' })
@@ -314,7 +314,7 @@ export async function create(dir: string) {
       return
     }
 
-    await createAction(dir)
+    await createAction(dir!)
   }
   catch (error) {
     console.log(error)
