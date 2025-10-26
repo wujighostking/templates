@@ -171,7 +171,7 @@ export async function createMonoRepoProject(dir: string) {
     await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['pkg', 'delete', 'scripts.test'], { stdio: 'inherit', cwd })
-    await execa(pnpm, ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix'], { cwd })
+    await execa(pnpm, ['pkg', 'set', 'type=module', 'private=true', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix', 'scripts.preinstall=npx only-allow pnpm'], { cwd })
 
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { cwd })
 

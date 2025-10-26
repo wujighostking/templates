@@ -35,7 +35,7 @@ export async function createReactProject(dir: string) {
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
-    await execa(pnpm, ['pkg', 'set', 'type=module', 'scripts.dev=vite', 'scripts.build=vite build', 'scripts.preview=vite preview', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['pkg', 'set', 'type=module', 'scripts.dev=vite', 'scripts.build=vite build', 'scripts.preview=vite preview', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix', 'scripts.preinstall=npx only-allow pnpm'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
