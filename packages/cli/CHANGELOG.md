@@ -1,5 +1,14 @@
 # @tmes/cli
 
+## 1.6.4
+
+### Patch Changes
+
+-
+- Updated dependencies
+  - @tmes/default-templates@1.2.3
+  - @tmes/utils@1.6.2
+
 ## 1.6.3
 
 ### Patch Changes
