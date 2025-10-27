@@ -29,15 +29,12 @@ function main() {
 
     case 'cp':
     {
-      let template = args[0]
+      const template = args[0]
 
       if (!template)
         return
 
-      const name = template
-      template = `../cli/node_modules/@tmes/default-templates/${template}`
-
-      cpTemplateAction(template, args[1] ?? name)
+      cpTemplateAction(template, args[1] ?? template)
       return
     }
 

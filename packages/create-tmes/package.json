@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@tmes/cli": "workspace:*",
+    "@tmes/default-templates": "workspace:*",
     "mri": "^1.2.0"
   }
 }
