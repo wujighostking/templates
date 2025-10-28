@@ -4,6 +4,12 @@
 npm i @tmes/cli -g
 ```
 
+如果不想全局安装，可以执行以下命令创建项目:
+
+```
+pnpm create tmes
+```
+
 create \<projectName> 创建项目
 
 ```
