@@ -283,3 +283,8 @@ export function tsconfigNode(nodeOptions: TsconfigNodeOptions) {
     '',
   ]
 }
+
+export const npmrc = [
+  'shamefully-hoist=true',
+  'registry=https://registry.npmmirror.com',
+]

@@ -1,4 +1,5 @@
 import type { JSXOptions } from '@tm/utils'
+import { EOL } from 'node:os'
 import process from 'node:process'
 import {
   buildToolsSelection,
@@ -18,6 +19,7 @@ import {
   join,
 
   mkdir,
+  npmrc,
   parsePath,
   pnpm,
   projectTypeSelection,
@@ -152,7 +154,7 @@ export async function createMonoRepoProject(dir: string) {
     writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
-    writeFile(join(cwd, '.npmrc'), '')
+    writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
     writeFile(join(cwd, 'README.md'), '')
 
     writeTsconfigFile({ cwd, projectType, framework, buildTool })

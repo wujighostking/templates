@@ -1,6 +1,7 @@
 import type { ArrayExpression, NodePath } from '@tm/utils'
+import { EOL } from 'node:os'
 import process from 'node:process'
-import { commitConfig, execa, generate, join, parse, pnpm, readFile, rm, traverse, types, unoConfig, writeFile } from '@tm/utils'
+import { commitConfig, execa, generate, join, npmrc, parse, pnpm, readFile, rm, traverse, types, unoConfig, writeFile } from '@tm/utils'
 
 export async function createVueProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -24,6 +25,9 @@ export async function createVueProject(dir: string) {
     setViteConfig(join(cwd, 'vite.config.ts'))
     addTypings(join(cwd, 'env.d.ts'))
     addGitIgnoreFile(join(cwd, '.gitignore'))
+
+    writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
+    writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
 
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 

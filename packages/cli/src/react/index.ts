@@ -1,5 +1,6 @@
+import { EOL } from 'node:os'
 import process from 'node:process'
-import { commitConfig, execa, gitignore, join, mkdir, pnpm, reactAppFile, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { commitConfig, execa, gitignore, join, mkdir, npmrc, pnpm, reactAppFile, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, webIndexHtmlConfig, writeFile } from '@tm/utils'
 
 export async function createReactProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -19,6 +20,9 @@ export async function createReactProject(dir: string) {
     writeFile(join(cwd, 'vite.config.ts'), viteReactConfig.join('\n'))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
+
+    writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
+    writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
 
     writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
     writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: 'react-jsx', types: ['vite/client'], include: ['src'] }).join('\n'))
