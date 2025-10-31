@@ -21,6 +21,12 @@ export function mkdir(dir: string) {
   return fs.mkdirSync(dir)
 }
 
+export function mkdirs(dirs: string[]) {
+  for (const dir of dirs) {
+    mkdir(dir)
+  }
+}
+
 export function join(...paths: string[]) {
   return path.join(...paths)
 }

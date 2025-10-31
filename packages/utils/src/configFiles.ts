@@ -1,4 +1,8 @@
-export type JSXOptions = 'react-jsx' | 'react-jsxdev' | 'preserve' | 'react-native' | 'react'
+export type JSXOptions = 'react-jsx'
+  | 'react-jsxdev'
+  | 'preserve'
+  | 'react-native'
+  | 'react'
 
 interface TsConfigAppOptions {
   /**
@@ -40,11 +44,22 @@ export const gitignore = [
   'cypress/videos/*',
   'tmp',
   'docs/.vitepress/cache',
+  '.nuxt',
+  '.output',
 ]
 
-export const commitConfig = ['export default { extends: [\'@commitlint/config-conventional\'] }']
+export const commitConfig = [
+  'export default { extends: [\'@commitlint/config-conventional\'] }',
+]
 
-export const unoConfig = ['import { defineConfig } from \'unocss\'', 'export default defineConfig({', '  rules: [', '    [\'center\', { \'display\': \'flex\', \'justify-content\': \'center\', \'align-items\': \'center\' }],', '  ],', '})']
+export const unoConfig = [
+  'import { defineConfig } from \'unocss\'',
+  'export default defineConfig({',
+  '  rules: [',
+  '    [\'center\', { \'display\': \'flex\', \'justify-content\': \'center\', \'align-items\': \'center\' }],',
+  '  ],',
+  '})',
+]
 
 export const workspaceConfig = ['packages:\n  - packages/*']
 
@@ -125,7 +140,11 @@ export const tsdownBuildConfig = [
   '',
 ]
 
-export function webIndexHtmlConfig(id: string, scriptSrc: string, title?: string) {
+export function webIndexHtmlConfig(
+  id: string,
+  scriptSrc: string,
+  title?: string,
+) {
   id = id ?? 'app'
   scriptSrc = scriptSrc ?? '/src/main.ts'
   title = title ?? 'Document'
@@ -247,7 +266,6 @@ export function tsconfigApp(appOptions: TsConfigAppOptions) {
     `  "include": ${include}`,
     '}',
     '',
-
   ]
 }
 export function tsconfigNode(nodeOptions: TsconfigNodeOptions) {
@@ -287,4 +305,48 @@ export function tsconfigNode(nodeOptions: TsconfigNodeOptions) {
 export const npmrc = [
   'shamefully-hoist=true',
   'registry=https://registry.npmmirror.com',
+]
+
+export const nuxtConfig = [
+  '// https://nuxt.com/docs/api/configuration/nuxt-config',
+  'export default defineNuxtConfig({',
+  '  compatibilityDate: \'2025-07-15\',',
+  '  devtools: { enabled: true },',
+  '   modules: [',
+  '    \'@unocss/nuxt\',',
+  '  ],',
+  '})',
+]
+
+export const nuxtAppPageConfig = [
+  '<script setup lang=\'ts\'>',
+  '',
+  '</script>',
+  '',
+  '<template>',
+  '  <div>',
+  '    <nuxt-page />',
+  '  </div>',
+  '</template>',
+]
+
+export const nuxtTsconfig = [
+  '{',
+  '  "references": [',
+  '    {',
+  '      "path": ".nuxt/tsconfig.app.json"',
+  '    },',
+  '    {',
+  '      "path": ".nuxt/tsconfig.server.json"',
+  '    },',
+  '    {',
+  '      "path": ".nuxt/tsconfig.shared.json"',
+  '    },',
+  '    {',
+  '      "path": ".nuxt/tsconfig.node.json"',
+  '    }',
+  '  ],',
+  '  // https://nuxt.com/docs/guide/concepts/typescript',
+  '  "files": []',
+  '}',
 ]

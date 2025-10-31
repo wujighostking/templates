@@ -13,6 +13,7 @@ export const frameworkSelection: SelectOptions<string> = {
   options: [
     { value: 'vue', label: 'Vue' },
     { value: 'react', label: 'React' },
+    { value: 'nuxt', label: 'Nuxt' },
   ],
 }
 

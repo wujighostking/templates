@@ -32,6 +32,7 @@ import {
   workspaceConfig,
   writeFile,
 } from '@tm/utils'
+import { createNuxtProject } from '../nuxt'
 import { createReactProject } from '../react'
 import { createVueProject } from '../vue'
 import { createApp, createBuildToolConfig, createProjectType, pkgToWorkspace } from './config'
@@ -225,6 +226,9 @@ export async function createPolyProject(dir: string) {
   }
   else if (framework === 'react') {
     await createReactProject(dir)
+  }
+  else if (framework === 'nuxt') {
+    await createNuxtProject(dir)
   }
 }
 
