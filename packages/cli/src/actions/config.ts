@@ -1,6 +1,7 @@
-import { error, execa, isExisting, join, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { EOL } from 'node:os'
+import { error, execa, isExisting, join, nuxtConfig, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
 
-export function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string, framework: string | undefined) {
+export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd: string, framework: string | undefined) {
   switch (buildTool) {
     case 'vite':
       createViteConfig(cwd, framework)
@@ -8,6 +9,10 @@ export function createBuildToolConfig(buildTool: 'vite' | 'tsdown', cwd: string,
 
     case 'tsdown':
       createTsdownConfig(cwd)
+      break
+
+    case 'nuxt':
+      createNuxtConfig(cwd)
       break
   }
 }
@@ -29,6 +34,10 @@ function createTsdownConfig(cwd: string) {
   writeFile(join(cwd, 'tsdown.config.build.ts'), tsdownBuildConfig.join('\n'))
 }
 
+function createNuxtConfig(cwd: string) {
+  writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig(true).join(EOL))
+}
+
 export function pkgToWorkspace(file: string, pkg: string) {
   if (!isExisting(file)) {
     console.log(error('pnpm-workspace.yaml 文件不存在'))
@@ -45,7 +54,7 @@ export function pkgToWorkspace(file: string, pkg: string) {
   writeFile(file, stringify(ast))
 }
 
-export async function createProjectType(projectType: 'node' | 'web', framework: string | undefined, cwd: string) {
+export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', framework: string | undefined, cwd: string) {
   if (projectType === 'node') {
     await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
   }
@@ -69,7 +78,7 @@ export async function createProjectType(projectType: 'node' | 'web', framework: 
 
 export function createApp(framework: string, cwd: string) {
   if (framework === 'vue') {
-    writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile.join('\n'), { flag: 'w' })
+    writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile().join('\n'), { flag: 'w' })
     writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile.join('\n'))
   }
   else if (framework === 'react') {

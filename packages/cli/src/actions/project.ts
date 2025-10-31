@@ -19,7 +19,9 @@ import {
   join,
 
   mkdir,
+  mkdirs,
   npmrc,
+  nuxtTsconfig,
   parsePath,
   pnpm,
   projectTypeSelection,
@@ -29,6 +31,8 @@ import {
   tsconfig,
   tsconfigApp,
   tsconfigNode,
+  unoConfig,
+  vueAppFile,
   workspaceConfig,
   writeFile,
 } from '@tm/utils'
@@ -124,8 +128,8 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   }
 }
 
-type ProjectType = 'node' | 'web'
-type BuildTool = 'vite' | 'tsdown'
+type ProjectType = 'node' | 'web' | 'nuxt'
+type BuildTool = 'vite' | 'tsdown' | 'nuxt'
 
 export async function createMonoRepoProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -136,6 +140,11 @@ export async function createMonoRepoProject(dir: string) {
 
     let framework: string = ''
     const buildTool = await createSelect(buildToolsSelection) as BuildTool
+
+    if (buildTool === 'nuxt') {
+      projectType = 'nuxt'
+      framework = 'nuxt'
+    }
 
     if (buildTool === 'vite') {
       projectType = await createSelect(projectTypeSelection) as ProjectType
@@ -198,6 +207,40 @@ export async function createMonoRepoProject(dir: string) {
         devDependencies.push('vite-plugin-dts')
       }
     }
+    else if (buildTool === 'nuxt') {
+      await execa(pnpm, [
+        'pkg',
+        'set',
+        'scripts.dev=nuxt dev',
+        'scripts.build=nuxt build',
+        'scripts.preview=nuxt preview',
+        'scripts.generate=nuxt generate',
+        'scripts.prepare=nuxt prepare',
+        'scripts.postinstall=nuxt prepare',
+      ], { cwd })
+
+      mkdirs([
+        join(cwd, 'packages', 'app'),
+        join(cwd, 'packages', 'server'),
+        join(cwd, 'packages', 'shared'),
+        join(cwd, 'public'),
+
+        join(cwd, 'packages', 'app', 'assets'),
+        join(cwd, 'packages', 'app', 'components'),
+        join(cwd, 'packages', 'app', 'composables'),
+        join(cwd, 'packages', 'app', 'pages'),
+        join(cwd, 'packages', 'app', 'utils'),
+
+        join(cwd, 'packages', 'server', 'middleware'),
+        join(cwd, 'packages', 'server', 'api'),
+        join(cwd, 'packages', 'server', 'routes'),
+      ])
+      writeFile(join(cwd, 'packages', 'app', 'app.vue'), vueAppFile('<NuxtPage />').join(EOL), { flag: 'w' })
+      writeFile(join(cwd, 'packages', 'app', 'pages', 'index.vue'), vueAppFile().join(EOL), { flag: 'w' })
+      writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
+
+      devDependencies.push('unocss', '@unocss/nuxt')
+    }
 
     await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
@@ -208,6 +251,9 @@ export async function createMonoRepoProject(dir: string) {
     }
     else if (framework === 'react') {
       await execa(pnpm, ['install', 'react', 'react-dom'], { stdio: 'inherit', cwd })
+    }
+    else if (framework === 'nuxt') {
+      await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router'], { stdio: 'inherit', cwd })
     }
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
@@ -302,10 +348,15 @@ function writeTsconfigFile(options: Options) {
       types = ['vite/client']
     }
   }
+  else if (buildTool === 'nuxt') {
+    writeFile(join(cwd, 'tsconfig.json'), nuxtTsconfig.join(EOL))
+  }
 
-  writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
-  writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: jsx!, types: types!, include: ['**/src'] }).join('\n'))
-  writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
+  if (buildTool !== 'nuxt') {
+    writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
+    writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: jsx!, types: types!, include: ['**/src'] }).join('\n'))
+    writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: nodeInclude! }).join('\n'))
+  }
 }
 
 export async function create(dir?: string) {

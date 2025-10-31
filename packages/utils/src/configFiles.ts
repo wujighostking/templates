@@ -176,20 +176,22 @@ export const vueMainFile = [
   '',
 ]
 
-export const vueAppFile = [
-  '<script setup lang="ts">',
-  '',
-  '</script>',
-  '',
-  '<template>',
-  '  <div>app</div>',
-  '</template>',
-  '',
-  '<style scoped>',
-  '',
-  '</style>',
-  '',
-]
+export function vueAppFile(content: string = 'app') {
+  return [
+    '<script setup lang="ts">',
+    '',
+    '</script>',
+    '',
+    '<template>',
+    `  <div>${content}</div>`,
+    '</template>',
+    '',
+    '<style scoped>',
+    '',
+    '</style>',
+    '',
+  ]
+}
 
 export const reactAppFile = [
   'function App() {',
@@ -307,16 +309,33 @@ export const npmrc = [
   'registry=https://registry.npmmirror.com',
 ]
 
-export const nuxtConfig = [
-  '// https://nuxt.com/docs/api/configuration/nuxt-config',
-  'export default defineNuxtConfig({',
-  '  compatibilityDate: \'2025-07-15\',',
-  '  devtools: { enabled: true },',
-  '   modules: [',
-  '    \'@unocss/nuxt\',',
-  '  ],',
-  '})',
-]
+export function nuxtConfig(isMonorepo: boolean = false) {
+  const config = [
+    '// https://nuxt.com/docs/api/configuration/nuxt-config',
+    'export default defineNuxtConfig({',
+    '  compatibilityDate: \'2025-07-15\',',
+    '  devtools: { enabled: true },',
+    '   modules: [',
+    '    \'@unocss/nuxt\',',
+    '  ],',
+    '})',
+  ]
+
+  if (isMonorepo) {
+    config[config.length - 1] = ''
+    config.push(
+      '  srcDir: \'packages/app/\',',
+      '    dir: {',
+      '      pages: \'pages\',',
+      '    },',
+      '',
+      '  serverDir: \'packages/server/\',',
+      '})',
+    )
+  }
+
+  return config
+}
 
 export const nuxtAppPageConfig = [
   '<script setup lang=\'ts\'>',

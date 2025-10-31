@@ -39,9 +39,9 @@ export async function createNuxtProject(dir: string) {
       join(cwd, 'server', 'routes'),
     ])
 
-    writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig.join('\n'))
+    writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig().join('\n'))
 
-    writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile.join(EOL))
+    writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile('<NuxtPage />').join(EOL))
 
     await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 

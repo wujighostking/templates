@@ -27,6 +27,7 @@ export const buildToolsSelection: SelectOptions<string> = {
   options: [
     { value: 'vite', label: 'vite' },
     { value: 'tsdown', label: 'tsdown' },
+    { value: 'nuxt', label: 'nuxt' },
   ],
 }
 
