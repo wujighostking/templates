@@ -222,6 +222,8 @@ export async function createMonoRepoProject(dir: string) {
       await createProjectType(projectType!, framework, cwd)
 
       if (framework) {
+        writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
+
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
 
