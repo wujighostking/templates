@@ -9,6 +9,7 @@ import {
   createText,
   definiteSelection,
   error,
+  eslintConfig,
   execa,
   frameworkSelection,
   gitignore,
@@ -33,6 +34,7 @@ import {
   tsconfigApp,
   tsconfigNode,
   unoConfig,
+  vscodeSettings,
   vueAppFile,
   workspaceConfig,
   writeFile,
@@ -161,22 +163,42 @@ export async function createMonoRepoProject(dir: string) {
     writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
 
     mkdir(join(cwd, 'packages'))
+    mkdir(join(cwd, '.vscode'))
 
     writeFile(join(cwd, 'pnpm-workspace.yaml'), workspaceConfig.join(''))
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
     writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
     writeFile(join(cwd, 'README.md'), '')
+    writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 
     writeTsconfigFile({ cwd, projectType, framework, buildTool })
 
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'typescript', '@types/node', buildTool]
+    const devDependencies = [
+      '@commitlint/cli',
+      '@commitlint/config-conventional',
+      'lint-staged',
+      'simple-git-hooks',
+      'typescript',
+      '@types/node',
+      buildTool,
+      '@antfu/eslint-config',
+      'eslint',
+      'eslint-plugin-format',
+    ]
 
     if (framework === 'vue') {
       devDependencies.push('@vitejs/plugin-vue')
+
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
     }
     else if (framework === 'react') {
       devDependencies.push('@types/react', '@types/react-dom', '@vitejs/plugin-react')
+
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'react: true']).join(EOL))
+    }
+    else if (projectType === 'node') {
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig().join(EOL))
     }
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })
@@ -200,7 +222,7 @@ export async function createMonoRepoProject(dir: string) {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
         createApp(framework, cwd)
 
-        devDependencies.push('unocss')
+        devDependencies.push('unocss', '@unocss/eslint-plugin')
       }
       else {
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool} build --mode=development`], { cwd })
@@ -241,11 +263,12 @@ export async function createMonoRepoProject(dir: string) {
       writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
 
       writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
 
-      devDependencies.push('unocss', '@unocss/nuxt')
+      devDependencies.push('unocss', '@unocss/nuxt', '@unocss/eslint-plugin')
     }
 
-    await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
+    // await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 

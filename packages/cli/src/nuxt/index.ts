@@ -2,6 +2,7 @@ import { EOL } from 'node:os'
 import process from 'node:process'
 import {
   commitConfig,
+  eslintConfig,
   execa,
   gitignore,
   join,
@@ -14,6 +15,7 @@ import {
   rm,
   robotsTxt,
   unoConfig,
+  vscodeSettings,
   vueAppFile,
   writeFile,
 } from '@tm/utils'
@@ -28,6 +30,7 @@ export async function createNuxtProject(dir: string) {
       join(cwd, 'server'),
       join(cwd, 'shared'),
       join(cwd, 'public'),
+      join(cwd, '.vscode'),
 
       join(cwd, 'app', 'assets'),
       join(cwd, 'app', 'components'),
@@ -45,6 +48,8 @@ export async function createNuxtProject(dir: string) {
     writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
 
     writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile('<NuxtPage />').join(EOL))
+
+    writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 
     await execa(pnpm, ['init'], { stdio: 'inherit', cwd })
 
@@ -86,12 +91,14 @@ export async function createNuxtProject(dir: string) {
 
     writeFile(join(cwd, 'tsconfig.json'), nuxtTsconfig.join(EOL))
 
+    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
+
     await execa('git', ['init'], { cwd, stdio: 'inherit' })
 
-    await execa(pnpm, ['dlx', '@antfu/eslint-config'], { cwd, stdio: 'inherit' })
+    // await execa(pnpm, ['dlx', '@antfu/eslint-config'], { cwd, stdio: 'inherit' })
 
     const dependencies = ['nuxt', 'vue', 'vue-router']
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', '@types/node', 'unocss', '@unocss/nuxt']
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', '@types/node', 'unocss', '@unocss/nuxt', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin']
     await execa(pnpm, ['install', ...dependencies], { stdio: 'inherit', cwd })
     await execa(pnpm, ['install', ...devDependencies], { stdio: 'inherit', cwd })
 

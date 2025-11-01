@@ -1,6 +1,6 @@
 import { EOL } from 'node:os'
 import process from 'node:process'
-import { commitConfig, execa, gitignore, join, mkdir, npmrc, pnpm, reactAppFile, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { commitConfig, eslintConfig, execa, gitignore, join, mkdir, npmrc, pnpm, reactAppFile, reactMainFile, rm, tsconfig, tsconfigApp, tsconfigNode, unoConfig, viteReactConfig, vscodeSettings, webIndexHtmlConfig, writeFile } from '@tm/utils'
 
 export async function createReactProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -8,6 +8,7 @@ export async function createReactProject(dir: string) {
   try {
     //  创建文件夹
     mkdir(cwd)
+    mkdir(join(cwd, '.vscode'))
     mkdir(join(cwd, 'src'))
     mkdir(join(cwd, 'public'))
 
@@ -24,11 +25,15 @@ export async function createReactProject(dir: string) {
     writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
     writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
 
+    writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
+
+    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'react: true']).join(EOL))
+
     writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
     writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: 'react-jsx', types: ['vite/client'], include: ['src'] }).join('\n'))
     writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: ['vite.config.ts'] }).join('\n'))
 
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom']
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin']
     const dependencies = ['react', 'react-dom']
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })
@@ -37,7 +42,7 @@ export async function createReactProject(dir: string) {
 
     await execa(pnpm, ['pkg', 'delete', 'scripts.test'], { cwd })
 
-    await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
+    // await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['pkg', 'set', 'type=module', 'scripts.dev=vite', 'scripts.build=vite build', 'scripts.preview=vite preview', 'scripts.commitlint=commitlint --edit', 'scripts.lint=eslint', 'scripts.lint:fix=eslint --fix', 'scripts.preinstall=npx only-allow pnpm'], { stdio: 'inherit', cwd })
 
