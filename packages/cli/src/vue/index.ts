@@ -1,7 +1,8 @@
 import type { ArrayExpression, NodePath } from '@tm/utils'
 import { EOL } from 'node:os'
 import process from 'node:process'
-import { commitConfig, eslintConfig, execa, generate, isExisting, join, mkdir, npmrc, parse, pnpm, readFile, rm, traverse, types, unoConfig, vscodeSettings, writeFile } from '@tm/utils'
+import { ciWorkflow, commitConfig, eslintConfig, execa, generate, isExisting, join, mkdir, npmrc, parse, pnpm, readFile, rm, traverse, types, unoConfig, vscodeSettings, writeFile } from '@tm/utils'
+import { createWorkflow } from '../actions'
 
 export async function createVueProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -34,6 +35,8 @@ export async function createVueProject(dir: string) {
     writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
 
     writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
+
+    createWorkflow(cwd, 'ci.yml', ciWorkflow())
 
     writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 

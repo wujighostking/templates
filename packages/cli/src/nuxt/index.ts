@@ -1,6 +1,7 @@
 import { EOL } from 'node:os'
 import process from 'node:process'
 import {
+  ciWorkflow,
   commitConfig,
   eslintConfig,
   execa,
@@ -19,6 +20,7 @@ import {
   vueAppFile,
   writeFile,
 } from '@tm/utils'
+import { createWorkflow } from '../actions'
 
 export async function createNuxtProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -92,6 +94,8 @@ export async function createNuxtProject(dir: string) {
     writeFile(join(cwd, 'tsconfig.json'), nuxtTsconfig.join(EOL))
 
     writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
+
+    createWorkflow(cwd, 'ci.yml', ciWorkflow())
 
     await execa('git', ['init'], { cwd, stdio: 'inherit' })
 

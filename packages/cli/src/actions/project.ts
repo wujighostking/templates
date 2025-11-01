@@ -3,6 +3,7 @@ import { EOL } from 'node:os'
 import process from 'node:process'
 import {
   buildToolsSelection,
+  ciWorkflow,
   commitConfig,
   createConfirm,
   createSelect,
@@ -43,6 +44,7 @@ import { createNuxtProject } from '../nuxt'
 import { createReactProject } from '../react'
 import { createVueProject } from '../vue'
 import { createApp, createBuildToolConfig, createProjectType, pkgToWorkspace } from './config'
+import { createWorkflow } from './workflows'
 
 export async function pkgAction(dir: string | undefined, _name: string | undefined, options: { name: string, add: boolean }) {
   /**
@@ -175,6 +177,7 @@ export async function createMonoRepoProject(dir: string) {
     writeFile(join(cwd, 'README.md'), '')
     writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 
+    createWorkflow(cwd, 'ci.yml', ciWorkflow())
     writeTsconfigFile({ cwd, projectType, framework, buildTool })
 
     const devDependencies = [
