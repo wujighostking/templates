@@ -1,5 +1,6 @@
 import { EOL } from 'node:os'
-import { error, execa, isExisting, join, nuxtConfig, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { error, isExisting, join, nuxtConfig, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { pkgAction } from './project'
 
 export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd: string, framework: string | undefined) {
   switch (buildTool) {
@@ -56,7 +57,8 @@ export function pkgToWorkspace(file: string, pkg: string) {
 
 export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', framework: string | undefined, cwd: string) {
   if (projectType === 'node') {
-    await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+    // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+    pkgAction('packages', 'main', { name: 'main', add: false })
   }
   else if (projectType === 'web') {
     if (framework === 'vue') {
@@ -64,14 +66,16 @@ export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', fr
         join(cwd, 'index.html'),
         webIndexHtmlConfig('app', './packages/main/src/main.ts').join('\n'),
       )
-      await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+      // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+      pkgAction('packages', 'main', { name: 'main', add: false })
     }
     else if (framework === 'react') {
       writeFile(
         join(cwd, 'index.html'),
         webIndexHtmlConfig('root', './packages/main/src/main.tsx').join('\n'),
       )
-      await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+      // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
+      pkgAction('packages', 'main', { name: 'main', add: false })
     }
   }
 }
