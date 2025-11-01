@@ -10,8 +10,6 @@ export function createNodeVersion(cwd: string) {
 }
 
 export function createWorkflow(cwd: string, fileName: string, workflow: string) {
-  console.log(workflow.includes('.node-version'), '============================')
-
   if (workflow.includes('.node-version')) {
     createNodeVersion(cwd)
   }
