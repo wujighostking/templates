@@ -27,7 +27,7 @@ export async function createReactProject(dir: string) {
 
     writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 
-    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'react: true']).join(EOL))
+    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'react: true,']).join(EOL))
 
     writeFile(join(cwd, 'tsconfig.json'), tsconfig.join('\n'))
     writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: 'react-jsx', types: ['vite/client'], include: ['src'] }).join('\n'))

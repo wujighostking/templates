@@ -190,12 +190,12 @@ export async function createMonoRepoProject(dir: string) {
     if (framework === 'vue') {
       devDependencies.push('@vitejs/plugin-vue')
 
-      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
     }
     else if (framework === 'react') {
       devDependencies.push('@types/react', '@types/react-dom', '@vitejs/plugin-react')
 
-      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'react: true']).join(EOL))
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'react: true,']).join(EOL))
     }
     else if (projectType === 'node') {
       writeFile(join(cwd, 'eslint.config.js'), eslintConfig().join(EOL))
@@ -263,7 +263,7 @@ export async function createMonoRepoProject(dir: string) {
       writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
 
       writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
-      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
+      writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
 
       devDependencies.push('unocss', '@unocss/nuxt', '@unocss/eslint-plugin')
     }

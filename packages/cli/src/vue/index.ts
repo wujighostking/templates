@@ -1,7 +1,7 @@
 import type { ArrayExpression, NodePath } from '@tm/utils'
 import { EOL } from 'node:os'
 import process from 'node:process'
-import { commitConfig, eslintConfig, execa, generate, join, mkdir, npmrc, parse, pnpm, readFile, rm, traverse, types, unoConfig, vscodeSettings, writeFile } from '@tm/utils'
+import { commitConfig, eslintConfig, execa, generate, isExisting, join, mkdir, npmrc, parse, pnpm, readFile, rm, traverse, types, unoConfig, vscodeSettings, writeFile } from '@tm/utils'
 
 export async function createVueProject(dir: string) {
   const cwd = join(process.cwd(), dir)
@@ -18,7 +18,9 @@ export async function createVueProject(dir: string) {
 
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
-    mkdir(join(cwd, '.vscode'))
+    if (!isExisting(join(cwd, '.vscode'))) {
+      mkdir(join(cwd, '.vscode'))
+    }
 
     writeFile(join(cwd, 'commitlint.config.js'), commitConfig.join(''))
     writeFile(join(cwd, 'uno.config.ts'), unoConfig.join('\n'))
@@ -31,7 +33,7 @@ export async function createVueProject(dir: string) {
     writeFile(join(cwd, '.nvmrc'), process.version.slice(0, 3))
     writeFile(join(cwd, '.npmrc'), npmrc.join(EOL))
 
-    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
+    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
 
     writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 

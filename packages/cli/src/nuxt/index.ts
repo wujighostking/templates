@@ -91,7 +91,7 @@ export async function createNuxtProject(dir: string) {
 
     writeFile(join(cwd, 'tsconfig.json'), nuxtTsconfig.join(EOL))
 
-    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true', 'vue: true']).join(EOL))
+    writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
 
     await execa('git', ['init'], { cwd, stdio: 'inherit' })
 
