@@ -27,6 +27,7 @@ import {
   projectTypeSelection,
   repoSelection,
   rm,
+  robotsTxt,
   stringToBoolean,
   tsconfig,
   tsconfigApp,
@@ -238,6 +239,8 @@ export async function createMonoRepoProject(dir: string) {
       writeFile(join(cwd, 'packages', 'app', 'app.vue'), vueAppFile('<NuxtPage />').join(EOL), { flag: 'w' })
       writeFile(join(cwd, 'packages', 'app', 'pages', 'index.vue'), vueAppFile().join(EOL), { flag: 'w' })
       writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
+
+      writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
 
       devDependencies.push('unocss', '@unocss/nuxt')
     }

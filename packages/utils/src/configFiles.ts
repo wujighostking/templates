@@ -369,3 +369,8 @@ export const nuxtTsconfig = [
   '  "files": []',
   '}',
 ]
+
+export const robotsTxt = [
+  'User-Agent: *',
+  'Disallow:',
+]

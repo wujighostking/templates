@@ -12,6 +12,7 @@ import {
   nuxtTsconfig,
   pnpm,
   rm,
+  robotsTxt,
   unoConfig,
   vueAppFile,
   writeFile,
@@ -40,6 +41,8 @@ export async function createNuxtProject(dir: string) {
     ])
 
     writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig().join('\n'))
+
+    writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
 
     writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile('<NuxtPage />').join(EOL))
 
