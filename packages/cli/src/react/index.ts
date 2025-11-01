@@ -33,7 +33,7 @@ export async function createReactProject(dir: string) {
     writeFile(join(cwd, 'tsconfig.app.json'), tsconfigApp({ jsx: 'react-jsx', types: ['vite/client'], include: ['src'] }).join('\n'))
     writeFile(join(cwd, 'tsconfig.node.json'), tsconfigNode({ include: ['vite.config.ts'] }).join('\n'))
 
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin']
+    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin', '@eslint-react/eslint-plugin', 'eslint-plugin-react-hooks', 'eslint-plugin-react-refresh']
     const dependencies = ['react', 'react-dom']
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })

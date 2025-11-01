@@ -47,7 +47,7 @@ export async function createNuxtProject(dir: string) {
 
     writeFile(join(cwd, 'public', 'robots.txt'), robotsTxt.join(EOL))
 
-    writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile('<NuxtPage />').join(EOL))
+    writeFile(join(cwd, 'app', 'pages', 'index.vue'), vueAppFile('index').join(EOL))
 
     writeFile(join(cwd, '.vscode', 'settings.json'), vscodeSettings.join(''))
 

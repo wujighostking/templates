@@ -1,5 +1,5 @@
 import { EOL } from 'node:os'
-import { error, isExisting, join, nuxtConfig, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
+import { error, isExisting, join, nuxtConfig, parsePath, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
 import { pkgAction } from './project'
 
 export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd: string, framework: string | undefined) {
@@ -56,9 +56,11 @@ export function pkgToWorkspace(file: string, pkg: string) {
 }
 
 export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', framework: string | undefined, cwd: string) {
+  const { name: dir } = parsePath(cwd)
+
   if (projectType === 'node') {
     // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
-    pkgAction('packages', 'main', { name: 'main', add: false })
+    await pkgAction(join(dir, 'packages'), 'main', { name: 'main', add: false })
   }
   else if (projectType === 'web') {
     if (framework === 'vue') {
@@ -67,7 +69,7 @@ export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', fr
         webIndexHtmlConfig('app', './packages/main/src/main.ts').join('\n'),
       )
       // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
-      pkgAction('packages', 'main', { name: 'main', add: false })
+      await pkgAction(join(dir, 'packages'), 'main', { name: 'main', add: false })
     }
     else if (framework === 'react') {
       writeFile(
@@ -75,7 +77,7 @@ export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', fr
         webIndexHtmlConfig('root', './packages/main/src/main.tsx').join('\n'),
       )
       // await execa('tm.cmd', ['pkg', 'packages', 'main', '--add=false'], { cwd })
-      pkgAction('packages', 'main', { name: 'main', add: false })
+      await pkgAction(join(dir, 'packages'), 'main', { name: 'main', add: false })
     }
   }
 }

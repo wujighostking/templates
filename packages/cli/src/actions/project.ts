@@ -153,7 +153,10 @@ export async function createMonoRepoProject(dir: string) {
       projectType = await createSelect(projectTypeSelection) as ProjectType
 
       if (projectType === 'web') {
-        const frameworkSelected = await createSelect(frameworkSelection)
+        const frameworkSelected = await createSelect({
+          ...frameworkSelection,
+          options: frameworkSelection.options.filter(f => f.value !== 'nuxt'),
+        })
         framework = isString(frameworkSelected) ? frameworkSelected : ''
       }
     }
@@ -193,7 +196,7 @@ export async function createMonoRepoProject(dir: string) {
       writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
     }
     else if (framework === 'react') {
-      devDependencies.push('@types/react', '@types/react-dom', '@vitejs/plugin-react')
+      devDependencies.push('@types/react', '@types/react-dom', '@vitejs/plugin-react', '@eslint-react/eslint-plugin', 'eslint-plugin-react-hooks', 'eslint-plugin-react-refresh')
 
       writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'react: true,']).join(EOL))
     }
@@ -324,8 +327,6 @@ export async function createAction(dir: string) {
   }
 
   await create()
-
-  await execa(pnpm, ['lint:fix'], { cwd, stdio: 'inherit' })
 }
 
 interface Options {
