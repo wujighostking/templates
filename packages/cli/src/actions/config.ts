@@ -20,7 +20,7 @@ export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd
 
 function createViteConfig(cwd: string, framework: string | undefined) {
   if (framework === 'vue') {
-    writeFile(join(cwd, 'vite.config.ts'), viteVueConfig.join('\n'))
+    writeFile(join(cwd, 'vite.config.ts'), viteVueConfig(true).join('\n'))
   }
   else if (framework === 'react') {
     writeFile(join(cwd, 'vite.config.ts'), viteReactConfig.join('\n'))

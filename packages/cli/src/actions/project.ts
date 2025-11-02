@@ -194,7 +194,7 @@ export async function createMonoRepoProject(dir: string) {
     ]
 
     if (framework === 'vue') {
-      devDependencies.push('@vitejs/plugin-vue')
+      devDependencies.push('@vitejs/plugin-vue', 'unplugin-auto-import')
 
       writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
     }

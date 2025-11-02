@@ -46,6 +46,7 @@ export const gitignore = [
   'docs/.vitepress/cache',
   '.nuxt',
   '.output',
+  'typings/auto-imports.d.ts',
 ]
 
 export const commitConfig = [
@@ -82,19 +83,45 @@ export const viteNodeConfig = [
   '}))',
 ]
 
-export const viteVueConfig = [
-  'import { defineConfig } from \'vite\'',
-  'import vue from \'@vitejs/plugin-vue\'',
-  'import UnoCss from \'unocss/vite\'',
-  '',
-  'export default defineConfig({',
-  '  plugins: [',
-  '    UnoCss(),',
-  '    vue(),',
-  '  ],',
-  '})',
-  '',
-]
+export function viteVueConfig(isMonorepo: boolean = false) {
+  const resolve: string[] = []
+
+  if (!isMonorepo) {
+    resolve.push(
+      '   resolve: {',
+      '     alias: {',
+      '       \'@\': fileURLToPath(new URL(\'./src\', import.meta.url)),',
+      '     },',
+      '   },',
+    )
+  }
+
+  const config = [
+    'import { defineConfig } from \'vite\'',
+    'import vue from \'@vitejs/plugin-vue\'',
+    'import UnoCss from \'unocss/vite\'',
+    'import AutoImport from \'unplugin-auto-import/vite\'',
+    '',
+    'export default defineConfig({',
+    '  plugins: [',
+    '    UnoCss(),',
+    '    vue(),',
+    '     AutoImport({',
+    '       imports: [\'vue\'],',
+    '       dts: \'typings/auto-imports.d.ts\',',
+    '     }),',
+    '  ],',
+    ...resolve,
+    '})',
+    '',
+  ]
+
+  if (!isMonorepo) {
+    config.unshift('import { fileURLToPath, URL } from \'node:url\'')
+  }
+
+  return config
+}
 
 export const viteReactConfig = [
   'import { defineConfig } from \'vite\'',
@@ -479,3 +506,14 @@ jobs:
 
 `
 }
+
+export const vueEnvConfig = [
+  '/// <reference types="vite/client" />',
+  '/// <reference types="./typings/auto-imports" />',
+]
+
+export const vscodeVueExtensions = [
+  '{',
+  '  "recommendations": ["Vue.volar"]',
+  '}',
+]
