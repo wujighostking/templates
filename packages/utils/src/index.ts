@@ -1,4 +1,3 @@
-export * from './babel'
 export * from './color'
 export * from './configFiles'
 export * from './execa'
