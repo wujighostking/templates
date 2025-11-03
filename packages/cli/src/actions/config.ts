@@ -1,3 +1,4 @@
+import type { UiKeys } from '@tm/utils'
 import { EOL } from 'node:os'
 import { error, isExisting, join, nuxtConfig, parsePath, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
 import { pkgAction } from './project'
@@ -85,7 +86,7 @@ export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', fr
 export function createApp(framework: string, cwd: string) {
   if (framework === 'vue') {
     writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile().join('\n'), { flag: 'w' })
-    writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile.join('\n'))
+    writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile('' as UiKeys).join('\n'))
   }
   else if (framework === 'react') {
     writeFile(join(cwd, 'packages', 'main', 'src', 'App.tsx'), reactAppFile.join('\n'), { flag: 'w' })

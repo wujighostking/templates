@@ -38,3 +38,13 @@ export const projectTypeSelection: SelectOptions<string> = {
     { value: 'web', label: 'web' },
   ],
 }
+
+export const vueUiSelection: SelectOptions<string> = {
+  message: '请选择 ui 框架',
+  options: [
+    { value: 'element-plus', label: 'element-plus' },
+    { value: 'ant-design-vue', label: 'ant-design-vue' },
+    { value: 'element-plus-x', label: 'element-plus-x' },
+    { value: '', label: '无' },
+  ],
+}

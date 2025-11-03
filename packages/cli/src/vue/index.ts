@@ -1,11 +1,14 @@
+import type { uiMap } from '@tm/utils'
 import { EOL } from 'node:os'
 import process from 'node:process'
 import {
   ciWorkflow,
   commitConfig,
+  createSelect,
   eslintConfig,
   execa,
   gitignore,
+  isEmpty,
   join,
   mkdirs,
   npmrc,
@@ -14,6 +17,7 @@ import {
   tsconfig,
   tsconfigApp,
   tsconfigNode,
+
   unoConfig,
   viteVueConfig,
   vscodeSettings,
@@ -21,16 +25,40 @@ import {
   vueAppFile,
   vueEnvConfig,
   vueMainFile,
+  vueUiSelection,
   webIndexHtmlConfig,
   writeFile,
 } from '@tm/utils'
 import { createWorkflow } from '../actions'
 
 export async function createVueProject(dir: string) {
+  const uiSelection = await createSelect(vueUiSelection) as keyof typeof uiMap
+
   const cwd = join(process.cwd(), dir)
 
   try {
-    const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'unplugin-auto-import', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin', '@vitejs/plugin-vue', 'vite', '@types/node', 'typescript']
+    const devDependencies = [
+      '@commitlint/cli',
+      '@commitlint/config-conventional',
+      'lint-staged',
+      'simple-git-hooks',
+      'unocss',
+      'unplugin-auto-import',
+      '@antfu/eslint-config',
+      'eslint',
+      'eslint-plugin-format',
+      '@unocss/eslint-plugin',
+      '@vitejs/plugin-vue',
+      'vite',
+      '@types/node',
+      'typescript',
+    ]
+
+    const dependencies = ['vue']
+
+    if (!isEmpty(uiSelection)) {
+      dependencies.push(uiSelection)
+    }
 
     mkdirs([
       cwd,
@@ -40,7 +68,7 @@ export async function createVueProject(dir: string) {
     ])
 
     writeFile(join(cwd, '.vscode', 'extensions.json'), vscodeVueExtensions.join(EOL))
-    writeFile(join(cwd, 'src', 'main.ts'), vueMainFile.join(EOL))
+    writeFile(join(cwd, 'src', 'main.ts'), vueMainFile(uiSelection).join(EOL))
     writeFile(join(cwd, 'src', 'App.vue'), vueAppFile().join(EOL))
 
     writeFile(join(cwd, 'README.md'), '')
@@ -84,7 +112,7 @@ export async function createVueProject(dir: string) {
     await execa(pnpm, ['pkg', 'set', 'simple-git-hooks={"pre-commit": "npx lint-staged", "commit-msg": "pnpm commitlint"}', 'lint-staged={"*": ["eslint --fix"]}', '--json'], { stdio: 'inherit', cwd })
 
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
-    await execa(pnpm, ['install', 'vue'], { stdio: 'inherit', cwd })
+    await execa(pnpm, ['install', ...dependencies], { stdio: 'inherit', cwd })
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
   }

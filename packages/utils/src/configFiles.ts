@@ -1,3 +1,7 @@
+import type { UiKeys } from '.'
+import { uiMap } from '.'
+import { isEmpty } from './type'
+
 export type JSXOptions = 'react-jsx'
   | 'react-jsxdev'
   | 'preserve'
@@ -192,16 +196,22 @@ export function webIndexHtmlConfig(
   ]
 }
 
-export const vueMainFile = [
-  'import { createApp } from \'vue\'',
-  'import App from \'./App.vue\'',
-  'import \'virtual:uno.css\'',
-  '',
-  'const app = createApp(App)',
-  '',
-  'app.mount(\'#app\')',
-  '',
-]
+export function vueMainFile(ui: UiKeys) {
+  const uiName = uiMap[ui]
+  return [
+    'import { createApp } from \'vue\'',
+    isEmpty(ui) ? null : `import ${uiName} from '${ui}'`,
+    'import App from \'./App.vue\'',
+    'import \'virtual:uno.css\'',
+    isEmpty(ui) ? null : `import '${ui}/dist/index.css'`,
+    '',
+    'const app = createApp(App)',
+    isEmpty(ui) ? null : `app.use(${uiName})`,
+    '',
+    'app.mount(\'#app\')',
+    '',
+  ].filter(v => v !== null)
+}
 
 export function vueAppFile(content: string = 'app') {
   return [
