@@ -347,7 +347,9 @@ export const npmrc = [
   'registry=https://registry.npmmirror.com/',
 ]
 
-export function nuxtConfig(isMonorepo: boolean = false) {
+export function nuxtConfig(isMonorepo: boolean = false, ui: UiKeys) {
+  const uiName = uiMap[ui]
+
   const config = [
     '// https://nuxt.com/docs/api/configuration/nuxt-config',
     'export default defineNuxtConfig({',
@@ -355,12 +357,13 @@ export function nuxtConfig(isMonorepo: boolean = false) {
     '  devtools: { enabled: true },',
     '   modules: [',
     '    \'@unocss/nuxt\',',
+    isEmpty(uiName) ? null : '    \'@element-plus/nuxt\'',
     '  ],',
     '})',
   ]
 
   if (isMonorepo) {
-    config[config.length - 1] = ''
+    config.pop()
     config.push(
       '  srcDir: \'packages/app/\',',
       '    dir: {',
@@ -372,7 +375,7 @@ export function nuxtConfig(isMonorepo: boolean = false) {
     )
   }
 
-  return config
+  return config.filter(c => c !== null)
 }
 
 export const nuxtAppPageConfig = [

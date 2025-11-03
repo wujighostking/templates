@@ -145,11 +145,18 @@ export async function createMonoRepoProject(dir: string) {
     let projectType: ProjectType = 'node'
 
     let framework: string = ''
+
+    let uiSelection: UiKeys
+
+    const dependencies = []
+
     const buildTool = await createSelect(buildToolsSelection) as BuildTool
 
     if (buildTool === 'nuxt') {
       projectType = 'nuxt'
       framework = 'nuxt'
+
+      uiSelection = await createSelect(vueUiSelection) as UiKeys
     }
     else if (buildTool === 'vite') {
       projectType = await createSelect(projectTypeSelection) as ProjectType
@@ -162,9 +169,6 @@ export async function createMonoRepoProject(dir: string) {
         framework = isString(frameworkSelected) ? frameworkSelected : ''
       }
     }
-
-    const dependencies = []
-    let uiSelection: UiKeys
 
     if (framework === 'vue') {
       uiSelection = await createSelect(vueUiSelection) as UiKeys
@@ -189,7 +193,7 @@ export async function createMonoRepoProject(dir: string) {
       'eslint-plugin-format',
     ]
 
-    createBuildToolConfig(buildTool, cwd, framework)
+    createBuildToolConfig(buildTool, cwd, framework, uiSelection!)
 
     writeFile(join(cwd, '.gitignore'), gitignore.join('\n'))
 
@@ -287,6 +291,10 @@ export async function createMonoRepoProject(dir: string) {
       writeFile(join(cwd, 'eslint.config.js'), eslintConfig(['unocss: true,', 'vue: true,']).join(EOL))
 
       devDependencies.push('unocss', '@unocss/nuxt', '@unocss/eslint-plugin')
+
+      if (!isEmpty(uiSelection!)) {
+        devDependencies.push('@element-plus/nuxt')
+      }
     }
 
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })

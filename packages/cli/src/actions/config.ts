@@ -3,7 +3,7 @@ import { EOL } from 'node:os'
 import { error, isExisting, join, nuxtConfig, parsePath, parseYaml, reactAppFile, reactMainFile, readFile, stringify, tsdownBuildConfig, tsdownConfig, viteNodeConfig, viteReactConfig, viteVueConfig, vueAppFile, vueMainFile, webIndexHtmlConfig, writeFile } from '@tm/utils'
 import { pkgAction } from './project'
 
-export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd: string, framework: string | undefined) {
+export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd: string, framework: string | undefined, ui: UiKeys) {
   switch (buildTool) {
     case 'vite':
       createViteConfig(cwd, framework)
@@ -14,7 +14,7 @@ export function createBuildToolConfig(buildTool: 'vite' | 'tsdown' | 'nuxt', cwd
       break
 
     case 'nuxt':
-      createNuxtConfig(cwd)
+      createNuxtConfig(cwd, ui)
       break
   }
 }
@@ -36,8 +36,8 @@ function createTsdownConfig(cwd: string) {
   writeFile(join(cwd, 'tsdown.config.build.ts'), tsdownBuildConfig.join('\n'))
 }
 
-function createNuxtConfig(cwd: string) {
-  writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig(true).join(EOL))
+function createNuxtConfig(cwd: string, ui: UiKeys) {
+  writeFile(join(cwd, 'nuxt.config.ts'), nuxtConfig(true, ui).join(EOL))
 }
 
 export function pkgToWorkspace(file: string, pkg: string) {
