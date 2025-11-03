@@ -1,5 +1,5 @@
 import type { UiKeys } from '.'
-import { uiMap } from '.'
+import { uiCSSMap, uiMap } from '.'
 import { isEmpty } from './type'
 
 export type JSXOptions = 'react-jsx'
@@ -198,15 +198,17 @@ export function webIndexHtmlConfig(
 
 export function vueMainFile(ui: UiKeys) {
   const uiName = uiMap[ui]
+  const uiCSSName = uiCSSMap[ui]
+
   return [
     'import { createApp } from \'vue\'',
-    isEmpty(ui) ? null : `import ${uiName} from '${ui}'`,
+    isEmpty(uiName) ? null : `import ${uiName} from '${ui}'`,
     'import App from \'./App.vue\'',
     'import \'virtual:uno.css\'',
-    isEmpty(ui) ? null : `import '${ui}/dist/index.css'`,
+    isEmpty(uiCSSName) ? null : `import '${uiCSSMap[ui]}'`,
     '',
     'const app = createApp(App)',
-    isEmpty(ui) ? null : `app.use(${uiName})`,
+    isEmpty(uiName) ? null : `app.use(${uiName})`,
     '',
     'app.mount(\'#app\')',
     '',

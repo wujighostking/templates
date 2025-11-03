@@ -44,7 +44,7 @@ export const vueUiSelection: SelectOptions<string> = {
   options: [
     { value: 'element-plus', label: 'element-plus' },
     { value: 'ant-design-vue', label: 'ant-design-vue' },
-    { value: 'element-plus-x', label: 'element-plus-x' },
-    { value: '', label: '无' },
+    { value: 'vue-element-plus-x', label: 'vue-element-plus-x' },
+    { value: '', label: '暂不选择' },
   ],
 }
