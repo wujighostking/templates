@@ -83,10 +83,10 @@ export async function createProjectType(projectType: 'node' | 'web' | 'nuxt', fr
   }
 }
 
-export function createApp(framework: string, cwd: string) {
+export function createApp(framework: string, cwd: string, ui: UiKeys) {
   if (framework === 'vue') {
     writeFile(join(cwd, 'packages', 'main', 'src', 'App.vue'), vueAppFile().join('\n'), { flag: 'w' })
-    writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile('' as UiKeys).join('\n'))
+    writeFile(join(cwd, 'packages', 'main', 'src', 'main.ts'), vueMainFile(ui).join('\n'))
   }
   else if (framework === 'react') {
     writeFile(join(cwd, 'packages', 'main', 'src', 'App.tsx'), reactAppFile.join('\n'), { flag: 'w' })

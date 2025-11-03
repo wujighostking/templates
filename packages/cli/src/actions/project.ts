@@ -1,4 +1,4 @@
-import type { JSXOptions } from '@tm/utils'
+import type { JSXOptions, UiKeys } from '@tm/utils'
 import { EOL } from 'node:os'
 import process from 'node:process'
 import {
@@ -37,6 +37,7 @@ import {
   unoConfig,
   vscodeSettings,
   vueAppFile,
+  vueUiSelection,
   workspaceConfig,
   writeFile,
 } from '@tm/utils'
@@ -150,8 +151,7 @@ export async function createMonoRepoProject(dir: string) {
       projectType = 'nuxt'
       framework = 'nuxt'
     }
-
-    if (buildTool === 'vite') {
+    else if (buildTool === 'vite') {
       projectType = await createSelect(projectTypeSelection) as ProjectType
 
       if (projectType === 'web') {
@@ -162,6 +162,32 @@ export async function createMonoRepoProject(dir: string) {
         framework = isString(frameworkSelected) ? frameworkSelected : ''
       }
     }
+
+    const dependencies = []
+    let uiSelection: UiKeys
+
+    if (framework === 'vue') {
+      uiSelection = await createSelect(vueUiSelection) as UiKeys
+
+      if (!isEmpty(uiSelection)) {
+        dependencies.push(uiSelection)
+      }
+
+      dependencies.push('vue')
+    }
+
+    const devDependencies = [
+      '@commitlint/cli',
+      '@commitlint/config-conventional',
+      'lint-staged',
+      'simple-git-hooks',
+      'typescript',
+      '@types/node',
+      buildTool,
+      '@antfu/eslint-config',
+      'eslint',
+      'eslint-plugin-format',
+    ]
 
     createBuildToolConfig(buildTool, cwd, framework)
 
@@ -179,19 +205,6 @@ export async function createMonoRepoProject(dir: string) {
 
     createWorkflow(cwd, 'ci.yml', ciWorkflow())
     writeTsconfigFile({ cwd, projectType, framework, buildTool })
-
-    const devDependencies = [
-      '@commitlint/cli',
-      '@commitlint/config-conventional',
-      'lint-staged',
-      'simple-git-hooks',
-      'typescript',
-      '@types/node',
-      buildTool,
-      '@antfu/eslint-config',
-      'eslint',
-      'eslint-plugin-format',
-    ]
 
     if (framework === 'vue') {
       devDependencies.push('@vitejs/plugin-vue', 'unplugin-auto-import')
@@ -228,7 +241,7 @@ export async function createMonoRepoProject(dir: string) {
         writeFile(join(cwd, 'uno.config.ts'), unoConfig.join(EOL), { flag: 'w' })
 
         await execa(pnpm, ['pkg', 'set', `scripts.dev=${buildTool}`], { cwd })
-        createApp(framework, cwd)
+        createApp(framework, cwd, uiSelection!)
 
         devDependencies.push('unocss', '@unocss/eslint-plugin')
       }
@@ -276,12 +289,10 @@ export async function createMonoRepoProject(dir: string) {
       devDependencies.push('unocss', '@unocss/nuxt', '@unocss/eslint-plugin')
     }
 
-    // await execa('pnpx', ['@antfu/eslint-config'], { stdio: 'inherit', cwd })
-
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
     if (framework === 'vue') {
-      await execa(pnpm, ['install', 'vue'], { stdio: 'inherit', cwd })
+      await execa(pnpm, ['install', ...dependencies], { stdio: 'inherit', cwd })
     }
     else if (framework === 'react') {
       await execa(pnpm, ['install', 'react', 'react-dom'], { stdio: 'inherit', cwd })
