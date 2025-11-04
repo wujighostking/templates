@@ -132,7 +132,6 @@ export async function pkgAction(dir: string | undefined, _name: string | undefin
   }
   catch (error) {
     console.error(error)
-    rm(cwd)
   }
 }
 

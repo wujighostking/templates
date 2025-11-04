@@ -357,7 +357,7 @@ export function nuxtConfig(isMonorepo: boolean = false, ui: UiKeys) {
     '  devtools: { enabled: true },',
     '   modules: [',
     '    \'@unocss/nuxt\',',
-    isEmpty(uiName) ? null : `    ${uiName}`,
+    isEmpty(uiName) ? null : `    '${uiName}'`,
     '  ],',
     '})',
   ]
