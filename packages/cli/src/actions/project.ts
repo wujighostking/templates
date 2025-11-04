@@ -39,6 +39,7 @@ import {
   vscodeSettings,
   vueAppFile,
   vueElementPlusX,
+  vueRouter,
   vueUiSelection,
   workspaceConfig,
   writeFile,
@@ -178,7 +179,7 @@ export async function createMonoRepoProject(dir: string) {
         dependencies.push(uiSelection)
       }
 
-      dependencies.push('vue')
+      dependencies.push('vue', 'vur-router')
     }
 
     const devDependencies = [
@@ -310,6 +311,9 @@ export async function createMonoRepoProject(dir: string) {
     await execa(pnpm, ['install', '-D', ...devDependencies], { stdio: 'inherit', cwd })
 
     if (framework === 'vue') {
+      mkdir(join(cwd, 'packages', 'main', 'src', 'router'))
+      writeFile(join(cwd, 'packages', 'main', 'src', 'router', 'index.ts'), vueRouter.join(EOL))
+
       await execa(pnpm, ['install', ...dependencies], { stdio: 'inherit', cwd })
     }
     else if (framework === 'react') {

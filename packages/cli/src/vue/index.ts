@@ -25,6 +25,7 @@ import {
   vueAppFile,
   vueEnvConfig,
   vueMainFile,
+  vueRouter,
   vueUiSelection,
   webIndexHtmlConfig,
   writeFile,
@@ -54,7 +55,7 @@ export async function createVueProject(dir: string) {
       'typescript',
     ]
 
-    const dependencies = ['vue']
+    const dependencies = ['vue', 'vue-router']
 
     if (!isEmpty(uiSelection)) {
       dependencies.push(uiSelection)
@@ -65,11 +66,14 @@ export async function createVueProject(dir: string) {
       join(cwd, '.vscode'),
       join(cwd, 'public'),
       join(cwd, 'src'),
+      join(cwd, 'src', 'router'),
     ])
 
     writeFile(join(cwd, '.vscode', 'extensions.json'), vscodeVueExtensions.join(EOL))
     writeFile(join(cwd, 'src', 'main.ts'), vueMainFile(uiSelection).join(EOL))
     writeFile(join(cwd, 'src', 'App.vue'), vueAppFile().join(EOL))
+
+    writeFile(join(cwd, 'src', 'router', 'index.ts'), vueRouter.join(EOL))
 
     writeFile(join(cwd, 'README.md'), '')
     writeFile(join(cwd, '.gitignore'), gitignore.join(EOL))

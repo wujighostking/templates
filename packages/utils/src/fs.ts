@@ -18,7 +18,7 @@ export function isDir(dir: string): boolean {
 }
 
 export function mkdir(dir: string) {
-  return fs.mkdirSync(dir)
+  return fs.mkdirSync(dir, { recursive: true })
 }
 
 export function mkdirs(dirs: string[]) {
