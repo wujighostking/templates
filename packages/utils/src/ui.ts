@@ -10,4 +10,10 @@ export const uiCSSMap = {
   'vue-element-plus-x': null,
 }
 
+export const nuxtuiMap = {
+  'element-plus': '@element-plus/nuxt',
+  'ant-design-vue': '@ant-design-vue/nuxt',
+  'vue-element-plus-x': null,
+}
+
 export type UiKeys = keyof typeof uiMap

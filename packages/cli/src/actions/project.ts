@@ -24,6 +24,7 @@ import {
   mkdirs,
   npmrc,
   nuxtTsconfig,
+  nuxtuiMap,
   parsePath,
   pnpm,
   projectTypeSelection,
@@ -37,6 +38,7 @@ import {
   unoConfig,
   vscodeSettings,
   vueAppFile,
+  vueElementPlusX,
   vueUiSelection,
   workspaceConfig,
   writeFile,
@@ -277,6 +279,7 @@ export async function createMonoRepoProject(dir: string) {
         join(cwd, 'packages', 'app', 'components'),
         join(cwd, 'packages', 'app', 'composables'),
         join(cwd, 'packages', 'app', 'pages'),
+        join(cwd, 'packages', 'app', 'plugins'),
         join(cwd, 'packages', 'app', 'utils'),
 
         join(cwd, 'packages', 'server', 'middleware'),
@@ -293,7 +296,15 @@ export async function createMonoRepoProject(dir: string) {
       devDependencies.push('unocss', '@unocss/nuxt', '@unocss/eslint-plugin')
 
       if (!isEmpty(uiSelection!)) {
-        devDependencies.push('@element-plus/nuxt')
+        const nuxtUi = nuxtuiMap[uiSelection!]!
+        if (!isEmpty(nuxtUi)) {
+          devDependencies.push(nuxtUi)
+        }
+        else {
+          writeFile(join(cwd, 'packages', 'app', 'plugins', `vue-element-plus-x.client.ts`), vueElementPlusX.join(EOL))
+
+          dependencies.push('vue-element-plus-x')
+        }
       }
     }
 
@@ -306,7 +317,7 @@ export async function createMonoRepoProject(dir: string) {
       await execa(pnpm, ['install', 'react', 'react-dom'], { stdio: 'inherit', cwd })
     }
     else if (framework === 'nuxt') {
-      await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router'], { stdio: 'inherit', cwd })
+      await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router', ...dependencies], { stdio: 'inherit', cwd })
     }
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })

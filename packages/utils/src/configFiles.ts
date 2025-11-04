@@ -1,5 +1,5 @@
 import type { UiKeys } from '.'
-import { uiCSSMap, uiMap } from '.'
+import { nuxtuiMap, uiCSSMap, uiMap } from '.'
 import { isEmpty } from './type'
 
 export type JSXOptions = 'react-jsx'
@@ -348,7 +348,7 @@ export const npmrc = [
 ]
 
 export function nuxtConfig(isMonorepo: boolean = false, ui: UiKeys) {
-  const uiName = uiMap[ui]
+  const uiName = nuxtuiMap[ui]
 
   const config = [
     '// https://nuxt.com/docs/api/configuration/nuxt-config',
@@ -357,7 +357,7 @@ export function nuxtConfig(isMonorepo: boolean = false, ui: UiKeys) {
     '  devtools: { enabled: true },',
     '   modules: [',
     '    \'@unocss/nuxt\',',
-    isEmpty(uiName) ? null : '    \'@element-plus/nuxt\'',
+    isEmpty(uiName) ? null : `    ${uiName}`,
     '  ],',
     '})',
   ]
@@ -531,4 +531,13 @@ export const vscodeVueExtensions = [
   '{',
   '  "recommendations": ["Vue.volar"]',
   '}',
+]
+
+export const vueElementPlusX = [
+  'import VueElementPlusX from \'vue-element-plus-x\'',
+  '',
+  'export default defineNuxtPlugin((nuxtApp) => {',
+  '  nuxtApp.vueApp.use(VueElementPlusX)',
+  '})',
+  '',
 ]
