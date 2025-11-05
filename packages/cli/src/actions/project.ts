@@ -179,7 +179,7 @@ export async function createMonoRepoProject(dir: string) {
         dependencies.push(uiSelection)
       }
 
-      dependencies.push('vue', 'vur-router')
+      dependencies.push('vue', 'vue-router')
     }
 
     const devDependencies = [
