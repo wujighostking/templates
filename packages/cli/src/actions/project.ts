@@ -321,6 +321,8 @@ export async function createMonoRepoProject(dir: string) {
     }
     else if (framework === 'nuxt') {
       await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router', ...dependencies], { stdio: 'inherit', cwd })
+
+      await execa(pnpm, ['prepare'], { stdio: 'inherit', cwd })
     }
 
     await execa('npx', ['simple-git-hooks'], { stdio: 'inherit', cwd })
