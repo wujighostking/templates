@@ -1,5 +1,17 @@
 # create-tmes
 
+## 1.2.0
+
+### Minor Changes
+
+-
+
+### Patch Changes
+
+- Updated dependencies
+  - @tmes/cli@1.8.0
+  - @tmes/default-templates@1.4.0
+
 ## 1.1.0
 
 ### Minor Changes

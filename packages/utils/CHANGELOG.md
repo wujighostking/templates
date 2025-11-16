@@ -1,5 +1,11 @@
 # @tmes/utils
 
+## 1.8.0
+
+### Minor Changes
+
+-
+
 ## 1.7.0
 
 ### Minor Changes
