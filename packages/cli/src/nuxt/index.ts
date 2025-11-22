@@ -31,7 +31,7 @@ import { createWorkflow } from '../actions'
 export async function createNuxtProject(dir: string) {
   const cwd = join(process.cwd(), dir)
 
-  const dependencies = ['nuxt', 'vue', 'vue-router']
+  const dependencies = ['nuxt', 'vue', 'vue-router', '@unocss/reset']
   const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', '@types/node', 'unocss', '@unocss/nuxt', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin']
 
   try {

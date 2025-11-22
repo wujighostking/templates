@@ -179,7 +179,7 @@ export async function createMonoRepoProject(dir: string) {
         dependencies.push(uiSelection)
       }
 
-      dependencies.push('vue', 'vue-router')
+      dependencies.push('vue', 'vue-router', '@unocss/reset')
     }
 
     const devDependencies = [
@@ -317,10 +317,10 @@ export async function createMonoRepoProject(dir: string) {
       await execa(pnpm, ['install', ...dependencies], { stdio: 'inherit', cwd })
     }
     else if (framework === 'react') {
-      await execa(pnpm, ['install', 'react', 'react-dom'], { stdio: 'inherit', cwd })
+      await execa(pnpm, ['install', 'react', 'react-dom', '@unocss/reset'], { stdio: 'inherit', cwd })
     }
     else if (framework === 'nuxt') {
-      await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router', ...dependencies], { stdio: 'inherit', cwd })
+      await execa(pnpm, ['install', 'nuxt', 'vue', 'vue-router', '@unocss/reset', ...dependencies], { stdio: 'inherit', cwd })
 
       await execa(pnpm, ['prepare'], { stdio: 'inherit', cwd })
     }

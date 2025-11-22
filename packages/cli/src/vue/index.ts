@@ -55,7 +55,7 @@ export async function createVueProject(dir: string) {
       'typescript',
     ]
 
-    const dependencies = ['vue', 'vue-router']
+    const dependencies = ['vue', 'vue-router', '@unocss/reset']
 
     if (!isEmpty(uiSelection)) {
       dependencies.push(uiSelection)

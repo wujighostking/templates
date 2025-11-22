@@ -37,7 +37,7 @@ export async function createReactProject(dir: string) {
     createWorkflow(cwd, 'ci.yml', ciWorkflow())
 
     const devDependencies = ['@commitlint/cli', '@commitlint/config-conventional', 'lint-staged', 'simple-git-hooks', 'unocss', 'typescript', '@types/node', 'vite', '@vitejs/plugin-react', '@types/react', '@types/react-dom', '@antfu/eslint-config', 'eslint', 'eslint-plugin-format', '@unocss/eslint-plugin', '@eslint-react/eslint-plugin', 'eslint-plugin-react-hooks', 'eslint-plugin-react-refresh']
-    const dependencies = ['react', 'react-dom']
+    const dependencies = ['react', 'react-dom', '@unocss/reset']
 
     await execa('git', ['init'], { stdio: 'inherit', cwd })
 
