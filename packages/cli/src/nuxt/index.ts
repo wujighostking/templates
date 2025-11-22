@@ -1,4 +1,4 @@
-import type { UiKeys } from 'packages/utils/dist'
+import type { UiKeys } from '@tm/utils'
 import { EOL } from 'node:os'
 import process from 'node:process'
 import {
