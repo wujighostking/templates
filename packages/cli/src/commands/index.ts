@@ -77,4 +77,14 @@ export const commands: CommandConfig[] = [
       oxfmtAction()
     },
   },
+  {
+    command: ['lint-preset', '创建 commitlint, githooks, lint-staged, oxlint, oxfmt 的配置'],
+    action: () => {
+      commitlintAction()
+      githooksAction()
+      lintstagedAction()
+      oxlintAction()
+      oxfmtAction()
+    },
+  },
 ]
