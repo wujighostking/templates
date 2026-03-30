@@ -1,5 +1,6 @@
 import type { CAC, Command } from 'cac'
 import { createAction, normaizeName } from '../actions/createAction'
+import { pkgAction } from '../actions/pkgAction'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
 interface CommandConfig {
@@ -25,6 +26,16 @@ export const commands: CommandConfig[] = [
       const _name = normaizeName(name)
 
       createAction({ ..._name, ...options })
+    },
+  },
+  {
+    command: ['pkg [dir] [packageName]', '创建一个包到指定目录'],
+    options: [
+      ['--dir, -d [dir]', '需要创建包的目录'],
+      ['--packageName, -p [packageName]', '需要创建包的名称'],
+    ],
+    action: (dir, packageName, options) => {
+      pkgAction({ dir, packageName, ...options })
     },
   },
 ]
