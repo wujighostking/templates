@@ -1,6 +1,13 @@
 import type { CAC, Command } from 'cac'
 
-import { pkgAction, createAction, normaizeName, commitlintAction } from '../actions'
+import {
+  pkgAction,
+  createAction,
+  normaizeName,
+  commitlintAction,
+  githooksAction,
+  lintstagedAction,
+} from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
 interface CommandConfig {
@@ -42,6 +49,18 @@ export const commands: CommandConfig[] = [
     command: ['commitlint', '创建检查提交信息是否符合规范的配置'],
     action: () => {
       commitlintAction()
+    },
+  },
+  {
+    command: ['githooks', '创建 git hooks 的配置'],
+    action: () => {
+      githooksAction()
+    },
+  },
+  {
+    command: ['lintstaged', '创建 lint-staged 的配置'],
+    action: () => {
+      lintstagedAction()
     },
   },
 ]

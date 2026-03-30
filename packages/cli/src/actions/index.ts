@@ -1,3 +1,5 @@
 export * from './createAction'
 export * from './pkgAction'
 export * from './commitlintAction'
+export * from './githooksAction'
+export * from './lintstagedAction'
