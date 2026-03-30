@@ -33,6 +33,7 @@
     "build": "tsdown"
   },
   "dependencies": {
+    "@tmes/shared": "workspace:*",
     "cac": "^7.0.0"
   },
   "packageManager": "pnpm@10.30.3"

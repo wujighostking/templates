@@ -74,9 +74,18 @@ importers:
 
   packages/cli:
     dependencies:
+      '@tmes/shared':
+        specifier: workspace:*
+        version: link:../shared
       cac:
         specifier: ^7.0.0
         version: 7.0.0
+
+  packages/shared:
+    dependencies:
+      chalk:
+        specifier: ^5.6.2
+        version: 5.6.2
 
 packages:
 
@@ -663,6 +672,10 @@ packages:
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+
+  chalk@5.6.2:
+    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   cli-cursor@5.0.0:
     resolution: {integrity: sha512-aCj4O5wKyszjMmDT4tZj93kxyydN/K5zPWSCe6/0AV/AA1pqe5ZBIw0a2ZfPQV7lL5/yb5HsUreJ6UFAF1tEQw==}
@@ -1582,6 +1595,8 @@ snapshots:
   cac@7.0.0: {}
 
   callsites@3.1.0: {}
+
+  chalk@5.6.2: {}
 
   cli-cursor@5.0.0:
     dependencies:

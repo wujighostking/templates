@@ -9,10 +9,10 @@ export function getDevDependencies() {
   return Array.from(devDependencies)
 }
 
-export function addDependency(dep: string) {
-  dependencies.add(dep)
+export function addDependency(...deps: string[]) {
+  deps.forEach((dep) => dependencies.add(dep))
 }
 
-export function addDevDependency(dep: string) {
-  devDependencies.add(dep)
+export function addDevDependency(...deps: string[]) {
+  deps.forEach((dep) => devDependencies.add(dep))
 }
