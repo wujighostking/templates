@@ -11,9 +11,9 @@
   "license": "MIT",
   "author": "",
   "bin": {
-    "create-template": "./dist/index.mjs",
-    "tm": "./dist/index.mjs",
-    "tmes": "./dist/index.mjs"
+    "create-template": "./lib/index.js",
+    "tm": "./lib/index.js",
+    "tmes": "./lib/index.js"
   },
   "files": [
     "dist"

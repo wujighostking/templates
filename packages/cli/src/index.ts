@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { CAC } from 'cac'
 import pkg from '../package.json' with { type: 'json' }
 import { commands } from './commands'

@@ -24,7 +24,7 @@ export const commands: CommandConfig[] = [
     action: (name, options) => {
       const _name = normaizeName(name)
 
-      createAction({ name: _name, ...options })
+      createAction({ ..._name, ...options })
     },
   },
 ]
