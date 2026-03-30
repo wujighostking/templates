@@ -13,16 +13,33 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
+    "commitlint": "commitlint --edit",
     "dev": "turbo run dev",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "prepare": "simple-git-hooks",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
     "@types/node": "catalog:",
+    "lint-staged": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
+    "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged",
+    "commit-msg": "pnpm commitlint"
+  },
+  "lint-staged": {
+    "*": [
+      "pnpm lint:fix",
+      "pnpm fmt"
+    ]
   },
   "packageManager": "pnpm@10.30.3"
 }
