@@ -1,6 +1,6 @@
 import type { CAC, Command } from 'cac'
-import { createAction, normaizeName } from '../actions/createAction'
-import { pkgAction } from '../actions/pkgAction'
+
+import { pkgAction, createAction, normaizeName, commitlintAction } from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
 interface CommandConfig {
@@ -36,6 +36,12 @@ export const commands: CommandConfig[] = [
     ],
     action: (dir, packageName, options) => {
       pkgAction({ dir, packageName, ...options })
+    },
+  },
+  {
+    command: ['commitlint', '创建检查提交信息是否符合规范的配置'],
+    action: () => {
+      commitlintAction()
     },
   },
 ]

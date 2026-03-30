@@ -6,4 +6,8 @@ export default defineConfig({
   singleQuote: true,
   trailingComma: 'all',
   sortPackageJson: true,
+  sortImports: {
+    order: 'asc',
+    sortSideEffects: true,
+  },
 })
