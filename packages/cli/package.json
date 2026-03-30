@@ -10,12 +10,15 @@
   ],
   "license": "MIT",
   "author": "",
+  "bin": {
+    "t": "./dist/index.mjs"
+  },
   "files": [
     "dist"
   ],
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
@@ -26,6 +29,9 @@
   "scripts": {
     "dev": "tsdown --watch=src",
     "build": "tsdown"
+  },
+  "dependencies": {
+    "cac": "^7.0.0"
   },
   "packageManager": "pnpm@10.30.3"
 }
