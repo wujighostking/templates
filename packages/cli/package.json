@@ -1,0 +1,31 @@
+{
+  "name": "@tmes/cli",
+  "version": "2.0.0",
+  "description": "",
+  "keywords": [
+    "cli",
+    "template",
+    "tm",
+    "tmes"
+  ],
+  "license": "MIT",
+  "author": "",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsdown --watch=src",
+    "build": "tsdown"
+  },
+  "packageManager": "pnpm@10.30.3"
+}

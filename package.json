@@ -1,12 +1,28 @@
 {
   "name": "tmes",
-  "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "",
-  "author": "",
-  "license": "MIT",
+  "description": "自用脚手架",
   "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
   "main": "index.js",
-  "scripts": {}
+  "scripts": {
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "dev": "turbo run dev",
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "tsdown": "^0.21.7",
+    "turbo": "^2.8.21",
+    "typescript": "^6.0.2"
+  },
+  "packageManager": "pnpm@10.30.3"
 }
