@@ -1,4 +1,13 @@
-import { execa, __dirname, join, log, isExists, pnpm, addDevDependency } from '@tmes/shared'
+import {
+  execa,
+  __dirname,
+  join,
+  log,
+  isExists,
+  pnpm,
+  addDevDependency,
+  formatDepsVersion,
+} from '@tmes/shared'
 
 export async function githooksAction() {
   const packagePath = join(__dirname, 'package.json')
@@ -12,6 +21,7 @@ export async function githooksAction() {
   addDevDependency('simple-git-hooks')
 
   try {
+    const deps = await formatDepsVersion('devDependencies')
     await execa(
       pnpm,
       [
@@ -20,6 +30,8 @@ export async function githooksAction() {
         'simple-git-hooks.pre-commit=pnpx lint-staged',
         'simple-git-hooks.commit-msg=pnpx commitlint --edit',
         'scripts.prepare=simple-git-hooks',
+
+        ...deps,
       ],
       {
         cwd: __dirname,
