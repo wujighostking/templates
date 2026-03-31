@@ -13,7 +13,6 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "commitlint": "commitlint --edit",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "prepare": "simple-git-hooks",
@@ -32,8 +31,8 @@
     "typescript": "catalog:"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "commit-msg": "pnpm commitlint"
+    "pre-commit": "pnpx lint-staged",
+    "commit-msg": "pnpx commitlint --edit"
   },
   "lint-staged": {
     "*": [
