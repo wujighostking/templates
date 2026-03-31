@@ -1,5 +1,4 @@
 import { execa as _execa } from 'execa'
+import { type ExecaMethod } from 'execa'
 
-export async function execa(...args: Parameters<typeof _execa>) {
-  return await _execa(...args)
-}
+export const execa: ExecaMethod = (...args: any[]) => (_execa as any)(...args)

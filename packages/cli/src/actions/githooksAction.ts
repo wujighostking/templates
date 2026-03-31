@@ -1,6 +1,4 @@
-import { execa, __dirname, join, log, isExists, pnpm } from '@tmes/shared'
-
-import { addDevDependency } from '../config/dependencies'
+import { execa, __dirname, join, log, isExists, pnpm, addDevDependency } from '@tmes/shared'
 
 export async function githooksAction() {
   const packagePath = join(__dirname, 'package.json')

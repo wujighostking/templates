@@ -1,6 +1,4 @@
-import { execa, isExists, join, log, pnpm, __dirname } from '@tmes/shared'
-
-import { addDevDependency } from '../config/dependencies'
+import { execa, isExists, join, log, pnpm, __dirname, addDevDependency } from '@tmes/shared'
 
 export async function lintstagedAction() {
   const packagePath = join(__dirname, 'package.json')
