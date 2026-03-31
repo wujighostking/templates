@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import chalk from 'chalk'
 
 export const warning = chalk.yellow
