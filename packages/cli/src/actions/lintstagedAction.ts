@@ -22,10 +22,13 @@ export async function lintstagedAction() {
 
   try {
     const deps = await formatDepsVersion('devDependencies')
-    await execa(pnpm, ['pkg', 'set', ...deps], { cwd: __dirname })
-    await execa(pnpm, ['pkg', 'set', 'lint-staged.*=["pnpm lint:fix", "pnpm fmt"]', '--json'], {
-      cwd: __dirname,
-    })
+    await execa(
+      pnpm,
+      ['pkg', 'set', 'lint-staged.*[0]=pnpm lint:fix', 'lint-staged.*[1]=pnpm fmt', ...deps],
+      {
+        cwd: __dirname,
+      },
+    )
 
     log.success('成功创建 lint-staged 配置')
   } catch {
