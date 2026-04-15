@@ -43,6 +43,6 @@
     "skipLibCheck": true,
     "resolvePackageJsonImports": true
   },
-  "include": ["tsdown.config.ts"],
-  "exclude": ["node_modules"]
+  "include": ["tsdown.config.ts", "packages/**/src/**/*"],
+  "exclude": ["node_modules", "dist", ".turbo"]
 }
