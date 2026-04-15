@@ -1,6 +1,7 @@
 import {
   writeFile as _writeFile,
   existsSync,
+  type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
 } from 'node:fs'
@@ -14,7 +15,7 @@ export const __dirname = cwd()
  * @param fileName 文件名
  * @returns
  */
-export function isExists(fileName: string): boolean {
+export function isExists(fileName: PathLike): boolean {
   try {
     return existsSync(fileName)
   } catch {
