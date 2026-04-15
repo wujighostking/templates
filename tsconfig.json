@@ -42,7 +42,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "resolvePackageJsonImports": true
+    "resolvePackageJsonImports": true,
+    "paths": {
+      "@tmes/*": ["./packages/*/src/index.ts"]
+    }
   },
   "include": ["tsdown.config.ts", "packages/**/src/**/*"],
   "exclude": ["node_modules", "dist", ".turbo"]
