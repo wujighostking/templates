@@ -1,7 +1,13 @@
-import { writeFile } from 'node:fs'
-import { EOL } from 'node:os'
-
-import { execa, log, pnpm, __dirname, formatDepsVersion, addDevDependency } from '@tmes/shared'
+import {
+  execa,
+  log,
+  pnpm,
+  __dirname,
+  formatDepsVersion,
+  addDevDependency,
+  writeFile,
+  EOL,
+} from '@tmes/shared'
 
 const commitContext = "export default { extends: ['@commitlint/config-conventional'] }" + EOL
 export async function commitlintAction() {
@@ -11,7 +17,7 @@ export async function commitlintAction() {
     const deps = await formatDepsVersion('devDependencies')
     await execa(pnpm, ['pkg', 'set', ...deps], { cwd: __dirname })
 
-    writeFile('commitlint.config.ts', commitContext, { encoding: 'utf-8' }, (err) => {
+    await writeFile('commitlint.config.ts', commitContext, (err) => {
       if (err) {
         log.error('创建 commitlint 配置失败')
         return
