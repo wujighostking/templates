@@ -7,3 +7,5 @@ export function isWin(): boolean {
 export const pnpm = isWin() ? 'pnpm.cmd' : 'pnpm'
 
 export const EOL = _EOL
+
+export const exit = process.exit

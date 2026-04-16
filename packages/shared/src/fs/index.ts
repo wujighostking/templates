@@ -1,12 +1,15 @@
 import {
   writeFile as _writeFile,
   existsSync,
+  mkdir,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
 } from 'node:fs'
 import { join as _join } from 'node:path'
-import { cwd } from 'node:process'
+import { cwd, exit } from 'node:process'
+
+import { log } from '..'
 
 export const __dirname = cwd()
 
@@ -40,6 +43,32 @@ export function writeFile(
 
         // oxlint-disable-next-line no-unused-expressions
         err ? reject(err) : resolve(void 0)
+      })
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export function createFolder(folderName: string | string[]) {
+  const folderPath = join(...(Array.isArray(folderName) ? folderName : [folderName]))
+
+  if (isExists(folderPath)) {
+    log.warning('文件夹已存在')
+    exit(1)
+  }
+
+  return new Promise((resolve, reject) => {
+    try {
+      mkdir(folderPath, { recursive: true }, (err) => {
+        if (err) {
+          log.error(`创建文件夹失败: ${err.message}`)
+          reject(err)
+          exit(1)
+        }
+
+        log.success(`文件夹 ${folderName} 创建成功`)
+        resolve(void 0)
       })
     } catch (err) {
       reject(err)
