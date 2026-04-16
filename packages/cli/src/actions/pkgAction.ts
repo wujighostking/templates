@@ -31,6 +31,19 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
     await createFolder(srcPath)
     await writeFile(join(srcPath, 'index.ts'), '')
 
-    execa(pnpm, ['init'], { cwd: pkgPath })
+    await execa(pnpm, ['init'], { cwd: pkgPath })
+    await execa(
+      pnpm,
+      [
+        'pkg',
+        'set',
+        'files.0=dist',
+        'type=module',
+        'main=dist/index.js',
+        'module=dist/index.js',
+        'types=dist/index.d.ts',
+      ],
+      { cwd: pkgPath },
+    )
   } catch {}
 }
