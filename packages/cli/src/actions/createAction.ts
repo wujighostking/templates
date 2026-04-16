@@ -28,8 +28,8 @@ export async function createAction(options: Options) {
     mode = (await getSelectedValue<ModeType>({
       message: '请选择项目模式',
       options: [
-        { value: 'monorepo', label: 'Monorepo' },
-        { value: 'polyrepo', label: 'Polyrepo' },
+        { value: 'monorepo', label: 'monorepo' },
+        { value: 'polyrepo', label: 'polyrepo' },
       ],
     })) as ModeType
   }
@@ -38,8 +38,8 @@ export async function createAction(options: Options) {
     buildTool = (await getSelectedValue<BuildToolType>({
       message: '请选择项目构建工具',
       options: [
-        { value: 'vite', label: 'Vite' },
-        { value: 'tsdown', label: 'Tsdown' },
+        { value: 'vite', label: 'vite' },
+        { value: 'tsdown', label: 'tsdown' },
       ],
     })) as BuildToolType
   }
@@ -48,8 +48,8 @@ export async function createAction(options: Options) {
     type = (await getSelectedValue<ProjectType>({
       message: '请选择项目类型',
       options: [
-        { value: 'web', label: 'Web' },
-        { value: 'lib', label: 'Library' },
+        { value: 'web', label: 'web' },
+        { value: 'lib', label: 'lib' },
       ],
     })) as ProjectType
   }
@@ -58,10 +58,10 @@ export async function createAction(options: Options) {
     framework = (await getSelectedValue<FrameworkType>({
       message: '请选择项目框架',
       options: [
-        { value: 'react', label: 'React' },
-        { value: 'vue', label: 'Vue' },
-        { value: 'nest', label: 'Nest' },
-        { value: 'nuxt', label: 'Nuxt' },
+        { value: 'react', label: 'react' },
+        { value: 'vue', label: 'vue' },
+        { value: 'nest', label: 'nest' },
+        { value: 'nuxt', label: 'nuxt' },
       ],
     })) as FrameworkType
   }
