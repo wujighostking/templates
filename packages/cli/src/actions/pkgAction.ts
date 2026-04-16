@@ -8,6 +8,8 @@ import {
   execa,
   pnpm,
   writeFile,
+  shouldContinue,
+  isRootPath,
 } from '@tmes/shared'
 
 export async function pkgAction(options: { dir: string; packageName: string }) {
@@ -45,5 +47,22 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
       ],
       { cwd: pkgPath },
     )
+
+    const continueAction = await shouldContinue('是否添加到 pnpm-workspace.yaml 中？')
+    if (!continueAction) return
+
+    let workspacePath = join(__dirname, 'pnpm-workspace.yaml')
+    let currentDirname = __dirname
+
+    while (!isExists(workspacePath) && !isRootPath(currentDirname)) {
+      currentDirname = join(currentDirname, '..')
+
+      workspacePath = join(currentDirname, 'pnpm-workspace.yaml')
+
+      if (isRootPath(currentDirname)) {
+        log.error('未找到 pnpm-workspace.yaml 文件')
+        exit(1)
+      }
+    }
   } catch {}
 }

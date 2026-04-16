@@ -6,7 +6,7 @@ import {
   type PathOrFileDescriptor,
   type WriteFileOptions,
 } from 'node:fs'
-import { join as _join } from 'node:path'
+import { join as _join, parse, resolve } from 'node:path'
 import { cwd, exit } from 'node:process'
 
 import { log } from '..'
@@ -74,4 +74,10 @@ export function createFolder(folderName: string | string[]) {
       reject(err)
     }
   })
+}
+
+export function isRootPath(filePath: string) {
+  const parsed = parse(resolve(filePath))
+  // 根路径的特点：dir 等于 root，且 base 为空
+  return parsed.dir === parsed.root && parsed.base === ''
 }
