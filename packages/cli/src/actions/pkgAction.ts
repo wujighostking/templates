@@ -10,35 +10,32 @@ import {
   writeFile,
   shouldContinue,
   isRootPath,
+  parseYaml,
+  readFile,
+  stringifyYaml,
+  parsePathToArray,
 } from '@tmes/shared'
 
 export async function pkgAction(options: { dir: string; packageName: string }) {
   const { dir, packageName } = options
-
   const packageDir = join(__dirname, dir)
-
   if (!isExists(packageDir)) {
     log.warning(`文件夹 ${dir} 不存在当前目录中，请选择一个已存在的文件夹`)
     exit(1)
   }
-
   const pkgPath = join(packageDir, packageName)
   if (isExists(pkgPath)) {
     log.warning(`文件夹 ${packageName} 已经存在，请选择一个不存在的包名称`)
     exit(1)
   }
-
   try {
     const srcPath = join(pkgPath, 'src')
     await createFolder(srcPath)
     await writeFile(join(srcPath, 'index.ts'), '')
-
     await execCommand()
-
     const continueAction = await shouldContinue('是否添加到 pnpm-workspace.yaml 中？')
     if (!continueAction) return
-
-    addPackageToWorkspace()
+    await addPackageToWorkspace()
 
     async function execCommand() {
       await execa(pnpm, ['init'], { cwd: pkgPath })
@@ -56,21 +53,32 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
         { cwd: pkgPath },
       )
     }
-
-    function addPackageToWorkspace() {
+    async function addPackageToWorkspace() {
       let workspacePath = join(__dirname, 'pnpm-workspace.yaml')
       let currentDirname = __dirname
+      let packagePath: string | string[] = [packageName]
+      const packagePathArray = parsePathToArray(__dirname)
 
       while (!isExists(workspacePath) && !isRootPath(currentDirname)) {
         currentDirname = join(currentDirname, '..')
-
+        packagePath.unshift(packagePathArray.pop()!)
         workspacePath = join(currentDirname, 'pnpm-workspace.yaml')
-
         if (isRootPath(currentDirname)) {
           log.error('未找到 pnpm-workspace.yaml 文件')
           exit(1)
         }
       }
+
+      const workspaceContent = await readFile(workspacePath)
+      const yamlData = parseYaml(workspaceContent)
+      packagePath = packagePath.join('/')
+
+      // oxlint-disable-next-line no-unused-expressions
+      Array.isArray(yamlData.packages)
+        ? yamlData.packages.push(packagePath)
+        : (yamlData.packages = [packagePath])
+
+      await writeFile(workspacePath, stringifyYaml(yamlData))
     }
   } catch {}
 }

@@ -1,12 +1,13 @@
 import {
   writeFile as _writeFile,
+  readFile as _readFile,
   existsSync,
   mkdir,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
 } from 'node:fs'
-import { join as _join, parse, resolve } from 'node:path'
+import { join as _join, parse, resolve, sep } from 'node:path'
 import { cwd, exit } from 'node:process'
 
 import { log } from '..'
@@ -80,4 +81,21 @@ export function isRootPath(filePath: string) {
   const parsed = parse(resolve(filePath))
   // 根路径的特点：dir 等于 root，且 base 为空
   return parsed.dir === parsed.root && parsed.base === ''
+}
+
+export function readFile(filePath: PathOrFileDescriptor) {
+  return new Promise<string>((resolve, reject) => {
+    try {
+      _readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
+        // oxlint-disable-next-line no-unused-expressions
+        err ? reject(err) : resolve(data)
+      })
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export function parsePathToArray(dirPath: string) {
+  return dirPath.split(sep).filter(Boolean)
 }
