@@ -1,4 +1,14 @@
-import { join, isExists, log, __dirname, exit, createFolder } from '@tmes/shared'
+import {
+  join,
+  isExists,
+  log,
+  __dirname,
+  exit,
+  createFolder,
+  execa,
+  pnpm,
+  writeFile,
+} from '@tmes/shared'
 
 export async function pkgAction(options: { dir: string; packageName: string }) {
   const { dir, packageName } = options
@@ -17,6 +27,10 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
   }
 
   try {
-    await createFolder(pkgPath)
+    const srcPath = join(pkgPath, 'src')
+    await createFolder(srcPath)
+    await writeFile(join(srcPath, 'index.ts'), '')
+
+    execa(pnpm, ['init'], { cwd: pkgPath })
   } catch {}
 }
