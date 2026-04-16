@@ -5,5 +5,5 @@ export const shouldContinue = async (message: string) =>
 
 export const getValue = async (options: TextOptions) => await text(options)
 
-export type ModeType = 'monorepo' | 'polyrepo'
-export const getSelectedValue = async (options: SelectOptions<ModeType>) => await select(options)
+export const getSelectedValue = async <T = unknown>(options: SelectOptions<T>) =>
+  await select(options)
