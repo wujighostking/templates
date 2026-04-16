@@ -33,35 +33,43 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
     await createFolder(srcPath)
     await writeFile(join(srcPath, 'index.ts'), '')
 
-    await execa(pnpm, ['init'], { cwd: pkgPath })
-    await execa(
-      pnpm,
-      [
-        'pkg',
-        'set',
-        'files.0=dist',
-        'type=module',
-        'main=dist/index.js',
-        'module=dist/index.js',
-        'types=dist/index.d.ts',
-      ],
-      { cwd: pkgPath },
-    )
+    await execCommand()
 
     const continueAction = await shouldContinue('是否添加到 pnpm-workspace.yaml 中？')
     if (!continueAction) return
 
-    let workspacePath = join(__dirname, 'pnpm-workspace.yaml')
-    let currentDirname = __dirname
+    addPackageToWorkspace()
 
-    while (!isExists(workspacePath) && !isRootPath(currentDirname)) {
-      currentDirname = join(currentDirname, '..')
+    async function execCommand() {
+      await execa(pnpm, ['init'], { cwd: pkgPath })
+      await execa(
+        pnpm,
+        [
+          'pkg',
+          'set',
+          'files.0=dist',
+          'type=module',
+          'main=dist/index.js',
+          'module=dist/index.js',
+          'types=dist/index.d.ts',
+        ],
+        { cwd: pkgPath },
+      )
+    }
 
-      workspacePath = join(currentDirname, 'pnpm-workspace.yaml')
+    function addPackageToWorkspace() {
+      let workspacePath = join(__dirname, 'pnpm-workspace.yaml')
+      let currentDirname = __dirname
 
-      if (isRootPath(currentDirname)) {
-        log.error('未找到 pnpm-workspace.yaml 文件')
-        exit(1)
+      while (!isExists(workspacePath) && !isRootPath(currentDirname)) {
+        currentDirname = join(currentDirname, '..')
+
+        workspacePath = join(currentDirname, 'pnpm-workspace.yaml')
+
+        if (isRootPath(currentDirname)) {
+          log.error('未找到 pnpm-workspace.yaml 文件')
+          exit(1)
+        }
       }
     }
   } catch {}
