@@ -1,5 +1,13 @@
 import { getSelectedValue, getValue } from '@tmes/shared'
 
+import {
+  createNestApp,
+  createNodeApp,
+  createNuxtApp,
+  createReactApp,
+  createVue,
+} from '../createApps'
+
 interface Options {
   name: string
   mode: ModeType
@@ -100,9 +108,14 @@ async function createPolyrepoProject({
   buildTool: BuildToolType
 }) {
   if (framework === 'react') {
+    createReactApp({ name, buildTool, type })
   } else if (framework === 'vue') {
+    createVue({ name, buildTool, type })
   } else if (framework === 'nest') {
+    createNestApp({ name })
   } else if (framework === 'nuxt') {
+    createNuxtApp({ name })
   } else if (framework === 'node') {
+    createNodeApp({ name })
   }
 }
