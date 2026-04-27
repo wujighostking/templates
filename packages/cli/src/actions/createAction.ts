@@ -5,7 +5,7 @@ import {
   createNodeApp,
   createNuxtApp,
   createReactApp,
-  createVue,
+  createVueApp,
 } from '../createApps'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 
@@ -96,7 +96,7 @@ async function createPolyrepoProject({
   if (framework === 'react') {
     createReactApp({ name, buildTool, type })
   } else if (framework === 'vue') {
-    createVue({ name, buildTool, type })
+    createVueApp({ name, buildTool, type })
   } else if (framework === 'nest') {
     createNestApp({ name })
   } else if (framework === 'nuxt') {
