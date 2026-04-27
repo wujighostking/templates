@@ -1,0 +1,19 @@
+{
+  "name": "main",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "turbo run build"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

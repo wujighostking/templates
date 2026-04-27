@@ -1,0 +1,26 @@
+{
+  "name": "template-monorepo",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "prepare": "simple-git-hooks",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "turbo": "^2.9.6",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

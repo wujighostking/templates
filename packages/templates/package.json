@@ -1,0 +1,20 @@
+{
+  "name": "@tmes/templates",
+  "version": "2.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "files": [
+    "dist",
+    "template-monorepo",
+    "template-node-tsdown",
+    "template-node-vite",
+    "template-nuxt",
+    "template-react",
+    "template-vue"
+  ],
+  "main": "index.js",
+  "scripts": {},
+  "packageManager": "pnpm@10.30.3"
+}
