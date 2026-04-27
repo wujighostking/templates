@@ -1,4 +1,4 @@
-import { getSelectedValue, getValue } from '@tmes/shared'
+import { getMultiSelectedValue, getSelectedValue, getValue } from '@tmes/shared'
 
 import {
   createNestApp,
@@ -39,7 +39,10 @@ export async function createAction(options: Options) {
   if (mode === 'polyrepo') {
     ;({ framework, type, buildTool } = await polyrepoSelected({ framework, type, buildTool }))
 
-    createPolyrepoProject({ name, framework, type, buildTool })
+    await createPolyrepoProject({ name, framework, type, buildTool })
+  } else if (mode === 'monorepo') {
+    await monorepoSelected({ framework, type, buildTool })
+    // await createMonorepoProject({ name })
   }
 }
 
@@ -104,4 +107,19 @@ async function createPolyrepoProject({
   } else if (framework === 'node') {
     createNodeApp({ name, buildTool })
   }
+}
+
+async function monorepoSelected(options: any) {
+  let { framework } = options
+
+  const frameworks = await getMultiSelectedValue({
+    message: '请选择子包项目',
+    options: [
+      { value: 'react', label: 'react' },
+      { value: 'vue', label: 'vue' },
+      { value: 'nest', label: 'nest' },
+      { value: 'nuxt', label: 'nuxt' },
+      { value: 'node', label: 'node' },
+    ],
+  })
 }
