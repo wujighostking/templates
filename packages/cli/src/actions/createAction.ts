@@ -102,6 +102,6 @@ async function createPolyrepoProject({
   } else if (framework === 'nuxt') {
     createNuxtApp({ name })
   } else if (framework === 'node') {
-    createNodeApp({ name })
+    createNodeApp({ name, buildTool })
   }
 }

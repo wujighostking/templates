@@ -15,4 +15,12 @@ export const templates = [
     name: 'nuxt',
     path: './template-nuxt',
   },
+  {
+    name: 'node-vite',
+    path: './template-node-vite',
+  },
+  {
+    name: 'node-tsdown',
+    path: './template-node-tsdown',
+  },
 ]
