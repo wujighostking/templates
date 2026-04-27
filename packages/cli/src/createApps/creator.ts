@@ -5,7 +5,7 @@ import { templates } from '@tmes/templates'
 
 import type { FrameworkType } from '../types'
 
-export function createTemplate(templateName: FrameworkType, name: string) {
+export async function createTemplate(templateName: FrameworkType, name: string) {
   const __dirname = fileURLToPath(import.meta.url)
 
   const { path: templatePath } = templates.find((t) => t.name === templateName) ?? {}
@@ -15,6 +15,7 @@ export function createTemplate(templateName: FrameworkType, name: string) {
     process.exit(1)
   }
 
-  copy(reactTemplatePath, join(process.cwd(), name))
-  log.success('创建成功')
+  await copy(reactTemplatePath, join(process.cwd(), name))
+
+  log.success(`创建 ${templateName} 成功`)
 }

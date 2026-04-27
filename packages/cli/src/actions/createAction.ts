@@ -7,6 +7,7 @@ import {
   createReactApp,
   createVueApp,
 } from '../createApps'
+import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 
 /**
@@ -37,12 +38,21 @@ export async function createAction(options: Options) {
   })) as ModeType
 
   if (mode === 'polyrepo') {
-    ;({ framework, type, buildTool } = await polyrepoSelected({ framework, type, buildTool }))
+    ;({ framework, type, buildTool } = await polyrepoSelected({
+      framework,
+      type,
+      buildTool,
+    } as {
+      framework: FrameworkType
+      type: ProjectType
+      buildTool: BuildToolType
+    }))
 
     await createPolyrepoProject({ name, framework, type, buildTool })
   } else if (mode === 'monorepo') {
-    await monorepoSelected({ framework, type, buildTool })
-    // await createMonorepoProject({ name })
+    ;({ framework, buildTool } = await monorepoSelected({ framework, buildTool }))
+
+    await createMonorepoProject({ name, framework, buildTool })
   }
 }
 
@@ -58,7 +68,7 @@ async function polyrepoSelected({
   framework?: FrameworkType
   type?: ProjectType
   buildTool?: BuildToolType
-}) {
+}): Promise<{ framework: FrameworkType; type: ProjectType; buildTool: BuildToolType }> {
   framework ??= (await getSelectedValue<FrameworkType>({
     message: '请选择项目框架',
     options: [
@@ -109,10 +119,12 @@ async function createPolyrepoProject({
   }
 }
 
-async function monorepoSelected(options: any) {
-  let { framework } = options
+async function monorepoSelected(
+  options: any,
+): Promise<{ framework: FrameworkType[]; buildTool: BuildToolType }> {
+  let { framework, buildTool } = options
 
-  const frameworks = await getMultiSelectedValue({
+  framework ??= await getMultiSelectedValue({
     message: '请选择子包项目',
     options: [
       { value: 'react', label: 'react' },
@@ -122,4 +134,32 @@ async function monorepoSelected(options: any) {
       { value: 'node', label: 'node' },
     ],
   })
+
+  framework = Array.isArray(framework) ? framework : [framework]
+
+  if (framework.includes('react') || framework.includes('vue') || framework.includes('node')) {
+    buildTool ??= (await getSelectedValue<BuildToolType>({
+      message: '请选择项目构建工具',
+      options: [
+        { value: 'vite', label: 'vite' },
+        { value: 'tsdown', label: 'tsdown' },
+      ],
+    })) as BuildToolType
+
+    // type ??= framework === 'node' ? 'lib' : 'web'
+  }
+
+  return { framework, buildTool }
+}
+
+async function createMonorepoProject({
+  name,
+  framework,
+  buildTool,
+}: {
+  name: string
+  framework: FrameworkType[]
+  buildTool: BuildToolType
+}) {
+  await createMonorepoApp({ name, framework, buildTool })
 }

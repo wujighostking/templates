@@ -3,7 +3,7 @@ export interface Options {
   mode: ModeType
   buildTool: BuildToolType
   type: ProjectType
-  framework: FrameworkType
+  framework: FrameworkType | FrameworkType[]
 }
 
 export type ModeType = 'monorepo' | 'polyrepo'

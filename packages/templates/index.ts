@@ -23,4 +23,8 @@ export const templates = [
     name: 'node-tsdown',
     path: './template-node-tsdown',
   },
+  {
+    name: 'monorepo',
+    path: './template-monorepo',
+  },
 ]

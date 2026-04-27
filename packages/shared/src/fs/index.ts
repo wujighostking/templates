@@ -4,6 +4,7 @@ import {
   existsSync,
   mkdir,
   cp,
+  constants,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
@@ -101,6 +102,11 @@ export function parsePathToArray(dirPath: string) {
   return dirPath.split(sep).filter(Boolean)
 }
 
-export function copy(src: string, dest: string) {
-  cp(src, dest, { recursive: true }, () => {})
+export async function copy(src: string, dest: string) {
+  return new Promise((resolve, reject) => {
+    cp(src, dest, { recursive: true }, (err) => {
+      // oxlint-disable-next-line no-unused-expressions
+      err ? reject(err) : resolve(void 0)
+    })
+  })
 }
