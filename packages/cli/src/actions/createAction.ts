@@ -7,19 +7,7 @@ import {
   createReactApp,
   createVue,
 } from '../createApps'
-
-interface Options {
-  name: string
-  mode: ModeType
-  buildTool: BuildToolType
-  type: ProjectType
-  framework: FrameworkType
-}
-
-type ModeType = 'monorepo' | 'polyrepo'
-type BuildToolType = 'vite' | 'tsdown' | undefined
-type ProjectType = 'web' | 'lib' | undefined
-type FrameworkType = 'react' | 'vue' | 'nest' | 'nuxt' | 'node'
+import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 
 /**
  * polyrepo
@@ -50,8 +38,6 @@ export async function createAction(options: Options) {
 
   if (mode === 'polyrepo') {
     ;({ framework, type, buildTool } = await polyrepoSelected({ framework, type, buildTool }))
-
-    console.log(name, mode, framework, type, buildTool)
 
     createPolyrepoProject({ name, framework, type, buildTool })
   }

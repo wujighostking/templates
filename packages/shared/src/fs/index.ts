@@ -3,6 +3,7 @@ import {
   readFile as _readFile,
   existsSync,
   mkdir,
+  cp,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
@@ -98,4 +99,8 @@ export function readFile(filePath: PathOrFileDescriptor) {
 
 export function parsePathToArray(dirPath: string) {
   return dirPath.split(sep).filter(Boolean)
+}
+
+export function copy(src: string, dest: string) {
+  cp(src, dest, { recursive: true }, () => {})
 }
