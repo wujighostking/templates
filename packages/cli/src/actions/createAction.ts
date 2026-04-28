@@ -1,4 +1,12 @@
-import { getMultiSelectedValue, getSelectedValue, getValue } from '@tmes/shared'
+import {
+  __dirname,
+  execa,
+  getMultiSelectedValue,
+  getSelectedValue,
+  getValue,
+  join,
+  setDirname,
+} from '@tmes/shared'
 
 import {
   createNestApp,
@@ -9,6 +17,7 @@ import {
 } from '../createApps'
 import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
+import { lintPreset } from './lintPreset.ts'
 
 /**
  * polyrepo
@@ -107,16 +116,20 @@ async function createPolyrepoProject({
   buildTool: BuildToolType
 }) {
   if (framework === 'react') {
-    createReactApp({ name, buildTool, type })
+    await createReactApp({ name, buildTool, type })
   } else if (framework === 'vue') {
-    createVueApp({ name, buildTool, type })
+    await createVueApp({ name, buildTool, type })
   } else if (framework === 'nest') {
-    createNestApp({ name })
+    await createNestApp({ name })
   } else if (framework === 'nuxt') {
-    createNuxtApp({ name })
+    await createNuxtApp({ name })
   } else if (framework === 'node') {
-    createNodeApp({ name, buildTool })
+    await createNodeApp({ name, buildTool })
   }
+
+  const projectPath = join(__dirname, name)
+  setDirname(projectPath)
+  lintPreset()
 }
 
 async function monorepoSelected(
@@ -162,4 +175,8 @@ async function createMonorepoProject({
   buildTool: BuildToolType
 }) {
   await createMonorepoApp({ name, framework, buildTool })
+
+  const projectPath = join(__dirname, name)
+  setDirname(projectPath)
+  lintPreset()
 }

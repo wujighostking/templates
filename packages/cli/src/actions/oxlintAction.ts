@@ -40,7 +40,7 @@ export async function oxlintAction() {
       },
     )
 
-    await writeFile('oxlint.config.ts', oxlintConfigContext)
+    await writeFile(join(__dirname, 'oxlint.config.ts'), oxlintConfigContext)
 
     log.success('成功创建 oxlint 配置')
   } catch {

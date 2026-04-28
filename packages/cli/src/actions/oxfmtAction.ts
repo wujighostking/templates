@@ -46,7 +46,7 @@ export async function oxfmtAction() {
       },
     )
 
-    await writeFile('oxfmt.config.ts', oxfmtConfigContext)
+    await writeFile(join(__dirname, 'oxfmt.config.ts'), oxfmtConfigContext)
 
     log.success('成功创建 oxfmt 配置')
   } catch {

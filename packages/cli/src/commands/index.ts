@@ -9,6 +9,7 @@ import {
   lintstagedAction,
   oxlintAction,
   oxfmtAction,
+  lintPreset,
 } from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
@@ -80,11 +81,7 @@ export const commands: CommandConfig[] = [
   {
     command: ['lint-preset', '创建 commitlint, githooks, lint-staged, oxlint, oxfmt 的配置'],
     action: () => {
-      commitlintAction()
-      githooksAction()
-      lintstagedAction()
-      oxlintAction()
-      oxfmtAction()
+      lintPreset()
     },
   },
 ]

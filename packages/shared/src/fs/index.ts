@@ -4,7 +4,6 @@ import {
   existsSync,
   mkdir,
   cp,
-  constants,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
@@ -14,7 +13,11 @@ import { cwd, exit } from 'node:process'
 
 import { log } from '..'
 
-export const __dirname = cwd()
+export let __dirname = cwd()
+
+export function setDirname(dirname: string) {
+  __dirname = dirname
+}
 
 /**
  * @description 判断当前文件是否存在

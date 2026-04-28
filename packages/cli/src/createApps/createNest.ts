@@ -1,1 +1,1 @@
-export function createNestApp(options: any) {}
+export async function createNestApp(options: any) {}
