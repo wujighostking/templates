@@ -1,11 +1,4 @@
-import {
-  __dirname,
-  getMultiSelectedValue,
-  getSelectedValue,
-  getValue,
-  join,
-  setDirname,
-} from '@tmes/shared'
+import { getMultiSelectedValue, getSelectedValue, getValue } from '@tmes/shared'
 
 import {
   createNestApp,
@@ -17,7 +10,6 @@ import {
 import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 import { setLintPreset, setProjectInit } from './commonAction.ts'
-import { lintPreset } from './lintPreset.ts'
 
 /**
  * polyrepo
