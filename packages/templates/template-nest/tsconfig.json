@@ -21,5 +21,6 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "types": ["node"]
-  }
+  },
+  "exclude": ["dist", "commitlint.config.ts", "oxfmt.config.ts", "oxlint.config.ts"]
 }
