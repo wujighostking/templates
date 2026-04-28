@@ -11,8 +11,8 @@ import {
 
 import { exit } from '..'
 
-export const shouldContinue = async (message: string) =>
-  await confirm({ message, initialValue: false, inactive: '否', active: '是' })
+export const shouldContinue = async (message: string, initialValue?: boolean) =>
+  await confirm({ message, initialValue: initialValue ?? false, inactive: '否', active: '是' })
 
 export const isCancel = (value: unknown, code?: number) => {
   _isCancel(value) && exit(code ?? 0)

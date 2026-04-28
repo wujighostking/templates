@@ -17,12 +17,12 @@ export async function setProjectInit(name?: string) {
   /**
    * 询问是否执行 git init 命令
    */
-  const isInit = await shouldContinue('是否执行 git init 命令？')
+  const isInit = await shouldContinue('是否执行 git init 命令？', true)
 
   /**
    * 询问是否执行 pnpm install 立即下载依赖
    */
-  const isInstall = await shouldContinue('是否立即下载依赖')
+  const isInstall = await shouldContinue('是否立即下载依赖', true)
 
   // oxlint-disable-next-line no-unused-expressions
   isInit && !isCancel(isInit) && (await execa('git', ['init'], { cwd: __dirname }))
