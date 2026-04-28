@@ -9,10 +9,16 @@ import {
   type MultiSelectOptions,
 } from '@clack/prompts'
 
+import { exit } from '..'
+
 export const shouldContinue = async (message: string) =>
   await confirm({ message, initialValue: false, inactive: '否', active: '是' })
 
-export const isCancel = _isCancel
+export const isCancel = (value: unknown, code?: number) => {
+  _isCancel(value) && exit(code ?? 0)
+
+  return false
+}
 
 export const getValue = async (options: TextOptions) => await text(options)
 

@@ -1,4 +1,4 @@
-import { getMultiSelectedValue, getSelectedValue, getValue } from '@tmes/shared'
+import { getMultiSelectedValue, getSelectedValue, getValue, isCancel } from '@tmes/shared'
 
 import {
   createNestApp,
@@ -30,6 +30,8 @@ export async function createAction(options: Options) {
     validate: (value) => (value ? undefined : '项目名称不能为空'),
   })) as string
 
+  isCancel(name)
+
   mode ??= (await getSelectedValue<ModeType>({
     message: '请选择项目模式',
     options: [
@@ -37,6 +39,8 @@ export async function createAction(options: Options) {
       { value: 'polyrepo', label: 'polyrepo' },
     ],
   })) as ModeType
+
+  isCancel(mode)
 
   if (mode === 'polyrepo') {
     ;({ framework, type, buildTool } = await polyrepoSelected({
@@ -81,6 +85,8 @@ async function polyrepoSelected({
     ],
   })) as FrameworkType
 
+  isCancel(framework)
+
   if (framework === 'react' || framework === 'vue' || framework === 'node') {
     buildTool ??= (await getSelectedValue<BuildToolType>({
       message: '请选择项目构建工具',
@@ -89,6 +95,8 @@ async function polyrepoSelected({
         { value: 'tsdown', label: 'tsdown' },
       ],
     })) as BuildToolType
+
+    isCancel(buildTool)
 
     type ??= framework === 'node' ? 'lib' : 'web'
   }
@@ -140,6 +148,8 @@ async function monorepoSelected(
     ],
   })
 
+  isCancel(framework)
+
   framework = Array.isArray(framework) ? framework : [framework]
 
   if (framework.includes('react') || framework.includes('vue') || framework.includes('node')) {
@@ -150,6 +160,8 @@ async function monorepoSelected(
         { value: 'tsdown', label: 'tsdown' },
       ],
     })) as BuildToolType
+
+    isCancel(buildTool)
 
     // type ??= framework === 'node' ? 'lib' : 'web'
   }
