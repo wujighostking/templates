@@ -13,6 +13,11 @@ The React Compiler is enabled on this template. See [this documentation](https:/
 
 Note: This will impact Vite dev & build performances.
 
+## Editor Convention
+
+This template includes a `.editorconfig` file for consistent UTF-8 encoding, LF line endings, 2-space indentation, and final newlines.
+Use it together with the existing VS Code formatter settings so editor defaults do not drift across machines.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:

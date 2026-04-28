@@ -6,6 +6,8 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 Make sure to install dependencies:
 
+This template also includes a `.editorconfig` file so editors default to UTF-8, LF line endings, 2-space indentation, and final newlines.
+
 ```bash
 # npm
 npm install
