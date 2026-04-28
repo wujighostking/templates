@@ -1,6 +1,5 @@
 import {
   __dirname,
-  execa,
   getMultiSelectedValue,
   getSelectedValue,
   getValue,
@@ -17,6 +16,7 @@ import {
 } from '../createApps'
 import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
+import { setLintPreset, setProjectInit } from './commonAction.ts'
 import { lintPreset } from './lintPreset.ts'
 
 /**
@@ -127,9 +127,9 @@ async function createPolyrepoProject({
     await createNodeApp({ name, buildTool })
   }
 
-  const projectPath = join(__dirname, name)
-  setDirname(projectPath)
-  lintPreset()
+  await setLintPreset(name)
+
+  await setProjectInit()
 }
 
 async function monorepoSelected(
@@ -176,7 +176,7 @@ async function createMonorepoProject({
 }) {
   await createMonorepoApp({ name, framework, buildTool })
 
-  const projectPath = join(__dirname, name)
-  setDirname(projectPath)
-  lintPreset()
+  await setLintPreset(name)
+
+  await setProjectInit()
 }

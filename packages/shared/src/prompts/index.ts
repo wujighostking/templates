@@ -3,6 +3,7 @@ import {
   select,
   text,
   multiselect,
+  isCancel as _isCancel,
   type SelectOptions,
   type TextOptions,
   type MultiSelectOptions,
@@ -10,6 +11,8 @@ import {
 
 export const shouldContinue = async (message: string) =>
   await confirm({ message, initialValue: false, inactive: '否', active: '是' })
+
+export const isCancel = _isCancel
 
 export const getValue = async (options: TextOptions) => await text(options)
 

@@ -4,10 +4,10 @@ import { lintstagedAction } from './lintstagedAction'
 import { oxfmtAction } from './oxfmtAction'
 import { oxlintAction } from './oxlintAction'
 
-export function lintPreset() {
-  commitlintAction()
-  githooksAction()
-  lintstagedAction()
-  oxlintAction()
-  oxfmtAction()
+export async function lintPreset() {
+  await commitlintAction()
+  await githooksAction()
+  await lintstagedAction()
+  await oxlintAction()
+  await oxfmtAction()
 }
