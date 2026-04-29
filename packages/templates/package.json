@@ -8,6 +8,7 @@
   "files": [
     "dist",
     "template-monorepo",
+    "template-nest",
     "template-node-tsdown",
     "template-node-vite",
     "template-nuxt",
