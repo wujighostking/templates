@@ -119,6 +119,8 @@ export async function copy(src: string, dest: string) {
 export function deleteFile(src: string, options?: RmOptions) {
   return new Promise((resolve, reject) => {
     try {
+      if (!isExists(src)) return resolve(void 0)
+
       rm(src, { recursive: true, force: true, ...options }, (err) => {
         // oxlint-disable-next-line no-unused-expressions
         err ? reject(err) : resolve(void 0)
