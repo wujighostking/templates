@@ -11,6 +11,7 @@ import {
   oxfmtAction,
   lintPreset,
   getListActions,
+  deleteTemplateAction,
 } from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
@@ -90,8 +91,10 @@ export const commands: CommandConfig[] = [
     action: () => {},
   },
   {
-    command: ['delete <template-name>', '删除已存在的模板'],
-    action: () => {},
+    command: ['delete <...template-names>', '删除已存在的模板'],
+    action: async (templateNames: string[]) => {
+      await deleteTemplateAction(templateNames)
+    },
   },
   // {
   //   command: ['modify [existingTemplateName] [newTemplateName]', '修改已存在的模板'],

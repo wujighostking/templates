@@ -4,9 +4,11 @@ import {
   existsSync,
   mkdir,
   cp,
+  rm,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
+  type RmOptions,
 } from 'node:fs'
 import { join as _join, parse, resolve, sep } from 'node:path'
 import { cwd, exit } from 'node:process'
@@ -111,5 +113,18 @@ export async function copy(src: string, dest: string) {
       // oxlint-disable-next-line no-unused-expressions
       err ? reject(err) : resolve(void 0)
     })
+  })
+}
+
+export function deleteFile(src: string, options?: RmOptions) {
+  return new Promise((resolve, reject) => {
+    try {
+      rm(src, { recursive: true, force: true, ...options }, (err) => {
+        // oxlint-disable-next-line no-unused-expressions
+        err ? reject(err) : resolve(void 0)
+      })
+    } catch (err) {
+      reject(err)
+    }
   })
 }

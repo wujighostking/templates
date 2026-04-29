@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 
-import { exit, isString, join, log, writeFile } from '@tmes/shared'
+import { deleteFile, exit, isString, join, log, writeFile } from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
 
 export function getListActions() {
@@ -11,6 +11,40 @@ export function getListActions() {
     const templatePath = template.path.slice(2)
 
     log(templateName.padEnd(20, '-'), templatePath)
+  }
+}
+
+export async function deleteTemplateAction(templateNames: string[]) {
+  try {
+    const _templateNameSet = new Set(templates.map((template) => template.name))
+
+    const _templateNames = templateNames.filter((name) => {
+      if (_templateNameSet.has(name)) return true
+
+      log.warning(`模板 ${name} 不存在模板列表中，跳过删除`)
+      return false
+    })
+
+    if (_templateNames.length === 0) {
+      log('有效模板为空')
+      exit(0)
+    }
+
+    const _templates = templates.filter((template) => !_templateNames.includes(template.name))
+    const deleteTemplates = templates.filter((template) => _templateNames.includes(template.name))
+
+    const __dirname = fileURLToPath(import.meta.url)
+    await writeFile(
+      join(__dirname, '../../node_modules/@tmes/templates/templates.json'),
+      JSON.stringify(_templates, null, 2),
+    )
+
+    for (const template of deleteTemplates) {
+      await deleteFile(join(__dirname, `../../node_modules/@tmes/templates`, template.path))
+      log.success(`模板 ${template.name} 删除成功`)
+    }
+  } catch (err: any) {
+    log.error(err?.message ?? err)
   }
 }
 
