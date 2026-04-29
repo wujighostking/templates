@@ -29,7 +29,7 @@ export const commands: CommandConfig[] = [
       ['--type, -t [type]', '需要创建的项目类型, 可选值: "web" | "lib"'],
       [
         '--framework, -f [framework]',
-        '需要创建的项目框架, 可选值: "react" | "vue" | "nest" | "nuxt"',
+        '需要创建的项目框架, 默认可选值: "react" | "vue" | "nest" | "nuxt" | "node"',
       ],
     ],
     action: (name, options) => {

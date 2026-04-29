@@ -7,6 +7,7 @@
   "author": "",
   "files": [
     "dist",
+    "templates.json",
     "template-monorepo",
     "template-nest",
     "template-node-tsdown",
@@ -16,19 +17,14 @@
     "template-vue"
   ],
   "type": "module",
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./templates.json",
+  "module": "./templates.json",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./templates.json",
+      "require": "./templates.json"
     }
   },
-  "scripts": {
-    "dev": "tsdown --watch=index.ts",
-    "build": "tsdown"
-  },
+  "scripts": {},
   "packageManager": "pnpm@10.30.3"
 }

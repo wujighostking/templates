@@ -1,0 +1,30 @@
+[
+  {
+    "name": "monorepo",
+    "path": "./template-monorepo"
+  },
+  {
+    "name": "nest",
+    "path": "./template-nest"
+  },
+  {
+    "name": "node-tsdown",
+    "path": "./template-node-tsdown"
+  },
+  {
+    "name": "node-vite",
+    "path": "./template-node-vite"
+  },
+  {
+    "name": "nuxt",
+    "path": "./template-nuxt"
+  },
+  {
+    "name": "react",
+    "path": "./template-react"
+  },
+  {
+    "name": "vue",
+    "path": "./template-vue"
+  }
+]

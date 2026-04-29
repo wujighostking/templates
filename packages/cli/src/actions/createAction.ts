@@ -1,4 +1,13 @@
-import { getMultiSelectedValue, getSelectedValue, getValue, isCancel } from '@tmes/shared'
+import {
+  execa,
+  getMultiSelectedValue,
+  getSelectedValue,
+  getValue,
+  isCancel,
+  join,
+  pnpm,
+  __dirname,
+} from '@tmes/shared'
 
 import {
   createNestApp,
@@ -127,6 +136,8 @@ async function createPolyrepoProject({
     await createNodeApp({ name, buildTool })
   }
 
+  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: join(__dirname, name) })
+
   await setLintPreset(name)
 
   await setProjectInit()
@@ -179,6 +190,8 @@ async function createMonorepoProject({
   buildTool: BuildToolType
 }) {
   await createMonorepoApp({ name, framework, buildTool })
+
+  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: join(__dirname, name) })
 
   await setLintPreset(name)
 

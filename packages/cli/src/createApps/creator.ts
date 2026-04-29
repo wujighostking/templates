@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 
 import { copy, isExists, join, log } from '@tmes/shared'
-import { templates } from '@tmes/templates'
+import templates from '@tmes/templates' with { type: 'json' }
 
 import type { FrameworkType } from '../types'
 
