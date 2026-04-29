@@ -49,7 +49,6 @@ export function writeFile(
       _writeFile(fileName, data, { encoding: 'utf-8', ...(options as object) }, (err) => {
         callback?.(err)
 
-        // oxlint-disable-next-line no-unused-expressions
         err ? reject(err) : resolve(void 0)
       })
     } catch (err) {
@@ -94,7 +93,6 @@ export function readFile(filePath: PathOrFileDescriptor) {
   return new Promise<string>((resolve, reject) => {
     try {
       _readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
-        // oxlint-disable-next-line no-unused-expressions
         err ? reject(err) : resolve(data)
       })
     } catch (err) {
@@ -110,7 +108,6 @@ export function parsePathToArray(dirPath: string) {
 export async function copy(src: string, dest: string) {
   return new Promise((resolve, reject) => {
     cp(src, dest, { recursive: true }, (err) => {
-      // oxlint-disable-next-line no-unused-expressions
       err ? reject(err) : resolve(void 0)
     })
   })
@@ -122,7 +119,6 @@ export function deleteFile(src: string, options?: RmOptions) {
       if (!isExists(src)) return resolve(void 0)
 
       rm(src, { recursive: true, force: true, ...options }, (err) => {
-        // oxlint-disable-next-line no-unused-expressions
         err ? reject(err) : resolve(void 0)
       })
     } catch (err) {

@@ -27,7 +27,6 @@ export async function setProjectInit(name?: string) {
 
   isCancel(isInstall)
 
-  // oxlint-disable-next-line no-unused-expressions
   isInit && (await execa('git', ['init'], { cwd: __dirname }))
   if (isInstall) {
     await execa(pnpm, ['install'], { cwd: __dirname, stdio: 'inherit' })

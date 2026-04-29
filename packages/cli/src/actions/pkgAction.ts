@@ -73,7 +73,6 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
       const yamlData = parseYaml(workspaceContent)
       packagePath = packagePath.join('/')
 
-      // oxlint-disable-next-line no-unused-expressions
       Array.isArray(yamlData.packages)
         ? yamlData.packages.push(packagePath)
         : (yamlData.packages = [packagePath])
