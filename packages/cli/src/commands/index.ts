@@ -93,10 +93,20 @@ export const commands: CommandConfig[] = [
     command: ['delete <template-name>', '删除已存在的模板'],
     action: () => {},
   },
-  {
-    command: ['modify <template-name>', '修改已存在的模板'],
-    action: () => {},
-  },
+  // {
+  //   command: ['modify [existingTemplateName] [newTemplateName]', '修改已存在的模板'],
+  //   options: [
+  //     ['--existingTemplateName, -e [existingTemplateName]', '需要修改的模板名称'],
+  //     ['--newTemplateName, -n [newTemplateName]', '修改后的模板名称'],
+  //   ],
+  //   action: (
+  //     existingTemplateName: string,
+  //     newTemplateName: string,
+  //     options: { existingTemplateName: string; newTemplateName: string },
+  //   ) => {
+  //     modifyTemplateAction(existingTemplateName, newTemplateName, options)
+  //   },
+  // },
   {
     command: ['list', '列出所有可用的模板'],
     action: () => {
