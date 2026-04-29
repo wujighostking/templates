@@ -10,6 +10,7 @@ import {
   oxlintAction,
   oxfmtAction,
   lintPreset,
+  getListActions,
 } from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
@@ -82,6 +83,24 @@ export const commands: CommandConfig[] = [
     command: ['lint-preset', '创建 commitlint, githooks, lint-staged, oxlint, oxfmt 的配置'],
     action: () => {
       lintPreset()
+    },
+  },
+  {
+    command: ['set <template-name> <template-path>', '设置自定义模板'],
+    action: () => {},
+  },
+  {
+    command: ['delete <template-name>', '删除已存在的模板'],
+    action: () => {},
+  },
+  {
+    command: ['modify <template-name>', '修改已存在的模板'],
+    action: () => {},
+  },
+  {
+    command: ['list', '列出所有可用的模板'],
+    action: () => {
+      getListActions()
     },
   },
 ]
