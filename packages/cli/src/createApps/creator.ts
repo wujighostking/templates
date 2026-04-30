@@ -17,5 +17,5 @@ export async function createTemplate(templateName: FrameworkType, name: string) 
 
   await copy(reactTemplatePath, join(process.cwd(), name))
 
-  log.success(`创建 ${templateName} 成功`)
+  log.success(`创建 ${name} 成功`)
 }

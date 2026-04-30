@@ -8,6 +8,7 @@ import {
   pnpm,
   __dirname,
 } from '@tmes/shared'
+import templates from '@tmes/templates' with { type: 'json' }
 
 import {
   createNestApp,
@@ -16,9 +17,20 @@ import {
   createReactApp,
   createVueApp,
 } from '../createApps'
+import { createCustomApp } from '../createApps/createCustomApp.ts'
 import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 import { setLintPreset, setProjectInit } from './commonAction.ts'
+
+const defaultTemplates = new Set<string>([
+  'react',
+  'vue',
+  'nest',
+  'nuxt',
+  'node-tsdown',
+  'node-vite',
+  'monorepo',
+])
 
 /**
  * polyrepo
@@ -41,13 +53,24 @@ export async function createAction(options: Options) {
 
   isCancel(name)
 
-  mode ??= (await getSelectedValue<ModeType>({
-    message: '请选择项目模式',
-    options: [
-      { value: 'monorepo', label: 'monorepo' },
-      { value: 'polyrepo', label: 'polyrepo' },
-    ],
-  })) as ModeType
+  if (!mode) {
+    const hasDefaultTemplate =
+      templates.filter((template) => !defaultTemplates.has(template.name)).length > 0
+
+    mode = (await getSelectedValue<ModeType>({
+      message: '请选择项目模式',
+      options: [
+        { value: 'monorepo', label: 'monorepo' },
+        { value: 'polyrepo', label: 'polyrepo' },
+        {
+          value: 'custom',
+          label: 'custom',
+          hint: hasDefaultTemplate ? '自定义模板' : '没有自定义模板',
+          disabled: !hasDefaultTemplate,
+        },
+      ],
+    })) as ModeType
+  }
 
   isCancel(mode)
 
@@ -67,6 +90,8 @@ export async function createAction(options: Options) {
     ;({ framework, buildTool } = await monorepoSelected({ framework, buildTool }))
 
     await createMonorepoProject({ name, framework, buildTool })
+  } else if (mode === 'custom') {
+    await createCustomProject({ name, framework } as any)
   }
 }
 
@@ -196,4 +221,35 @@ async function createMonorepoProject({
   await setLintPreset(name)
 
   await setProjectInit()
+}
+
+async function customSelected(options: any) {
+  let { framework } = options
+
+  framework ??= await getSelectedValue({
+    message: '请选择自定义模板',
+    options: templates
+      .map((template) => {
+        if (!defaultTemplates.has(template.name)) {
+          return { value: template.name, label: template.name }
+        }
+      })
+      .filter(Boolean) as { value: string; label: string }[],
+  })
+
+  isCancel(framework)
+
+  return { framework }
+}
+
+async function createCustomProject({
+  name,
+  framework,
+}: {
+  name: string
+  framework: FrameworkType
+}) {
+  ;({ framework } = await customSelected({ name, framework }))
+
+  await createCustomApp({ name, framework })
 }
