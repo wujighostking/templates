@@ -12,6 +12,7 @@ import {
   lintPreset,
   getListActions,
   deleteTemplateAction,
+  setTemplateAction,
 } from '../actions'
 
 type ActionParameters = Parameters<Parameters<Command['action']>[0]>
@@ -88,7 +89,9 @@ export const commands: CommandConfig[] = [
   },
   {
     command: ['set <template-name> <template-path>', '设置自定义模板'],
-    action: () => {},
+    action: async (templateName: string, templatePath: string) => {
+      await setTemplateAction(templateName, templatePath)
+    },
   },
   {
     command: ['delete <...template-names>', '删除已存在的模板'],

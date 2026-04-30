@@ -1,6 +1,19 @@
+import { parse } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { deleteFile, exit, isString, join, log, writeFile } from '@tmes/shared'
+import {
+  deleteFile,
+  exit,
+  isAbsolutePath,
+  isExists,
+  isFile,
+  isString,
+  join,
+  log,
+  writeFile,
+  __dirname,
+  copy,
+} from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
 
 export function getListActions() {
@@ -45,6 +58,65 @@ export async function deleteTemplateAction(templateNames: string[]) {
     }
   } catch (err: any) {
     log.error(err?.message ?? err)
+  }
+}
+
+export async function setTemplateAction(templateName: string, templatePath: string) {
+  if (!templateName) {
+    log.error('请提供模板名称')
+    exit(1)
+  }
+  if (!templatePath) {
+    log.error('请提供模板路径')
+    exit(1)
+  }
+
+  if (templates.some((template) => template.name === templateName)) {
+    log.warning(`模板 ${templateName} 已存在`)
+    exit(1)
+  }
+
+  /**
+   * 文件: 直接复制
+   *  -文件路径存在
+   *
+   * 文件夹
+   *  -文件夹路径存在
+   *  -文件夹不为空
+   *   -相对路径
+   *   -绝对路径
+   */
+
+  if (!isAbsolutePath(templatePath)) {
+    templatePath = join(__dirname, templatePath)
+  }
+
+  if (!isExists(templatePath)) {
+    log.error(`模板路径 ${templatePath} 不存在`)
+    exit(1)
+  }
+
+  if (isFile(templatePath)) {
+    templates.push({ name: templateName, path: `./template-${templateName}` })
+
+    try {
+      const __dirname = fileURLToPath(import.meta.url)
+
+      const base = parse(templatePath).base
+
+      await copy(
+        templatePath,
+        join(__dirname, `../../node_modules/@tmes/templates/template-${templateName}/${base}`),
+      )
+      await writeFile(
+        join(__dirname, '../../node_modules/@tmes/templates/templates.json'),
+        JSON.stringify(templates, null, 2),
+      )
+
+      log.success(`模板 ${templateName} 设置成功`)
+    } catch {
+      log.error(`模板 ${templateName} 设置失败`)
+    }
   }
 }
 

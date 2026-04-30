@@ -5,12 +5,14 @@ import {
   mkdir,
   cp,
   rm,
+  statSync,
   type PathLike,
   type PathOrFileDescriptor,
   type WriteFileOptions,
   type RmOptions,
+  type StatSyncOptions,
 } from 'node:fs'
-import { join as _join, parse, resolve, sep } from 'node:path'
+import { join as _join, parse, resolve, sep, isAbsolute } from 'node:path'
 import { cwd, exit } from 'node:process'
 
 import { log } from '..'
@@ -125,4 +127,16 @@ export function deleteFile(src: string, options?: RmOptions) {
       reject(err)
     }
   })
+}
+
+export function isFile(path: PathLike, options?: StatSyncOptions) {
+  return statSync(path, options)?.isFile() ?? false
+}
+
+export function isDirectory(path: PathLike, options?: StatSyncOptions) {
+  return statSync(path, options)?.isDirectory() ?? false
+}
+
+export function isAbsolutePath(path: string) {
+  return isAbsolute(path)
 }
