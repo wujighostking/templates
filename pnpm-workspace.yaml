@@ -13,6 +13,7 @@ catalog:
   tsdown: ^0.21.7
   turbo: ^2.8.21
   typescript: ^6.0.2
+  vitepress: ^1.6.4
 
 onlyBuiltDependencies:
   - simple-git-hooks

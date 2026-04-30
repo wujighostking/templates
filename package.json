@@ -32,7 +32,7 @@
     "tsdown": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
-    "vitepress": "^1.6.4"
+    "vitepress": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpx lint-staged",
