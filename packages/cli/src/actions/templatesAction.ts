@@ -1,4 +1,4 @@
-import { parse } from 'node:path'
+import { parse, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
@@ -13,8 +13,11 @@ import {
   writeFile,
   __dirname,
   copy,
+  isDirectory,
+  readFile,
 } from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
+import ignore from 'ignore'
 
 export function getListActions() {
   for (let i = 0; i < templates.length; i++) {
@@ -96,9 +99,9 @@ export async function setTemplateAction(templateName: string, templatePath: stri
     exit(1)
   }
 
-  if (isFile(templatePath)) {
-    templates.push({ name: templateName, path: `./template-${templateName}` })
+  templates.push({ name: templateName, path: `./template-${templateName}` })
 
+  if (isFile(templatePath)) {
     try {
       const __dirname = fileURLToPath(import.meta.url)
 
@@ -107,6 +110,36 @@ export async function setTemplateAction(templateName: string, templatePath: stri
       await copy(
         templatePath,
         join(__dirname, `../../node_modules/@tmes/templates/template-${templateName}/${base}`),
+      )
+      await writeFile(
+        join(__dirname, '../../node_modules/@tmes/templates/templates.json'),
+        JSON.stringify(templates, null, 2),
+      )
+
+      log.success(`模板 ${templateName} 设置成功`)
+    } catch {
+      log.error(`模板 ${templateName} 设置失败`)
+    }
+  } else if (isDirectory(templatePath)) {
+    try {
+      const __dirname = fileURLToPath(import.meta.url)
+
+      const gitignorePath = join(templatePath, '.gitignore')
+      const gitignoreContent = isFile(gitignorePath) ? await readFile(gitignorePath) : ''
+      const ig = ignore().add(gitignoreContent).add('.git')
+
+      await copy(
+        templatePath,
+        join(__dirname, `../../node_modules/@tmes/templates/template-${templateName}`),
+        {
+          filter: (src) => {
+            const relativePath = relative(templatePath, src).replaceAll('\\', '/')
+
+            if (!relativePath) return true
+
+            return !ig.ignores(relativePath)
+          },
+        },
       )
       await writeFile(
         join(__dirname, '../../node_modules/@tmes/templates/templates.json'),

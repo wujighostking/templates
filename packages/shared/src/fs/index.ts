@@ -11,6 +11,7 @@ import {
   type WriteFileOptions,
   type RmOptions,
   type StatSyncOptions,
+  type CopyOptions,
 } from 'node:fs'
 import { join as _join, parse, resolve, sep, isAbsolute } from 'node:path'
 import { cwd, exit } from 'node:process'
@@ -107,9 +108,16 @@ export function parsePathToArray(dirPath: string) {
   return dirPath.split(sep).filter(Boolean)
 }
 
-export async function copy(src: string, dest: string) {
+export async function copy(
+  src: string,
+  dest: string,
+  options?: CopyOptions,
+  callback?: (err: NodeJS.ErrnoException | null) => void,
+) {
   return new Promise((resolve, reject) => {
-    cp(src, dest, { recursive: true }, (err) => {
+    cp(src, dest, { recursive: true, ...options }, (err) => {
+      callback?.(err)
+
       err ? reject(err) : resolve(void 0)
     })
   })
