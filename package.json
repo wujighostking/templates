@@ -15,6 +15,9 @@
     "fmt:check": "oxfmt --check",
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "docs:dev": "pnpm exec vitepress dev docs",
+    "docs:build": "pnpm exec vitepress build docs",
+    "docs:preview": "pnpm exec vitepress preview docs",
     "prepare": "simple-git-hooks",
     "preinstall": "npx only-allow pnpm"
   },
@@ -28,7 +31,8 @@
     "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitepress": "^1.6.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpx lint-staged",
