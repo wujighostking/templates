@@ -6,4 +6,5 @@ export default defineConfig({
     'no-unused-vars': 'warn',
     'no-unused-expressions': 'off',
   },
+  ignorePatterns: ['dist/**/*', 'packages/templates/template-*'],
 })
