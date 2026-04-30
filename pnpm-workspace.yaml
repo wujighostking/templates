@@ -16,4 +16,5 @@ catalog:
   vitepress: ^1.6.4
 
 onlyBuiltDependencies:
+  - esbuild
   - simple-git-hooks
