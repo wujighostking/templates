@@ -2,6 +2,7 @@ import { execa, log, __dirname, pnpm } from '..'
 
 const dependencies = new Set<string>()
 const devDependencies = new Set<string>()
+const formatDepsCache = new Map<string, string>()
 
 export function getDependencies() {
   return Array.from(dependencies)
@@ -31,14 +32,21 @@ export async function formatDepsVersion(mode: DepsMode) {
   try {
     const promises = depsInstance.map(
       async (dependency) =>
-        await execa(pnpm, ['view', dependency, 'version'], { cwd: __dirname }).then(
+        formatDepsCache.get(dependency) ??
+        (await execa(pnpm, ['view', dependency, 'version'], { cwd: __dirname }).then(
           (res: any) => res.stdout,
-        ),
+        )),
     )
 
     const versions = await Promise.all(promises)
 
     const deps = formatdeps(depsInstance, versions, mode)
+    for (let i = 0; i < depsInstance.length; i++) {
+      const dependency = depsInstance[i]
+      const dependencyVersion = deps[i]
+      dependency && dependencyVersion && formatDepsCache.set(dependency, dependencyVersion)
+    }
+
     return deps
   } catch {
     log.error('获取依赖版本信息失败')
