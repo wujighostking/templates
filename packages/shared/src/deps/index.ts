@@ -54,3 +54,19 @@ export async function formatDepsVersion(mode: DepsMode) {
     return []
   }
 }
+
+export async function getDepsFromPackage(packagePath: string) {
+  const { devDependencies = {}, dependencies = {} } = (await execa(
+    pnpm,
+    ['pkg', 'get', 'devDependencies', 'dependencies'],
+    {
+      cwd: packagePath,
+    },
+  ).then((res) => (res?.stdout ? JSON.parse(res?.stdout as string) : {}))) as {
+    devDependencies: Record<string, string>
+    dependencies: Record<string, string>
+  }
+
+  addDependency(...Object.keys(dependencies))
+  addDevDependency(...Object.keys(devDependencies))
+}

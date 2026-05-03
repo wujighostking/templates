@@ -7,6 +7,7 @@ import {
   join,
   pnpm,
   __dirname,
+  getDepsFromPackage,
 } from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
 
@@ -161,7 +162,11 @@ async function createPolyrepoProject({
     await createNodeApp({ name, buildTool })
   }
 
-  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: join(__dirname, name) })
+  const projectPath = join(__dirname, name)
+
+  await getDepsFromPackage(projectPath)
+
+  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
 
   await setLintPreset(name)
 
@@ -216,7 +221,11 @@ async function createMonorepoProject({
 }) {
   await createMonorepoApp({ name, framework, buildTool })
 
-  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: join(__dirname, name) })
+  const projectPath = join(__dirname, name)
+
+  await getDepsFromPackage(projectPath)
+
+  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
 
   await setLintPreset(name)
 
