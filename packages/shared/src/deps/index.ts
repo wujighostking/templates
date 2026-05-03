@@ -67,6 +67,5 @@ export async function getDepsFromPackage(packagePath: string) {
     dependencies: Record<string, string>
   }
 
-  addDependency(...Object.keys(dependencies))
-  addDevDependency(...Object.keys(devDependencies))
+  return { devDependencies, dependencies }
 }

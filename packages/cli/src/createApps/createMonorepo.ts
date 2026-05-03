@@ -1,3 +1,5 @@
+import { addDependency, addDevDependency, execa, getDepsFromPackage, pnpm } from '@tmes/shared'
+
 import type { BuildToolType, FrameworkType } from '../types'
 import { createTemplate } from './creator.ts'
 
@@ -9,14 +11,16 @@ export async function createMonorepoApp(options: {
   await createTemplate('monorepo' as FrameworkType, options.name)
 
   for (const framework of options.framework) {
+    const subpackagePath = `./${options.name}/packages/template-${framework}`
+
     if (framework === 'node') {
-      await createTemplate(
-        `node-${options.buildTool}` as FrameworkType,
-        `./${options.name}/packages/template-${framework}`,
-      )
-      continue
+      await createTemplate(`node-${options.buildTool}` as FrameworkType, subpackagePath)
+    } else {
+      await createTemplate(framework, subpackagePath)
     }
 
-    await createTemplate(framework, `./${options.name}/packages/template-${framework}`)
+    const { dependencies, devDependencies } = await getDepsFromPackage(subpackagePath)
+    addDependency(...Object.keys(dependencies))
+    addDevDependency(...Object.keys(devDependencies))
   }
 }

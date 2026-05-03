@@ -8,6 +8,8 @@ import {
   pnpm,
   __dirname,
   getDepsFromPackage,
+  addDependency,
+  addDevDependency,
 } from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
 
@@ -164,7 +166,9 @@ async function createPolyrepoProject({
 
   const projectPath = join(__dirname, name)
 
-  await getDepsFromPackage(projectPath)
+  const { dependencies, devDependencies } = await getDepsFromPackage(projectPath)
+  addDependency(...Object.keys(dependencies))
+  addDevDependency(...Object.keys(devDependencies))
 
   await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
 
@@ -223,7 +227,9 @@ async function createMonorepoProject({
 
   const projectPath = join(__dirname, name)
 
-  await getDepsFromPackage(projectPath)
+  const { dependencies, devDependencies } = await getDepsFromPackage(projectPath)
+  addDependency(...Object.keys(dependencies))
+  addDevDependency(...Object.keys(devDependencies))
 
   await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
 
