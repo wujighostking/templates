@@ -10,6 +10,7 @@ import {
   getDepsFromPackage,
   addDependency,
   addDevDependency,
+  formatDepsVersion,
 } from '@tmes/shared'
 import templates from '@tmes/templates' with { type: 'json' }
 
@@ -174,6 +175,9 @@ async function createPolyrepoProject({
 
   await setLintPreset(name)
 
+  const deps = await formatDepsVersion('dependencies')
+  await execa(pnpm, ['pkg', 'set', ...deps], { cwd: projectPath })
+
   await setProjectInit()
 }
 
@@ -234,6 +238,9 @@ async function createMonorepoProject({
   await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
 
   await setLintPreset(name)
+
+  const deps = await formatDepsVersion('dependencies')
+  await execa(pnpm, ['pkg', 'set', ...deps], { cwd: projectPath })
 
   await setProjectInit()
 }

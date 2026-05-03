@@ -1,4 +1,4 @@
-import { addDependency, addDevDependency, execa, getDepsFromPackage, pnpm } from '@tmes/shared'
+import { addDependency, addDevDependency, getDepsFromPackage } from '@tmes/shared'
 
 import type { BuildToolType, FrameworkType } from '../types'
 import { createTemplate } from './creator.ts'
