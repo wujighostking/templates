@@ -171,12 +171,10 @@ async function createPolyrepoProject({
   addDependency(...Object.keys(dependencies))
   addDevDependency(...Object.keys(devDependencies))
 
-  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
+  const deps = await formatDepsVersion('dependencies')
+  await execa(pnpm, ['pkg', 'set', `name=${name}`, ...deps], { cwd: projectPath })
 
   await setLintPreset(name)
-
-  const deps = await formatDepsVersion('dependencies')
-  await execa(pnpm, ['pkg', 'set', ...deps], { cwd: projectPath })
 
   await setProjectInit()
 }
@@ -235,12 +233,10 @@ async function createMonorepoProject({
   addDependency(...Object.keys(dependencies))
   addDevDependency(...Object.keys(devDependencies))
 
-  await execa(pnpm, ['pkg', 'set', `name=${name}`], { cwd: projectPath })
+  const deps = await formatDepsVersion('dependencies')
+  await execa(pnpm, ['pkg', 'set', `name=${name}`, ...deps], { cwd: projectPath })
 
   await setLintPreset(name)
-
-  const deps = await formatDepsVersion('dependencies')
-  await execa(pnpm, ['pkg', 'set', ...deps], { cwd: projectPath })
 
   await setProjectInit()
 }
