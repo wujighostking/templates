@@ -26,8 +26,9 @@ export function formatdeps(deps: string[], versions: string[], mode: DepsMode) {
   return deps.map((dep, index) => `${mode}.${dep}=^${versions[index]}`)
 }
 
-export async function formatDepsVersion(mode: DepsMode) {
-  const depsInstance = mode === 'devDependencies' ? getDevDependencies() : getDependencies()
+export async function formatDepsVersion(mode: DepsMode, dependencies?: string[]) {
+  const depsInstance =
+    dependencies ?? (mode === 'devDependencies' ? getDevDependencies() : getDependencies())
 
   try {
     const promises = depsInstance.map(async (dependency) => {

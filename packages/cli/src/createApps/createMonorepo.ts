@@ -1,4 +1,4 @@
-import { addDependency, addDevDependency, getDepsFromPackage } from '@tmes/shared'
+import { execa, formatDepsVersion, getDepsFromPackage, join, pnpm } from '@tmes/shared'
 
 import type { BuildToolType, FrameworkType } from '../types'
 import { createTemplate } from './creator.ts'
@@ -20,7 +20,10 @@ export async function createMonorepoApp(options: {
     }
 
     const { dependencies, devDependencies } = await getDepsFromPackage(subpackagePath)
-    addDependency(...Object.keys(dependencies))
-    addDevDependency(...Object.keys(devDependencies))
+    const devDeps = await formatDepsVersion('devDependencies', Object.keys(devDependencies))
+    const deps = await formatDepsVersion('dependencies', Object.keys(dependencies))
+    await execa(pnpm, ['pkg', 'set', ...devDeps, ...deps], {
+      cwd: join(process.cwd(), subpackagePath),
+    })
   }
 }
