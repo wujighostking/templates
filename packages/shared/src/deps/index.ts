@@ -30,22 +30,23 @@ export async function formatDepsVersion(mode: DepsMode) {
   const depsInstance = mode === 'devDependencies' ? getDevDependencies() : getDependencies()
 
   try {
-    const promises = depsInstance.map(
-      async (dependency) =>
-        formatDepsCache.get(dependency) ??
-        (await execa(pnpm, ['view', dependency, 'version'], { cwd: __dirname }).then(
-          (res: any) => res.stdout,
-        )),
-    )
+    const promises = depsInstance.map(async (dependency) => {
+      let dependencyVersion: string = formatDepsCache.get(dependency) as string
+
+      if (!dependencyVersion) {
+        dependencyVersion = await execa(pnpm, ['view', dependency, 'version'], {
+          cwd: __dirname,
+        }).then((res: any) => res.stdout)
+
+        formatDepsCache.set(dependency, dependencyVersion)
+      }
+
+      return dependencyVersion
+    })
 
     const versions = await Promise.all(promises)
 
     const deps = formatdeps(depsInstance, versions, mode)
-    for (let i = 0; i < depsInstance.length; i++) {
-      const dependency = depsInstance[i]
-      const dependencyVersion = deps[i]
-      dependency && dependencyVersion && formatDepsCache.set(dependency, dependencyVersion)
-    }
 
     return deps
   } catch {
