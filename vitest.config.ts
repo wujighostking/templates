@@ -1,3 +1,7 @@
-import { defineConfig } from 'vitest/config'
+import { defineConfig, configDefaults } from 'vitest/config'
 
-export default defineConfig({})
+export default defineConfig({
+  test: {
+    exclude: [...configDefaults.exclude, 'packages/**/__test__/__temp/**'],
+  },
+})
