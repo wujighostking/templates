@@ -16,7 +16,8 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "prepare": "simple-git-hooks",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "test": "vitest"
   },
   "devDependencies": {
     "@commitlint/cli": "catalog:",
@@ -28,7 +29,9 @@
     "simple-git-hooks": "catalog:",
     "tsdown": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "^8.0.10",
+    "vitest": "catalog:"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpx lint-staged",
