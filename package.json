@@ -17,7 +17,7 @@
     "build": "turbo run build",
     "prepare": "simple-git-hooks",
     "preinstall": "npx only-allow pnpm",
-    "test": "vitest"
+    "test": "vitest --run"
   },
   "devDependencies": {
     "@commitlint/cli": "catalog:",
