@@ -25,6 +25,9 @@
       "require": "./templates.json"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {},
   "packageManager": "pnpm@10.30.3"
 }

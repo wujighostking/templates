@@ -13,13 +13,18 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
+    "changeset": "changeset",
+    "release:status": "changeset status --verbose",
+    "version-packages": "changeset version",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "prepare": "simple-git-hooks",
     "preinstall": "npx only-allow pnpm",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",
     "@types/node": "catalog:",
