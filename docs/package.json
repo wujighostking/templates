@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "",
   "author": "",
+  "type": "module",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
