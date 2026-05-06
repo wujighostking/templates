@@ -36,8 +36,8 @@ jobs:
       - name: Validate
         run: |
           pnpm run lint
-          pnpm run test
           pnpm run build
+          pnpm run test
 
       - name: Create release PR or publish
         uses: changesets/action@v1
