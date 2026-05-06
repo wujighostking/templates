@@ -1,14 +1,18 @@
 import { mkdirSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 
-import { execa, join, pnpm, deleteFile, isExists, isWin } from '@tmes/shared'
+import { execa, join, pnpm, deleteFile, isExists, setDirname } from '@tmes/shared'
 import { beforeAll, describe, expect, it } from 'vitest'
 
+import { githooksAction } from '../../src/actions'
+
 beforeAll(async () => {
-  await deleteFile(join(process.cwd(), './packages/cli/__test__/__temp/test-githooks'))
+  await deleteFile(join(process.cwd(), '../../__temp/test-githooks'))
 })
 
 describe('测试 tmes githooks 命令', () => {
-  const testGithooksPath = join(process.cwd(), './packages/cli/__test__/__temp/test-githooks')
+  const __dirname = fileURLToPath(import.meta.url)
+  const testGithooksPath = join(__dirname, '../../__temp/test-githooks')
 
   it('验证 simple-git-hooks 版本信息', async () => {
     if (!isExists(join(testGithooksPath, 'package.json'))) {
@@ -17,7 +21,8 @@ describe('测试 tmes githooks 命令', () => {
       await execa(pnpm, ['init'], { cwd: testGithooksPath })
     }
 
-    await execa(isWin() ? 'tmes.cmd' : 'tmes', ['githooks'], { cwd: testGithooksPath })
+    setDirname(testGithooksPath)
+    await githooksAction()
 
     const simpleGitHooksVersion = await execa(pnpm, ['view', 'simple-git-hooks', 'version']).then(
       (res) => res.stdout,

@@ -1,15 +1,19 @@
 import { mkdirSync } from 'node:fs'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 
-import { execa, join, pnpm, isExists, isWin, deleteFile } from '@tmes/shared'
+import { execa, join, pnpm, isExists, deleteFile, setDirname } from '@tmes/shared'
 import { beforeAll, describe, expect, it } from 'vitest'
 
+import { commitlintAction } from '../../src/actions'
+
 beforeAll(async () => {
-  await deleteFile(join(process.cwd(), './packages/cli/__test__/__temp/test-commitlint'))
+  await deleteFile(join(process.cwd(), '../../__temp/test-commitlint'))
 })
 
 describe.sequential('测试 tmes commitlint 命令', () => {
-  const testCommitlintPath = join(process.cwd(), './packages/cli/__test__/__temp/test-commitlint')
+  const __dirname = fileURLToPath(import.meta.url)
+  const testCommitlintPath = join(__dirname, '../../__temp/test-commitlint')
 
   it('tmes commitlint', async () => {
     if (!isExists(join(testCommitlintPath, 'package.json'))) {
@@ -18,7 +22,8 @@ describe.sequential('测试 tmes commitlint 命令', () => {
       await execa(pnpm, ['init'], { cwd: testCommitlintPath })
     }
 
-    await execa(isWin() ? 'tmes.cmd' : 'tmes', ['commitlint'], { cwd: testCommitlintPath })
+    setDirname(testCommitlintPath)
+    await commitlintAction()
 
     expect(isExists(join(testCommitlintPath, 'commitlint.config.ts'))).toBeTruthy()
   })
