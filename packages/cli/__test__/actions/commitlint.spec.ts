@@ -11,17 +11,16 @@ beforeAll(async () => {
   await deleteFile(join(process.cwd(), '../../__temp/test-commitlint'))
 })
 
-describe.sequential('测试 tmes commitlint 命令', () => {
+describe.sequential('测试 tmes commitlint 命令', async () => {
   const __dirname = fileURLToPath(import.meta.url)
   const testCommitlintPath = join(__dirname, '../../__temp/test-commitlint')
+  if (!isExists(join(testCommitlintPath, 'package.json'))) {
+    mkdirSync(testCommitlintPath, { recursive: true })
+
+    await execa(pnpm, ['init'], { cwd: testCommitlintPath })
+  }
 
   it('tmes commitlint', async () => {
-    if (!isExists(join(testCommitlintPath, 'package.json'))) {
-      mkdirSync(testCommitlintPath, { recursive: true })
-
-      await execa(pnpm, ['init'], { cwd: testCommitlintPath })
-    }
-
     setDirname(testCommitlintPath)
     await commitlintAction()
 

@@ -11,17 +11,17 @@ beforeAll(async () => {
   await deleteFile(join(process.cwd(), './__temp/test-oxc'))
 })
 
-describe.sequential('测试 tmes oxfmt 和 tmes oxlint 命令', () => {
+describe.sequential('测试 tmes oxfmt 和 tmes oxlint 命令', async () => {
   const __dirname = fileURLToPath(import.meta.url)
   const testOxcPath = join(__dirname, '../../__temp/test-oxc')
 
+  if (!isExists(join(testOxcPath, 'package.json'))) {
+    mkdirSync(testOxcPath, { recursive: true })
+
+    await execa(pnpm, ['init'], { cwd: testOxcPath })
+  }
+
   it('tmes oxfmt', async () => {
-    if (!isExists(join(testOxcPath, 'package.json'))) {
-      mkdirSync(testOxcPath, { recursive: true })
-
-      await execa(pnpm, ['init'], { cwd: testOxcPath })
-    }
-
     setDirname(testOxcPath)
     await oxfmtAction()
 

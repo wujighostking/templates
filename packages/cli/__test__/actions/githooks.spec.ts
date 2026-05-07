@@ -10,17 +10,16 @@ beforeAll(async () => {
   await deleteFile(join(process.cwd(), '../../__temp/test-githooks'))
 })
 
-describe('测试 tmes githooks 命令', () => {
+describe('测试 tmes githooks 命令', async () => {
   const __dirname = fileURLToPath(import.meta.url)
   const testGithooksPath = join(__dirname, '../../__temp/test-githooks')
+  if (!isExists(join(testGithooksPath, 'package.json'))) {
+    mkdirSync(testGithooksPath, { recursive: true })
+
+    await execa(pnpm, ['init'], { cwd: testGithooksPath })
+  }
 
   it('验证 simple-git-hooks 版本信息', async () => {
-    if (!isExists(join(testGithooksPath, 'package.json'))) {
-      mkdirSync(testGithooksPath, { recursive: true })
-
-      await execa(pnpm, ['init'], { cwd: testGithooksPath })
-    }
-
     setDirname(testGithooksPath)
     await githooksAction()
 
