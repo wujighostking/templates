@@ -1,3 +1,4 @@
+import { EOL, log } from '@tmes/shared'
 import type { CAC, Command } from 'cac'
 
 import {
@@ -116,7 +117,8 @@ export const commands: CommandConfig[] = [
   {
     command: ['list', '列出所有可用的模板'],
     action: () => {
-      getListActions()
+      const templates = getListActions()
+      log(templates.join(EOL))
     },
   },
 ]

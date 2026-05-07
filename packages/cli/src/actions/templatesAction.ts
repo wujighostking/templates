@@ -20,14 +20,17 @@ import templates from '@tmes/templates' with { type: 'json' }
 import ignore from 'ignore'
 
 export function getListActions() {
+  const templatesList = []
   for (let i = 0; i < templates.length; i++) {
     const template = templates[i]!
 
     const templateName = template.name
     const templatePath = template.path.slice(2)
 
-    log(templateName.padEnd(20, '-'), templatePath)
+    templatesList.push(`${templateName.padEnd(20, '-')}${templatePath}`)
   }
+
+  return templatesList
 }
 
 export async function deleteTemplateAction(templateNames: string[]) {
