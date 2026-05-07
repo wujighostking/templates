@@ -17,6 +17,7 @@
     "release:status": "changeset status --verbose",
     "version-packages": "changeset version",
     "dev": "turbo run dev",
+    "docs:dev": "turbo run dev --filter=docs",
     "build": "turbo run build",
     "prepare": "simple-git-hooks",
     "preinstall": "npx only-allow pnpm",
@@ -24,7 +25,7 @@
     "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
+    "@changesets/cli": "catalog:",
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",
     "@types/node": "catalog:",
@@ -35,7 +36,7 @@
     "tsdown": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8.0.10",
+    "vite": "catalog:",
     "vitest": "catalog:"
   },
   "simple-git-hooks": {
