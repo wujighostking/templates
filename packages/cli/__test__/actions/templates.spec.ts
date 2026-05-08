@@ -1,4 +1,4 @@
-import { mkdirSync, rm, rmSync } from 'node:fs'
+import { mkdirSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { EOL, isExists, join, writeFile } from '@tmes/shared'
@@ -24,13 +24,21 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await deleteTestTemplate()
+  await deleteTestFileTemplate()
 
   async function deleteTestTemplate() {
+    const templatePath = join(__dirname, `../../../node_modules/@tmes/templates`)
+    if (!isExists(templatePath)) return
+
+    rmSync(join(templatePath, 'template-test'), { recursive: true })
+    await writeFile(join(templatePath, 'templates.json'), JSON.stringify(templates, null, 2) + EOL)
+  }
+  async function deleteTestFileTemplate() {
     const templatePath = join(__dirname, `../../../node_modules/@tmes/templates`)
 
     if (!isExists(templatePath)) return
 
-    rmSync(join(templatePath, 'template-test'), { recursive: true })
+    rmSync(join(templatePath, 'template-testFile'), { recursive: true })
     await writeFile(join(templatePath, 'templates.json'), JSON.stringify(templates, null, 2) + EOL)
   }
 })
@@ -59,6 +67,16 @@ describe('测试模板数据', () => {
     expect(newTemplatesList[newTemplatesList.length - 1]).toEqual({
       name: 'test',
       path: './template-test',
+    })
+  })
+
+  it('添加文件测试模板', async () => {
+    await setTemplateAction('testFile', join(testTemplate, 'test.txt'))
+    const newTemplatesList = (await import('@tmes/templates')).default
+
+    expect(newTemplatesList[newTemplatesList.length - 1]).toEqual({
+      name: 'testFile',
+      path: './template-testFile',
     })
   })
 })

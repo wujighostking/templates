@@ -110,14 +110,15 @@ export async function setTemplateAction(templateName: string, templatePath: stri
 
       const base = parse(templatePath).base
 
-      await copy(
-        templatePath,
-        join(__dirname, `../../node_modules/@tmes/templates/template-${templateName}/${base}`),
-      )
-      await writeFile(
-        join(__dirname, '../../node_modules/@tmes/templates/templates.json'),
-        JSON.stringify(templates, null, 2),
-      )
+      let destPath
+      if (process.env.NODE_ENV === 'test') {
+        destPath = join(__dirname, `../../../node_modules/@tmes/templates`)
+      } else {
+        destPath = join(__dirname, `../../node_modules/@tmes/templates`)
+      }
+
+      await copy(templatePath, join(destPath, `template-${templateName}/${base}`))
+      await writeFile(join(destPath, 'templates.json'), JSON.stringify(templates, null, 2))
 
       log.success(`模板 ${templateName} 设置成功`)
     } catch {
