@@ -14,6 +14,7 @@ import {
   readFile,
   stringifyYaml,
   parsePathToArray,
+  isCancel,
 } from '@tmes/shared'
 
 export async function pkgAction(options: { dir: string; packageName: string }) {
@@ -34,7 +35,9 @@ export async function pkgAction(options: { dir: string; packageName: string }) {
     await writeFile(join(srcPath, 'index.ts'), '')
     await execCommand()
     const continueAction = await shouldContinue('是否添加到 pnpm-workspace.yaml 中？')
-    if (!continueAction) return
+    // if (!continueAction) return
+    if (!continueAction || isCancel(continueAction)) return
+
     await addPackageToWorkspace()
 
     async function execCommand() {
