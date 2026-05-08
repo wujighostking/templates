@@ -128,29 +128,30 @@ export async function setTemplateAction(templateName: string, templatePath: stri
       const __dirname = fileURLToPath(import.meta.url)
 
       const gitignorePath = join(templatePath, '.gitignore')
-      const gitignoreContent = isFile(gitignorePath) ? await readFile(gitignorePath) : ''
+      const gitignoreContent =
+        isExists(gitignorePath) && isFile(gitignorePath) ? await readFile(gitignorePath) : ''
       const ig = ignore().add(gitignoreContent).add('.git')
 
-      await copy(
-        templatePath,
-        join(__dirname, `../../node_modules/@tmes/templates/template-${templateName}`),
-        {
-          filter: (src) => {
-            const relativePath = relative(templatePath, src).replaceAll('\\', '/')
+      let destPath
+      if (process.env.NODE_ENV === 'test') {
+        destPath = join(__dirname, `../../../node_modules/@tmes/templates`)
+      } else {
+        destPath = join(__dirname, `../../node_modules/@tmes/templates`)
+      }
 
-            if (!relativePath) return true
+      await copy(templatePath, join(destPath, `template-${templateName}`), {
+        filter: (src) => {
+          const relativePath = relative(templatePath, src).replaceAll('\\', '/')
 
-            return !ig.ignores(relativePath)
-          },
+          if (!relativePath) return true
+
+          return !ig.ignores(relativePath)
         },
-      )
-      await writeFile(
-        join(__dirname, '../../node_modules/@tmes/templates/templates.json'),
-        JSON.stringify(templates, null, 2),
-      )
+      })
+      await writeFile(join(destPath, 'templates.json'), JSON.stringify(templates, null, 2))
 
       log.success(`模板 ${templateName} 设置成功`)
-    } catch {
+    } catch (err) {
       log.error(`模板 ${templateName} 设置失败`)
     }
   }
