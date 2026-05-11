@@ -8,8 +8,16 @@
     "tm",
     "tmes"
   ],
+  "homepage": "https://templates-docs-xi.vercel.app/",
+  "bugs": {
+    "url": "https://github.com/wujighostking/templates/issues"
+  },
   "license": "MIT",
-  "author": "",
+  "author": "gk_k",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wujighostking/templates.git"
+  },
   "bin": {
     "create-template": "./lib/index.js",
     "tm": "./lib/index.js",
