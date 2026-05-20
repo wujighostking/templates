@@ -176,6 +176,11 @@ async function createPolyrepoProject({
 
   await setLintPreset(name)
 
+  await execa('npx', ['-p', '@fission-ai/openspec', 'openspec', 'init'], {
+    cwd: projectPath,
+    stdio: 'inherit',
+  })
+
   await setProjectInit()
 }
 
@@ -237,6 +242,11 @@ async function createMonorepoProject({
   await execa(pnpm, ['pkg', 'set', `name=${name}`, ...deps], { cwd: projectPath })
 
   await setLintPreset(name)
+
+  await execa('npx', ['-p', '@fission-ai/openspec', 'openspec', 'init'], {
+    cwd: projectPath,
+    stdio: 'inherit',
+  })
 
   await setProjectInit()
 }
