@@ -42,8 +42,8 @@ describe('测试 tmes commitlint 命令', async () => {
       cwd: testCommitlintPath,
     }).then((res) => (res.stdout ? JSON.parse(res.stdout as string) : {}))
 
-    expect(result['@commitlint/cli'].slice(1)).toBe(commitlintCliVersion)
-    expect(result['@commitlint/config-conventional'].slice(1)).toBe(
+    expect(result["'@commitlint/cli'"].slice(1)).toBe(commitlintCliVersion)
+    expect(result["'@commitlint/config-conventional'"].slice(1)).toBe(
       commitlintConfigConventionalVersion,
     )
   })

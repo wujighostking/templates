@@ -32,6 +32,6 @@ describe('测试 tmes githooks 命令', async () => {
       cwd: testGithooksPath,
     }).then((res) => (res.stdout ? JSON.parse(res.stdout as string) : {}))
 
-    expect(result['simple-git-hooks'].slice(1)).toBe(simpleGitHooksVersion)
+    expect(result["'simple-git-hooks'"].slice(1)).toBe(simpleGitHooksVersion)
   })
 })
