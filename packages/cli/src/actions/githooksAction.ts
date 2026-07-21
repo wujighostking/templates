@@ -29,7 +29,7 @@ export async function githooksAction() {
         'set',
         '["simple-git-hooks"]["pre-commit"]=pnpx lint-staged',
         '["simple-git-hooks"]["commit-msg"]=pnpx commitlint --edit',
-        'scripts["prepare"]="simple-git-hooks"',
+        'scripts["prepare"]=simple-git-hooks',
 
         ...deps,
       ],
