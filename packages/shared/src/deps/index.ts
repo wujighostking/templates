@@ -23,7 +23,7 @@ export function addDevDependency(...deps: string[]) {
 export type DepsMode = 'devDependencies' | 'dependencies'
 
 export function formatdeps(deps: string[], versions: string[], mode: DepsMode) {
-  return deps.map((dep, index) => `${mode}.${dep}=^${versions[index]}`)
+  return deps.map((dep, index) => `${mode}['${dep}']=^${versions[index]}`)
 }
 
 export async function formatDepsVersion(mode: DepsMode, dependencies?: string[]) {

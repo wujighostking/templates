@@ -34,7 +34,7 @@ export async function oxlintAction() {
     const deps = await formatDepsVersion('devDependencies')
     await execa(
       pnpm,
-      ['pkg', 'set', 'scripts.lint=oxlint', 'scripts.lint:fix=oxlint --fix', ...deps],
+      ['pkg', 'set', 'scripts["lint"]=oxlint', 'scripts["lint:fix"]=oxlint --fix', ...deps],
       {
         cwd: __dirname,
       },

@@ -40,7 +40,7 @@ export async function oxfmtAction() {
     const deps = await formatDepsVersion('devDependencies')
     await execa(
       pnpm,
-      ['pkg', 'set', 'scripts.fmt=oxfmt', 'scripts.fmt:check=oxfmt --check', ...deps],
+      ['pkg', 'set', 'scripts["fmt"]=oxfmt', 'scripts["fmt:check"]=oxfmt --check', ...deps],
       {
         cwd: __dirname,
       },

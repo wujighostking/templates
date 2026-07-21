@@ -24,7 +24,13 @@ export async function lintstagedAction() {
     const deps = await formatDepsVersion('devDependencies')
     await execa(
       pnpm,
-      ['pkg', 'set', 'lint-staged.*[0]=pnpm lint:fix', 'lint-staged.*[1]=pnpm fmt', ...deps],
+      [
+        'pkg',
+        'set',
+        '["lint-staged"]["*"][0]=pnpm lint:fix',
+        '["lint-staged"]["*"][1]=pnpm fmt',
+        ...deps,
+      ],
       {
         cwd: __dirname,
       },

@@ -27,9 +27,9 @@ export async function githooksAction() {
       [
         'pkg',
         'set',
-        'simple-git-hooks.pre-commit=pnpx lint-staged',
-        'simple-git-hooks.commit-msg=pnpx commitlint --edit',
-        'scripts.prepare=simple-git-hooks',
+        '["simple-git-hooks"]["pre-commit"]=pnpx lint-staged',
+        '["simple-git-hooks"]["commit-msg"]=pnpx commitlint --edit',
+        'scripts["prepare"]="simple-git-hooks"',
 
         ...deps,
       ],
