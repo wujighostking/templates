@@ -240,6 +240,13 @@ async function createMonorepoProject({
 
   const deps = await formatDepsVersion('dependencies')
   await execa(pnpm, ['pkg', 'set', `name=${name}`, ...deps], { cwd: projectPath })
+  await execa(
+    pnpm,
+    ['pkg', 'set', `packageManager=pnpm@${(await execa(pnpm, ['--version'])).stdout}`],
+    {
+      cwd: projectPath,
+    },
+  )
 
   await setLintPreset(name)
 

@@ -10,6 +10,9 @@ export default defineConfig({
       formats: ['es'],
       fileName: createRequire(import.meta.url)?.('./package.json').name,
     },
+    watch: {
+      exclude: ['**/node_modules/**', '**/dist/**', '**/__tests__/**', '**/__mocks__/**'],
+    },
   },
 
   plugins: [dts({ rollupTypes: true })],
