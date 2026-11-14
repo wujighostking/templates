@@ -1,5 +1,14 @@
 # @tmes/cli
 
+## 2.0.2
+
+### Patch Changes
+
+-
+- Updated dependencies
+  - @tmes/shared@2.0.2
+  - @tmes/templates@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes

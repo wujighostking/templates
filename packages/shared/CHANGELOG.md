@@ -1,5 +1,11 @@
 # @tmes/shared
 
+## 2.0.2
+
+### Patch Changes
+
+-
+
 ## 2.0.1
 
 ### Patch Changes
