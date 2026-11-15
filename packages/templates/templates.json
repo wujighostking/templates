@@ -26,5 +26,9 @@
   {
     "name": "vue",
     "path": "./template-vue"
+  },
+  {
+    "name": "electron",
+    "path": "./template-electron"
   }
 ]

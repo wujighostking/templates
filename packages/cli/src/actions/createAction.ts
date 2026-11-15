@@ -22,6 +22,7 @@ import {
   createVueApp,
 } from '../createApps'
 import { createCustomApp } from '../createApps/createCustomApp.ts'
+import { createElectronApp } from '../createApps/createElectron.ts'
 import { createMonorepoApp } from '../createApps/createMonorepo.ts'
 import type { BuildToolType, FrameworkType, ModeType, Options, ProjectType } from '../types'
 import { setLintPreset, setProjectInit } from './commonAction.ts'
@@ -120,6 +121,7 @@ async function polyrepoSelected({
       { value: 'nest', label: 'nest' },
       { value: 'nuxt', label: 'nuxt' },
       { value: 'node', label: 'node' },
+      { value: 'electron', label: 'electron' },
     ],
   })) as FrameworkType
 
@@ -163,6 +165,8 @@ async function createPolyrepoProject({
     await createNuxtApp({ name })
   } else if (framework === 'node') {
     await createNodeApp({ name, buildTool })
+  } else if (framework === 'electron') {
+    await createElectronApp({ name })
   }
 
   const projectPath = join(__dirname, name)
@@ -197,6 +201,7 @@ async function monorepoSelected(
       { value: 'nest', label: 'nest' },
       { value: 'nuxt', label: 'nuxt' },
       { value: 'node', label: 'node' },
+      { value: 'electron', label: 'electron' },
     ],
   })
 

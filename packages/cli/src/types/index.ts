@@ -9,4 +9,4 @@ export interface Options {
 export type ModeType = 'monorepo' | 'polyrepo' | 'custom'
 export type BuildToolType = 'vite' | 'tsdown' | undefined
 export type ProjectType = 'web' | 'lib' | undefined
-export type FrameworkType = 'react' | 'vue' | 'nest' | 'nuxt' | 'node'
+export type FrameworkType = 'react' | 'vue' | 'nest' | 'nuxt' | 'node' | 'electron'
