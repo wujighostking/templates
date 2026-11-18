@@ -41,9 +41,14 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  // 8.163.129.27:1024
-  win.loadURL('http://localhost:5173')
-  win.webContents.openDevTools({ mode: 'detach' })
+  // 开发环境加载 Vite Dev Server，生产环境加载打包后的静态文件
+  const devServerUrl = process.env.VITE_DEV_SERVER_URL
+  if (devServerUrl) {
+    win.loadURL(devServerUrl)
+    win.webContents.openDevTools({ mode: 'detach' })
+  } else {
+    win.loadFile(path.join(__dirname, '../dist/index.html'))
+  }
 }
 
 app.whenReady().then(() => {
